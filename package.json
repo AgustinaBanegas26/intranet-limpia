@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "expo": "~56.0.8",
+    "expo-keep-awake": "~56.0.3"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.14",
+    "typescript": "~6.0.3"
+  }
+}

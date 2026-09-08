@@ -1,0 +1,149 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "id": 1,
+      "nombre": "Administración",
+      "activo": true,
+      "created_at": "2026-07-01T13:28:39.740Z"
+    },
+    {
+      "id": 2,
+      "nombre": "Administrativo",
+      "activo": true,
+      "created_at": "2026-07-01T13:28:39.759Z"
+    },
+    {
+      "id": 3,
+      "nombre": "Auditoría y Stock",
+      "activo": true,
+      "created_at": "2026-07-01T13:28:39.759Z"
+    },
+    {
+      "id": 5,
+      "nombre": "Compras",
+      "activo": true,
+      "created_at": "2026-07-01T13:28:39.759Z"
+    },
+    {
+      "id": 6,
+      "nombre": "Compras FOB",
+      "activo": true,
+      "created_at": "2026-07-01T13:28:39.759Z"
+    },
+    {
+      "id": 7,
+      "nombre": "Corporativo",
+      "activo": true,
+      "created_at": "2026-07-01T13:28:39.759Z"
+    },
+    {
+      "id": 8,
+      "nombre": "Créditos y Cobranzas",
+      "activo": true,
+      "created_at": "2026-07-01T13:28:39.759Z"
+    },
+    {
+      "id": 9,
+      "nombre": "Gerencia",
+      "activo": true,
+      "created_at": "2026-07-01T13:28:39.759Z"
+    },
+    {
+      "id": 10,
+      "nombre": "Logística",
+      "activo": true,
+      "created_at": "2026-07-01T13:28:39.759Z"
+    },
+    {
+      "id": 11,
+      "nombre": "Logística (Referente)",
+      "activo": true,
+      "created_at": "2026-07-01T13:28:39.759Z"
+    },
+    {
+      "id": 12,
+      "nombre": "Maestranza",
+      "activo": true,
+      "created_at": "2026-07-01T13:28:39.759Z"
+    },
+    {
+      "id": 13,
+      "nombre": "Marketplace",
+      "activo": true,
+      "created_at": "2026-07-01T13:28:39.759Z"
+    },
+    {
+      "id": 14,
+      "nombre": "PM",
+      "activo": true,
+      "created_at": "2026-07-01T13:28:39.759Z"
+    },
+    {
+      "id": 15,
+      "nombre": "Producción",
+      "activo": true,
+      "created_at": "2026-07-01T13:28:39.759Z"
+    },
+    {
+      "id": 16,
+      "nombre": "RMA",
+      "activo": true,
+      "created_at": "2026-07-01T13:28:39.759Z"
+    },
+    {
+      "id": 17,
+      "nombre": "RR. HH.",
+      "activo": true,
+      "created_at": "2026-07-01T13:28:39.759Z"
+    },
+    {
+      "id": 18,
+      "nombre": "Seguridad",
+      "activo": true,
+      "created_at": "2026-07-01T13:28:39.759Z"
+    },
+    {
+      "id": 19,
+      "nombre": "Ventas",
+      "activo": true,
+      "created_at": "2026-07-01T13:28:39.759Z"
+    },
+    {
+      "id": 20,
+      "nombre": "Ventas (Referente)",
+      "activo": true,
+      "created_at": "2026-07-01T13:28:39.759Z"
+    },
+    {
+      "id": 21,
+      "nombre": "Ventas Canal",
+      "activo": true,
+      "created_at": "2026-07-01T13:28:39.759Z"
+    },
+    {
+      "id": 22,
+      "nombre": "Ventas Retail",
+      "activo": true,
+      "created_at": "2026-07-01T13:28:39.759Z"
+    },
+    {
+      "id": 23,
+      "nombre": "Sector Test 1782912519854 OK",
+      "activo": false,
+      "created_at": "2026-07-01T13:28:39.855Z"
+    },
+    {
+      "id": 24,
+      "nombre": "hola",
+      "activo": false,
+      "created_at": "2026-07-01T13:31:16.204Z"
+    },
+    {
+      "id": 25,
+      "nombre": "Sistemas",
+      "activo": true,
+      "created_at": "2026-07-01T13:34:55.897Z"
+    }
+  ]
+}

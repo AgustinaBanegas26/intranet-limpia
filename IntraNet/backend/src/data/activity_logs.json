@@ -1,0 +1,643 @@
+{
+  "version": 58,
+  "items": [
+    {
+      "id": "a2c33547-fbd4-4fae-8b3a-03dc5c0e6389",
+      "createdAt": "2026-08-05T14:05:55.975Z",
+      "action": "login",
+      "actorId": 3,
+      "entityType": "sessions",
+      "entityId": 3,
+      "metadata": {
+        "mustChangePassword": false
+      }
+    },
+    {
+      "id": "9dd67bf5-41f2-4841-8fe4-9b92fb8e1ffe",
+      "createdAt": "2026-08-05T14:05:44.409Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "agustinabanegas26@gmail.com"
+      }
+    },
+    {
+      "id": "26685fad-62b3-43f1-9e74-022a93f3d5f1",
+      "createdAt": "2026-08-05T14:01:29.384Z",
+      "action": "login",
+      "actorId": 1,
+      "entityType": "sessions",
+      "entityId": 1,
+      "metadata": {
+        "mustChangePassword": false
+      }
+    },
+    {
+      "id": "f3ea6023-e1c4-4d90-8b04-2baee3f6655d",
+      "createdAt": "2026-08-05T14:00:44.994Z",
+      "action": "login",
+      "actorId": 3,
+      "entityType": "sessions",
+      "entityId": 3,
+      "metadata": {
+        "mustChangePassword": false
+      }
+    },
+    {
+      "id": "a466e2f5-18d3-489e-a97c-8a8a76beedfc",
+      "createdAt": "2026-08-05T13:55:37.034Z",
+      "action": "login",
+      "actorId": 1,
+      "entityType": "sessions",
+      "entityId": 1,
+      "metadata": {
+        "mustChangePassword": false
+      }
+    },
+    {
+      "id": "460639f3-5303-4356-bc7c-195e6df1db2d",
+      "createdAt": "2026-08-05T13:54:48.660Z",
+      "action": "login",
+      "actorId": 3,
+      "entityType": "sessions",
+      "entityId": 3,
+      "metadata": {
+        "mustChangePassword": false
+      }
+    },
+    {
+      "id": "e6f88337-a1dd-4b5f-ba4b-12090df480e9",
+      "createdAt": "2026-08-05T13:51:47.835Z",
+      "action": "login",
+      "actorId": 1,
+      "entityType": "sessions",
+      "entityId": 1,
+      "metadata": {
+        "mustChangePassword": false
+      }
+    },
+    {
+      "id": "bed13414-a367-49b6-9201-cd8334680d8a",
+      "createdAt": "2026-08-05T13:51:06.357Z",
+      "action": "login",
+      "actorId": 3,
+      "entityType": "sessions",
+      "entityId": 3,
+      "metadata": {
+        "mustChangePassword": false
+      }
+    },
+    {
+      "id": "e9cf81dc-21b0-49cc-b59b-47c9f01cb6f6",
+      "createdAt": "2026-08-05T13:50:36.318Z",
+      "action": "login",
+      "actorId": 3,
+      "entityType": "sessions",
+      "entityId": 3,
+      "metadata": {
+        "mustChangePassword": false
+      }
+    },
+    {
+      "id": "eb4a5af9-a9d4-435a-add0-bea824336e20",
+      "createdAt": "2026-08-05T13:50:24.751Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "agustinabanegas26@gmail.com"
+      }
+    },
+    {
+      "id": "b5e0cb59-2451-46b1-a2fe-480c7a3eee12",
+      "createdAt": "2026-08-05T13:47:35.736Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "agustinabanegas26@gmail.com"
+      }
+    },
+    {
+      "id": "bd54817a-c759-4e50-aa41-5192bf12c5eb",
+      "createdAt": "2026-08-05T13:46:35.193Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "agustinabanegas26@gmail.com"
+      }
+    },
+    {
+      "id": "a258770e-8171-48ae-bcac-e2a7e069e547",
+      "createdAt": "2026-08-05T13:45:50.091Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "agustinabanegas26@gmail.com"
+      }
+    },
+    {
+      "id": "6216b61b-691f-4419-8693-782c3c608225",
+      "createdAt": "2026-08-04T15:11:28.091Z",
+      "action": "login",
+      "actorId": 1,
+      "entityType": "sessions",
+      "entityId": 1,
+      "metadata": {
+        "mustChangePassword": false
+      }
+    },
+    {
+      "id": "5f1a1e02-3df2-482e-b982-c76fb755f150",
+      "createdAt": "2026-08-04T15:10:07.329Z",
+      "action": "login",
+      "actorId": 3,
+      "entityType": "sessions",
+      "entityId": 3,
+      "metadata": {
+        "mustChangePassword": false
+      }
+    },
+    {
+      "id": "8da2c6be-f2a0-4dce-ad65-f58ed8087924",
+      "createdAt": "2026-08-04T15:08:52.031Z",
+      "action": "login",
+      "actorId": 1,
+      "entityType": "sessions",
+      "entityId": 1,
+      "metadata": {
+        "mustChangePassword": false
+      }
+    },
+    {
+      "id": "0766f5c1-f2ed-4028-a70f-aaffcf9bcbfc",
+      "createdAt": "2026-08-04T13:03:40.350Z",
+      "action": "login",
+      "actorId": 3,
+      "entityType": "sessions",
+      "entityId": 3,
+      "metadata": {
+        "mustChangePassword": false
+      }
+    },
+    {
+      "id": "7f8f5a66-f1ff-4b14-a909-78468815567c",
+      "createdAt": "2026-08-04T13:03:06.792Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "agustinabanegas26@gmail.com"
+      }
+    },
+    {
+      "id": "592db9c6-1f25-4e3c-97b9-92f12f18f254",
+      "createdAt": "2026-08-03T16:36:13.225Z",
+      "action": "login",
+      "actorId": 3,
+      "entityType": "sessions",
+      "entityId": 3,
+      "metadata": {
+        "mustChangePassword": false
+      }
+    },
+    {
+      "id": "5bd649d3-2716-4c95-8753-5d9299963f0c",
+      "createdAt": "2026-08-03T16:36:04.405Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "agustinabanegas26@gmail.com"
+      }
+    },
+    {
+      "id": "5df38d6e-4938-4a12-895c-70fae4f9b3ea",
+      "createdAt": "2026-08-03T16:36:00.197Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "agustinabanegas26@gmail.com"
+      }
+    },
+    {
+      "id": "b4ab0f28-f77e-4142-ad24-c8eeb0381bdd",
+      "createdAt": "2026-08-03T14:25:11.670Z",
+      "action": "login",
+      "actorId": 3,
+      "entityType": "sessions",
+      "entityId": 3,
+      "metadata": {
+        "mustChangePassword": false
+      }
+    },
+    {
+      "id": "4788ab7c-1431-4b27-8ab7-6458206930a6",
+      "createdAt": "2026-08-03T14:14:30.516Z",
+      "action": "login",
+      "actorId": 1,
+      "entityType": "sessions",
+      "entityId": 1,
+      "metadata": {
+        "mustChangePassword": false
+      }
+    },
+    {
+      "id": "7260bbda-4159-474c-85cf-0a7623cc25b8",
+      "createdAt": "2026-08-03T14:13:06.547Z",
+      "action": "login",
+      "actorId": 86,
+      "entityType": "sessions",
+      "entityId": 86,
+      "metadata": {
+        "mustChangePassword": true
+      }
+    },
+    {
+      "id": "2db69609-0b42-4077-bd55-2eae3e0eb0ae",
+      "createdAt": "2026-08-03T14:10:49.275Z",
+      "action": "login",
+      "actorId": 1,
+      "entityType": "sessions",
+      "entityId": 1,
+      "metadata": {
+        "mustChangePassword": false
+      }
+    },
+    {
+      "id": "3fb26e3e-36db-4bcc-aec8-216b9906f67e",
+      "createdAt": "2026-08-03T14:10:19.436Z",
+      "action": "login",
+      "actorId": 3,
+      "entityType": "sessions",
+      "entityId": 3,
+      "metadata": {
+        "mustChangePassword": false
+      }
+    },
+    {
+      "id": "bcfe7b36-686d-477d-928c-183f5092991e",
+      "createdAt": "2026-08-03T13:33:14.182Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "test@example.com"
+      }
+    },
+    {
+      "id": "16073317-db7f-48c2-b956-a3f54825351f",
+      "createdAt": "2026-07-16T16:43:33.845Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "gisela@gruponucleo.com.ar"
+      }
+    },
+    {
+      "id": "1ceca492-3f23-4d3f-9bba-e10fe8952edb",
+      "createdAt": "2026-07-15T15:07:17.321Z",
+      "action": "password_recovery_requested",
+      "actorId": 3,
+      "entityType": "sessions",
+      "entityId": 3,
+      "metadata": {
+        "email": "agustinabanegas26@gmail.com"
+      }
+    },
+    {
+      "id": "f797a82c-ee3d-4d0c-b698-ab89ef416bd9",
+      "createdAt": "2026-07-15T15:06:32.955Z",
+      "action": "login",
+      "actorId": 3,
+      "entityType": "sessions",
+      "entityId": 3,
+      "metadata": {
+        "mustChangePassword": false
+      }
+    },
+    {
+      "id": "97bef273-f2e4-450a-9e4c-a89ab5e39d39",
+      "createdAt": "2026-07-15T15:04:41.320Z",
+      "action": "password_recovery_requested",
+      "actorId": 3,
+      "entityType": "sessions",
+      "entityId": 3,
+      "metadata": {
+        "email": "agustinabanegas26@gmail.com"
+      }
+    },
+    {
+      "id": "4f5e2397-3ee0-4b5f-8dc1-6ce656fdee02",
+      "createdAt": "2026-07-15T15:03:43.251Z",
+      "action": "login",
+      "actorId": 3,
+      "entityType": "sessions",
+      "entityId": 3,
+      "metadata": {
+        "mustChangePassword": false
+      }
+    },
+    {
+      "id": "84a10a97-0172-4f28-b806-d52566da4242",
+      "createdAt": "2026-07-15T14:59:54.334Z",
+      "action": "login",
+      "actorId": 3,
+      "entityType": "sessions",
+      "entityId": 3,
+      "metadata": {
+        "mustChangePassword": false
+      }
+    },
+    {
+      "id": "42cfc75f-5cb5-44e2-8227-8772706c4efe",
+      "createdAt": "2026-07-15T14:37:59.817Z",
+      "action": "login",
+      "actorId": 3,
+      "entityType": "sessions",
+      "entityId": 3,
+      "metadata": {
+        "mustChangePassword": false
+      }
+    },
+    {
+      "id": "83952ec1-f688-4962-b7e3-be329d88a2c1",
+      "createdAt": "2026-07-15T14:37:21.980Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "juan.perez@gruponucleo.com.ar"
+      }
+    },
+    {
+      "id": "57ad2dab-84ed-4cea-8ea1-67157359fc8b",
+      "createdAt": "2026-07-15T14:37:05.144Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "agustinbanegas26@gmail.com"
+      }
+    },
+    {
+      "id": "da83e630-670d-4527-84fe-286671811dcd",
+      "createdAt": "2026-07-15T14:36:55.367Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "agustinbanegas26@gmail.com"
+      }
+    },
+    {
+      "id": "87fdd380-ee12-43ed-b316-67e73a66b260",
+      "createdAt": "2026-07-15T14:28:50.821Z",
+      "action": "login",
+      "actorId": 1,
+      "entityType": "sessions",
+      "entityId": 1,
+      "metadata": {
+        "mustChangePassword": false
+      }
+    },
+    {
+      "id": "109143fe-6fc6-43ff-8599-bca1163d4a3c",
+      "createdAt": "2026-07-15T14:27:31.220Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "sarawillerslhor08@gmail.com"
+      }
+    },
+    {
+      "id": "013de1ef-198d-482b-b119-4b85b46061f6",
+      "createdAt": "2026-07-15T14:27:13.485Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "sarawillerslhor08@gmail.com"
+      }
+    },
+    {
+      "id": "c39d9d86-e182-4d0e-ad3a-b675067267a2",
+      "createdAt": "2026-07-15T14:23:27.299Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "juan.perez@gruponucleo.com.ar"
+      }
+    },
+    {
+      "id": "532a7428-82a7-4725-9331-ec621a40cee5",
+      "createdAt": "2026-07-15T14:20:57.130Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "sarawillerslorh08@gmail.com"
+      }
+    },
+    {
+      "id": "a471fa49-c5c5-4840-a985-66d0d9d2efa2",
+      "createdAt": "2026-07-15T14:20:32.752Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "sarawillerslorh08@gmail.com"
+      }
+    },
+    {
+      "id": "ffb7ea52-4a3c-47d7-9792-f64cba8c5320",
+      "createdAt": "2026-07-15T14:20:15.286Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "juan.perez@gruponucleo.com.ar"
+      }
+    },
+    {
+      "id": "481c1442-8fd8-4ab3-8ca3-a18bad885b6b",
+      "createdAt": "2026-07-15T14:19:21.863Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "sarawillerslorh08@gmail.com"
+      }
+    },
+    {
+      "id": "53f874d3-2c1d-41fa-82cb-d4267842edda",
+      "createdAt": "2026-07-15T14:05:20.630Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "sarawillerslohr08@gmail.com"
+      }
+    },
+    {
+      "id": "9d0ead6a-293c-49b3-9455-6fee508f09bb",
+      "createdAt": "2026-07-15T14:05:15.881Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "sarawillerslohr08@gmail.com"
+      }
+    },
+    {
+      "id": "68d4ed7c-b6dc-46e5-a6dd-b776cf26f411",
+      "createdAt": "2026-07-15T14:05:03.522Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "sarawillerslohr08@gmail.com"
+      }
+    },
+    {
+      "id": "61a9e35a-c1ad-46cf-8050-1e013d304230",
+      "createdAt": "2026-07-15T14:04:57.176Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "sarawillerslohr08@gmail.com"
+      }
+    },
+    {
+      "id": "34c721eb-e61d-460c-a173-f3189bbca320",
+      "createdAt": "2026-07-15T14:04:52.671Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "sarawillerslohr08@gmail.com"
+      }
+    },
+    {
+      "id": "bce3747e-e75a-4530-b2d6-69bbdeb33927",
+      "createdAt": "2026-07-15T14:04:30.353Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "sarawillerslorh08@gmail.com"
+      }
+    },
+    {
+      "id": "76476fd2-55a4-43b4-9493-31208c20a9e7",
+      "createdAt": "2026-07-15T14:04:19.739Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "sarawillerslorh08@gmail.com"
+      }
+    },
+    {
+      "id": "4e02b51c-c3e3-4496-bf52-7c0e8173ae70",
+      "createdAt": "2026-07-15T14:02:38.930Z",
+      "action": "login",
+      "actorId": 3,
+      "entityType": "sessions",
+      "entityId": 3,
+      "metadata": {
+        "mustChangePassword": false
+      }
+    },
+    {
+      "id": "4f185334-1764-42ab-8c86-d9cb3a2bd9d3",
+      "createdAt": "2026-07-15T13:38:40.882Z",
+      "action": "login",
+      "actorId": 3,
+      "entityType": "sessions",
+      "entityId": 3,
+      "metadata": {
+        "mustChangePassword": false
+      }
+    },
+    {
+      "id": "757fc265-79ba-4b3c-981e-1e4a6d152522",
+      "createdAt": "2026-07-14T16:43:51.312Z",
+      "action": "login",
+      "actorId": 3,
+      "entityType": "sessions",
+      "entityId": 3,
+      "metadata": {
+        "mustChangePassword": false
+      }
+    },
+    {
+      "id": "daccbe57-6037-4431-8e42-10bab7b188fa",
+      "createdAt": "2026-07-14T16:42:52.482Z",
+      "action": "login",
+      "actorId": 1,
+      "entityType": "sessions",
+      "entityId": 1,
+      "metadata": {
+        "mustChangePassword": false
+      }
+    },
+    {
+      "id": "f8d096ff-8b0a-4449-8b98-bb4fa984c737",
+      "createdAt": "2026-07-14T16:42:41.362Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "gisela@gruponucleo.com.ar"
+      }
+    },
+    {
+      "id": "al_1",
+      "createdAt": "2026-07-14T15:56:12.228Z",
+      "action": "login",
+      "actorId": 3,
+      "entityType": "sessions",
+      "entityId": 3,
+      "metadata": {
+        "mustChangePassword": false
+      }
+    }
+  ]
+}

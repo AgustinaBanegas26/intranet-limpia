@@ -1,0 +1,65 @@
+{
+  "version": 159,
+  "items": [
+    {
+      "email": "juan.perez@gruponucleo.com.ar",
+      "failedCount": 3,
+      "lockedUntil": null,
+      "updatedAt": "2026-07-15T14:37:21.978Z"
+    },
+    {
+      "email": "sara@gruponucleo.com.ar",
+      "failedCount": 2,
+      "lockedUntil": null,
+      "updatedAt": "2026-06-30T13:15:32.378Z"
+    },
+    {
+      "email": "agustina@gruponucleo.com.ar",
+      "failedCount": 0,
+      "lockedUntil": null,
+      "updatedAt": "2026-06-30T16:35:06.267Z"
+    },
+    {
+      "email": "gisela@gruponucleo.com.ar",
+      "failedCount": 1,
+      "lockedUntil": null,
+      "updatedAt": "2026-07-16T16:43:33.555Z"
+    },
+    {
+      "email": "sarawillerslorh08@gmail.com",
+      "failedCount": 5,
+      "lockedUntil": "2026-07-15T14:35:57.126Z",
+      "updatedAt": "2026-07-15T14:20:57.127Z"
+    },
+    {
+      "email": "sarawillerslohr08@gmail.com",
+      "failedCount": 0,
+      "lockedUntil": null,
+      "updatedAt": "2026-08-05T15:21:01.338Z"
+    },
+    {
+      "email": "sarawillerslhor08@gmail.com",
+      "failedCount": 2,
+      "lockedUntil": null,
+      "updatedAt": "2026-07-15T14:27:31.217Z"
+    },
+    {
+      "email": "agustinbanegas26@gmail.com",
+      "failedCount": 2,
+      "lockedUntil": null,
+      "updatedAt": "2026-07-15T14:37:05.140Z"
+    },
+    {
+      "email": "test@example.com",
+      "failedCount": 1,
+      "lockedUntil": null,
+      "updatedAt": "2026-08-03T13:33:14.173Z"
+    },
+    {
+      "email": "agustinabanegas26@gmail.com",
+      "failedCount": 0,
+      "lockedUntil": null,
+      "updatedAt": "2026-08-05T14:05:55.847Z"
+    }
+  ]
+}

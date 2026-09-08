@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Novedades — Mockup Premium 2026</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #111315;
+      --card: #1B1D22;
+      --red: #E53935;
+      --text: #ffffff;
+      --muted: rgba(255, 255, 255, 0.55);
+      --border: rgba(255, 255, 255, 0.07);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+    .page-wrap {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 32px 20px 48px;
+    }
+    /* ── Module shell (glass) ── */
+    .news-module {
+      padding: 22px 24px;
+      border-radius: 20px;
+      background: linear-gradient(145deg, rgba(27,29,34,.92), rgba(17,19,21,.88));
+      border: 1px solid rgba(255,255,255,.06);
+      box-shadow: 0 1px 0 rgba(255,255,255,.04) inset, 0 24px 48px rgba(0,0,0,.28);
+      backdrop-filter: blur(12px);
+    }
+    .news-module__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 18px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .news-module__icon {
+      width: 42px; height: 42px;
+      border-radius: 14px;
+      display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--red), #b71c1c);
+      box-shadow: 0 8px 20px rgba(229,57,53,.28);
+      color: #fff;
+      font-size: 1.1rem;
+    }
+    .news-module__eyebrow {
+      margin: 0;
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .news-module__title {
+      margin: 2px 0 0;
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -.02em;
+    }
+    .badge-new {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: .72rem;
+      font-weight: 700;
+      background: rgba(229,57,53,.18);
+      border: 1px solid rgba(229,57,53,.35);
+      color: #fff;
+    }
+    .btn-ver-todas {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 14px;
+      border-radius: 12px;
+      font-size: .8125rem;
+      font-weight: 700;
+      color: #fff;
+      text-decoration: none;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      transition: all .2s ease;
+    }
+    .btn-ver-todas:hover {
+      background: rgba(229,57,53,.12);
+      border-color: rgba(229,57,53,.35);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+    /* ── Feed card ── */
+    .feed-card {
+      position: relative;
+      padding: 18px 20px 16px;
+      border-radius: 18px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 0 rgba(255,255,255,.04) inset, 0 12px 32px rgba(0,0,0,.22);
+      transition: transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s ease;
+      overflow: hidden;
+    }
+    .feed-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 20px 40px rgba(0,0,0,.32);
+      border-color: rgba(255,255,255,.12);
+    }
+    .feed-card--important {
+      background: linear-gradient(135deg, rgba(229,57,53,.06) 0%, var(--card) 38%);
+    }
+    .feed-card__accent {
+      position: absolute;
+      left: 0; top: 14px; bottom: 14px;
+      width: 3px;
+      border-radius: 0 4px 4px 0;
+      background: linear-gradient(180deg, var(--red), #ff6f60);
+      box-shadow: 0 0 12px rgba(229,57,53,.45);
+    }
+    .avatar {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--red), #7f1d1d);
+      border: 2px solid rgba(255,255,255,.12);
+      display: grid; place-items: center;
+      font-size: .78rem; font-weight: 800;
+      flex-shrink: 0;
+    }
+    .author-name { font-size: .9375rem; font-weight: 800; letter-spacing: -.01em; }
+    .author-role { font-size: .78rem; font-weight: 600; color: rgba(255,255,255,.72); }
+    .author-location { font-size: .74rem; color: rgba(255,255,255,.48); }
+    .author-time { font-size: .72rem; font-weight: 600; color: rgba(255,255,255,.38); margin-top: 3px; }
+    .badge-important {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: .65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .02em;
+      color: #ff8a80;
+      background: rgba(229,57,53,.14);
+      border: 1px solid rgba(229,57,53,.28);
+    }
+    .menu-btn {
+      width: 34px; height: 34px;
+      border-radius: 10px;
+      border: none;
+      background: transparent;
+      color: rgba(255,255,255,.45);
+      display: grid; place-items: center;
+      cursor: pointer;
+    }
+    .menu-btn:hover { background: rgba(255,255,255,.06); color: #fff; }
+    .post-title {
+      font-size: 1.0625rem;
+      font-weight: 800;
+      letter-spacing: -.02em;
+      line-height: 1.35;
+      margin: 0 0 8px;
+    }
+    .post-body {
+      font-size: .875rem;
+      line-height: 1.65;
+      color: var(--muted);
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin: 0;
+    }
+    .read-more {
+      margin-top: 6px;
+      padding: 0;
+      border: none;
+      background: none;
+      font-size: .8125rem;
+      font-weight: 700;
+      color: var(--red);
+      cursor: pointer;
+    }
+    .post-media {
+      margin-top: 14px;
+      border-radius: 14px;
+      overflow: hidden;
+      max-height: 220px;
+    }
+    .post-media img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+      transition: transform .35s ease;
+    }
+    .feed-card:hover .post-media img { transform: scale(1.02); }
+    .reactions-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 12px;
+      padding-top: 10px;
+      font-size: .75rem;
+      font-weight: 600;
+      color: rgba(255,255,255,.45);
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+    .reactions-dot {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--red);
+      display: grid; place-items: center;
+      font-size: .55rem; color: #fff;
+    }
+    .feed-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 10px;
+      background: transparent;
+      font-size: .78rem;
+      font-weight: 600;
+      color: rgba(255,255,255,.52);
+      cursor: pointer;
+      transition: all .15s ease;
+    }
+    .action-btn:hover { background: rgba(255,255,255,.05); color: rgba(255,255,255,.88); }
+    .action-btn.active { color: var(--red); }
+    .btn-primary-post {
+      margin-left: auto;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 12px;
+      font-size: .8125rem;
+      font-weight: 800;
+      color: #fff;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--red), #c62828);
+      box-shadow: 0 8px 20px rgba(229,57,53,.32);
+      transition: all .2s ease;
+    }
+    .btn-primary-post:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 28px rgba(229,57,53,.4);
+    }
+    @media (max-width: 576px) {
+      .news-module__header { flex-direction: column; align-items: flex-start; }
+      .btn-ver-todas { width: 100%; justify-content: center; }
+      .feed-footer { flex-direction: column; align-items: stretch; }
+      .btn-primary-post { margin-left: 0; width: 100%; text-align: center; }
+      .post-media img { height: 180px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrap">
+  <!-- ═══ MODULE HEADER ═══ -->
+  <section class="news-module">
+    <header class="news-module__header">
+      <div class="d-flex align-items-center gap-3">
+        <div class="news-module__icon"><i class="bi bi-newspaper"></i></div>
+        <div>
+          <p class="news-module__eyebrow">Comunicación interna</p>
+          <div class="d-flex align-items-center gap-2 flex-wrap">
+            <h2 class="news-module__title mb-0">Novedades</h2>
+            <span class="badge-new"><i class="bi bi-stars"></i> 3 nuevas</span>
+          </div>
+        </div>
+      </div>
+      <a href="#" class="btn-ver-todas">Ver todas <i class="bi bi-arrow-right"></i></a>
+    </header>
+
+    <!-- ═══ FEED CARD (importante) ═══ -->
+    <article class="feed-card feed-card--important mb-3">
+      <span class="feed-card__accent" aria-hidden="true"></span>
+
+      <!-- Card header -->
+      <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+        <div class="d-flex gap-3">
+          <div class="avatar">GG</div>
+          <div>
+            <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
+              <span class="author-name">Gisela Gonzalez</span>
+              <span class="badge-important"><i class="bi bi-megaphone-fill"></i> Importante</span>
+            </div>
+            <div class="author-role">Dirección</div>
+            <div class="author-location">Mar del Plata</div>
+            <div class="author-time">Hace 24 min</div>
+          </div>
+        </div>
+        <button class="menu-btn" aria-label="Opciones"><i class="bi bi-three-dots"></i></button>
+      </div>
+
+      <!-- Content -->
+      <h3 class="post-title">Nueva política de beneficios 2026</h3>
+      <p class="post-body">
+        A partir del próximo mes entran en vigencia los nuevos beneficios para todo el personal de Grupo Núcleo.
+        Incluye mejoras en guardería, días de estudio y un programa de bienestar ampliado. Revisá el documento
+        adjunto y cualquier consulta canalizala con tu referente de RRHH.
+      </p>
+      <button class="read-more">Ver más</button>
+
+      <!-- Media (optional) -->
+      <div class="post-media">
+        <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80" alt="Equipo en reunión" />
+      </div>
+
+      <!-- Reactions summary -->
+      <div class="reactions-bar">
+        <span class="reactions-dot"><i class="bi bi-heart-fill"></i></span>
+        <span>12 reacciones</span>
+      </div>
+
+      <!-- Footer actions -->
+      <footer class="feed-footer">
+        <div class="d-flex gap-1 flex-wrap">
+          <button class="action-btn active"><i class="bi bi-heart-fill"></i> Me gusta</button>
+          <button class="action-btn"><i class="bi bi-chat"></i> Comentarios</button>
+          <button class="action-btn"><i class="bi bi-share"></i> Compartir</button>
+        </div>
+        <button class="btn-primary-post">Ver publicación</button>
+      </footer>
+    </article>
+
+    <!-- ═══ FEED CARD (sin imagen) ═══ -->
+    <article class="feed-card">
+      <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+        <div class="d-flex gap-3">
+          <div class="avatar">MR</div>
+          <div>
+            <span class="author-name d-block mb-1">Martín Ruiz</span>
+            <div class="author-role">Recursos Humanos</div>
+            <div class="author-location">Buenos Aires</div>
+            <div class="author-time">Hace 2 h</div>
+          </div>
+        </div>
+        <button class="menu-btn" aria-label="Opciones"><i class="bi bi-three-dots"></i></button>
+      </div>
+      <h3 class="post-title">Recordatorio: cierre de evaluaciones</h3>
+      <p class="post-body">
+        Les recordamos que el plazo para completar las evaluaciones de desempeño vence el viernes.
+        Accedan desde el módulo de Solicitudes para finalizar el proceso.
+      </p>
+      <div class="reactions-bar">
+        <span class="reactions-dot"><i class="bi bi-heart-fill"></i></span>
+        <span>4 reacciones</span>
+      </div>
+      <footer class="feed-footer">
+        <div class="d-flex gap-1 flex-wrap">
+          <button class="action-btn"><i class="bi bi-heart"></i> Me gusta</button>
+          <button class="action-btn"><i class="bi bi-chat"></i> Comentarios</button>
+          <button class="action-btn"><i class="bi bi-share"></i> Compartir</button>
+        </div>
+        <button class="btn-primary-post">Ver publicación</button>
+      </footer>
+    </article>
+  </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

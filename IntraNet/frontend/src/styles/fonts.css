@@ -1,0 +1,34 @@
+/* ─── Tipografía del sistema — Grupo Núcleo Intranet ─────────────────────────
+   Se usa el stack de fuentes del sistema operativo para máxima legibilidad y
+   rendimiento. En el futuro reemplazar con la fuente corporativa oficial.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --font-sans:
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    'Inter',
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
+
+  --font-mono:
+    'SF Mono',
+    'Cascadia Code',
+    'Fira Code',
+    ui-monospace,
+    'Courier New',
+    monospace;
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--font-mono);
+}
