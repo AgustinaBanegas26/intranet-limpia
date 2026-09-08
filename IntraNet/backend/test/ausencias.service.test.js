@@ -1,5 +1,6 @@
 const test = require('node:test')
 const assert = require('node:assert/strict')
+require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') })
 
 const {
   assertValidTimeRange,

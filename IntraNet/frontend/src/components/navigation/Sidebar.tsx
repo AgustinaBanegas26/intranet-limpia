@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router'
+import { Link, useLocation } from "react-router";
 import {
   Home,
   Users,
@@ -17,44 +17,44 @@ import {
   Image,
   BookOpen,
   Cpu,
-} from 'lucide-react'
-import { useAuth, getInitials } from '../../context/AuthContext'
-import { ThemeToggle } from '../ThemeToggle'
-import { InstallAppButton } from '../InstallAppButton'
+} from "lucide-react";
+import { useAuth, getInitials } from "../../context/AuthContext";
+import { ThemeToggle } from "../ThemeToggle";
+import { InstallAppButton } from "../InstallAppButton";
 
 const adminNav = [
-  { icon: Home, label: 'Inicio', path: '/' },
-  { icon: Users, label: 'Empleados', path: '/empleados' },
-  { icon: Bell, label: 'Novedades', path: '/novedades' },
-  { icon: Calendar, label: 'Eventos', path: '/eventos' },
-  { icon: Calendar, label: 'Calendario', path: '/calendario' },
-  { icon: FileText, label: 'Solicitudes', path: '/solicitudes' },
-  { icon: Cpu, label: 'Insumos Técnicos', path: '/insumos-tecnicos' },
-  { icon: UserX, label: 'Ausencias y Llegadas Tardes', path: '/ausencias' },
-  { icon: Gift, label: 'Beneficios', path: '/beneficios' },
-  { icon: FileCheck, label: 'Políticas', path: '/politicas' },
-  { icon: BookOpen, label: 'Manuales', path: '/manuales' },
-  { icon: MessageSquare, label: 'Sugerencias', path: '/sugerencias' },
-]
+  { icon: Home, label: "Inicio", path: "/" },
+  { icon: Users, label: "Empleados", path: "/empleados" },
+  { icon: Bell, label: "Novedades", path: "/novedades" },
+  { icon: Calendar, label: "Eventos", path: "/eventos" },
+  { icon: Calendar, label: "Calendario", path: "/calendario" },
+  { icon: FileText, label: "Solicitudes", path: "/solicitudes" },
+  { icon: Cpu, label: "Insumos Técnicos", path: "/insumos-tecnicos" },
+  { icon: UserX, label: "Ausencias y Llegadas Tardes", path: "/ausencias" },
+  { icon: Gift, label: "Beneficios", path: "/beneficios" },
+  { icon: FileCheck, label: "Políticas", path: "/politicas" },
+  { icon: BookOpen, label: "Manuales", path: "/manuales" },
+  { icon: MessageSquare, label: "Sugerencias", path: "/sugerencias" },
+];
 
 const employeeMainNav = [
-  { icon: Home, label: 'Inicio', path: '/' },
-  { icon: Bell, label: 'Novedades', path: '/novedades' },
-  { icon: Calendar, label: 'Eventos', path: '/eventos' },
-  { icon: Image, label: 'Beneficios', path: '/beneficios' },
-]
+  { icon: Home, label: "Inicio", path: "/" },
+  { icon: Bell, label: "Novedades", path: "/novedades" },
+  { icon: Calendar, label: "Eventos", path: "/eventos" },
+  { icon: Image, label: "Beneficios", path: "/beneficios" },
+];
 
 const employeeMoreNav = [
-  { icon: Palmtree, label: 'Vacaciones', path: '/vacaciones' },
-  { icon: Wallet, label: 'Adelantos', path: '/adelantos' },
-  { icon: Car, label: 'Auto y hotel', path: '/solicitar' },
-  { icon: Cpu, label: 'Insumos Técnicos', path: '/insumos-tecnicos' },
-  { icon: Wallet, label: 'On Balance', path: '/on-balanceada' },
-  { icon: BookOpen, label: 'Manuales', path: '/manuales' },
-  { icon: FileCheck, label: 'Políticas', path: '/politicas' },
-  { icon: MessageSquare, label: 'Sugerencias', path: '/sugerencias' },
-  { icon: UserCircle, label: 'Mi perfil', path: '/perfil' },
-]
+  { icon: Palmtree, label: "Vacaciones", path: "/vacaciones" },
+  { icon: Wallet, label: "Adelantos", path: "/adelantos" },
+  { icon: Car, label: "Auto y hotel", path: "/solicitar" },
+  { icon: Cpu, label: "Insumos Técnicos", path: "/insumos-tecnicos" },
+  { icon: Wallet, label: "On Balance", path: "/on-balanceada" },
+  { icon: BookOpen, label: "Manuales", path: "/manuales" },
+  { icon: FileCheck, label: "Políticas", path: "/politicas" },
+  { icon: MessageSquare, label: "Sugerencias", path: "/sugerencias" },
+  { icon: UserCircle, label: "Mi perfil", path: "/perfil" },
+];
 
 function NavItem({
   icon: Icon,
@@ -62,21 +62,21 @@ function NavItem({
   path,
   badge,
 }: {
-  icon: typeof Home
-  label: string
-  path: string
-  badge?: number
+  icon: typeof Home;
+  label: string;
+  path: string;
+  badge?: number;
 }) {
-  const location = useLocation()
-  const isActive = location.pathname === path
+  const location = useLocation();
+  const isActive = location.pathname === path;
 
   return (
     <Link
       to={path}
       className={`flex items-center gap-3 px-4 py-3 rounded-2xl mb-1 transition-all ${
         isActive
-          ? 'bg-foreground text-background shadow-sm'
-          : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+          ? "bg-foreground text-background shadow-sm"
+          : "text-muted-foreground hover:bg-muted hover:text-foreground"
       }`}
     >
       <Icon className="w-5 h-5 shrink-0" />
@@ -84,53 +84,57 @@ function NavItem({
       {badge != null && badge > 0 && (
         <span
           className={`text-xs font-bold min-w-[1.25rem] h-5 px-1.5 rounded-full flex items-center justify-center ${
-            isActive ? 'bg-primary text-primary-foreground' : 'bg-foreground text-background'
+            isActive
+              ? "bg-primary text-primary-foreground"
+              : "bg-foreground text-background"
           }`}
         >
           {badge}
         </span>
       )}
     </Link>
-  )
+  );
 }
 
 function AdminSidebar() {
-  const location = useLocation()
-  const { user, isAdmin, onLogout } = useAuth()
-  const initials = getInitials(user.name)
-  const roleLabel = isAdmin ? 'Administradora' : 'Empleado'
+  const location = useLocation();
+  const { user, isAdmin, onLogout } = useAuth();
+  const initials = getInitials(user.name);
+  const roleLabel = isAdmin ? "Administradora" : "Empleado";
 
   return (
     <aside className="w-60 bg-sidebar h-screen flex flex-col border-r border-sidebar-border fixed left-0 top-0 z-20 transition-colors">
       <div className="p-6">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center shrink-0">
-            <span className="font-bold text-primary-foreground text-lg">GN</span>
+            <span aria-hidden="true" />
           </div>
           <div className="min-w-0">
-            <h1 className="text-lg font-bold text-sidebar-foreground truncate">Panel Admin</h1>
-            <p className="text-xs text-muted-foreground">Grupo Núcleo</p>
+            <h1 className="text-lg font-bold text-sidebar-foreground truncate">
+              Panel Admin
+            </h1>
+            <p className="text-xs text-muted-foreground">Portal interno</p>
           </div>
         </div>
       </div>
 
       <nav className="flex-1 px-3 overflow-y-auto">
         {adminNav.map((item) => {
-          const isActive = location.pathname === item.path
+          const isActive = location.pathname === item.path;
           return (
             <Link
               key={item.path}
               to={item.path}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-full mb-1 transition-all ${
                 isActive
-                  ? 'bg-sidebar-primary text-sidebar-primary-foreground shadow-sm'
-                  : 'text-sidebar-accent-foreground hover:bg-sidebar-accent'
+                  ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm"
+                  : "text-sidebar-accent-foreground hover:bg-sidebar-accent"
               }`}
             >
               <item.icon className="w-5 h-5 shrink-0" />
               <span className="text-sm font-medium">{item.label}</span>
             </Link>
-          )
+          );
         })}
 
         <Link
@@ -158,13 +162,13 @@ function AdminSidebar() {
         </button>
       </div>
     </aside>
-  )
+  );
 }
 
 function EmployeeSidebar() {
-  const { user, isRRHH, onLogout } = useAuth()
-  const initials = getInitials(user.name)
-  const handle = `@${user.name.split(/\s+/)[0]?.toLowerCase() || 'empleado'}.gn`
+  const { user, isRRHH, onLogout } = useAuth();
+  const initials = getInitials(user.name);
+  const handle = `@${user.name.split(/\s+/)[0]?.toLowerCase() || "empleado"}`;
 
   return (
     <aside className="w-[240px] shrink-0 flex flex-col">
@@ -176,7 +180,9 @@ function EmployeeSidebar() {
           </div>
         </div>
         <div className="mt-1">
-          <p className="font-bold text-foreground text-sm leading-tight">{user.name}</p>
+          <p className="font-bold text-foreground text-sm leading-tight">
+            {user.name}
+          </p>
           <p className="text-xs text-muted-foreground mt-0.5">{handle}</p>
         </div>
       </div>
@@ -210,7 +216,9 @@ function EmployeeSidebar() {
       </nav>
 
       <div className="mt-4 bg-card rounded-3xl p-4 border border-dashed border-border text-center">
-        <p className="text-xs font-medium text-foreground mb-1">Grupo Núcleo</p>
+        <p className="text-xs font-medium text-foreground mb-1">
+          Portal interno
+        </p>
         <p className="text-[10px] text-muted-foreground leading-snug">
           Tu red interna — novedades, equipo y trámites en un solo lugar.
         </p>
@@ -218,7 +226,7 @@ function EmployeeSidebar() {
           <InstallAppButton variant="secondary" className="w-full" />
         </div>
         <div className="flex justify-center -space-x-2 mt-3">
-          {['MR', 'JL', 'AC'].map((i) => (
+          {["MR", "JL", "AC"].map((i) => (
             <div
               key={i}
               className="w-7 h-7 rounded-full avatar-gradient text-[10px] font-medium flex items-center justify-center border-2 border-card"
@@ -229,10 +237,10 @@ function EmployeeSidebar() {
         </div>
       </div>
     </aside>
-  )
+  );
 }
 
 export function Sidebar() {
-  const { isAdmin } = useAuth()
-  return isAdmin ? <AdminSidebar /> : <EmployeeSidebar />
+  const { isAdmin } = useAuth();
+  return isAdmin ? <AdminSidebar /> : <EmployeeSidebar />;
 }

@@ -1,22 +1,24 @@
-import { Link } from 'react-router'
-import { Megaphone } from 'lucide-react'
-import { getInitials } from '../../context/AuthContext'
-import type { NovedadDTO } from '../../services/news'
-import { formatPublishDateShort } from '../../utils/formatPublishDate'
+import { Link } from "react-router";
+import { Megaphone } from "lucide-react";
+import { getInitials } from "../../context/AuthContext";
+import type { NovedadDTO } from "../../services/news";
+import { formatPublishDateShort } from "../../utils/formatPublishDate";
 
 type Props = {
-  post: NovedadDTO
-}
+  post: NovedadDTO;
+};
 
 function summary(text: string, max = 120) {
-  const clean = text.replace(/\s+/g, ' ').trim()
-  if (clean.length <= max) return clean
-  return `${clean.slice(0, max).trim()}…`
+  const clean = text.replace(/\s+/g, " ").trim();
+  if (clean.length <= max) return clean;
+  return `${clean.slice(0, max).trim()}…`;
 }
 
 export function NewsPostCompact({ post }: Props) {
-  const authorName = post.autor?.trim() || 'Administración'
-  const meta = [post.autorSector, post.autorSucursal].filter(Boolean).join(' · ')
+  const authorName = post.autor?.trim() || "Administración";
+  const meta = [post.autorSector, post.autorSucursal]
+    .filter(Boolean)
+    .join(" · ");
 
   return (
     <article className="news-compact-card">
@@ -30,7 +32,7 @@ export function NewsPostCompact({ post }: Props) {
         </div>
         <div className="news-compact-meta">
           <strong>{authorName}</strong>
-          <span>{meta || 'Grupo Núcleo'}</span>
+          <span>{meta || "Organización"}</span>
           {post.fecha && <time>{formatPublishDateShort(post.fecha)}</time>}
         </div>
         {post.importante && (
@@ -48,5 +50,5 @@ export function NewsPostCompact({ post }: Props) {
         Ver publicación →
       </Link>
     </article>
-  )
+  );
 }

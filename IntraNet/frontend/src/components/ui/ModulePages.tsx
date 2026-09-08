@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react'
-import type { LucideIcon } from 'lucide-react'
-import { FileWarning, UserCircle, AlertCircle } from 'lucide-react'
-import { motion } from 'framer-motion'
-import { useAuth } from '../../context/AuthContext'
-import { getProfile, type Profile } from '../../services/api'
-import { EmptyState, PageHero, PremiumCard } from './ProductUI'
+import { useEffect, useState } from "react";
+import type { LucideIcon } from "lucide-react";
+import { FileWarning, UserCircle, AlertCircle } from "lucide-react";
+import { motion } from "framer-motion";
+import { useAuth } from "../../context/AuthContext";
+import { getProfile, type Profile } from "../../services/api";
+import { EmptyState, PageHero, PremiumCard } from "./ProductUI";
 
 export function PendingModulePage({
   eyebrow,
@@ -14,30 +14,30 @@ export function PendingModulePage({
   reason,
   icon: Icon = FileWarning,
 }: {
-  eyebrow: string
-  title: string
-  description: string
-  endpoint?: string
-  reason: string
-  icon?: LucideIcon
+  eyebrow: string;
+  title: string;
+  description: string;
+  endpoint?: string;
+  reason: string;
+  icon?: LucideIcon;
 }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      style={{ display: 'grid', gap: 20 }}
+      style={{ display: "grid", gap: 20 }}
     >
       <PageHero eyebrow={eyebrow} title={title} description={description} />
 
       <section className="card">
         <div
           style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            textAlign: 'center',
-            padding: '32px 16px',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            textAlign: "center",
+            padding: "32px 16px",
             gap: 16,
           }}
         >
@@ -46,22 +46,22 @@ export function PendingModulePage({
               width: 64,
               height: 64,
               borderRadius: 20,
-              background: 'var(--warning-bg)',
-              color: 'var(--warning)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              background: "var(--warning-bg)",
+              color: "var(--warning)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
             <Icon size={28} />
           </div>
 
-          <div style={{ display: 'grid', gap: 8, maxWidth: 420 }}>
+          <div style={{ display: "grid", gap: 8, maxWidth: 420 }}>
             <p
               style={{
-                fontSize: '0.9375rem',
+                fontSize: "0.9375rem",
                 fontWeight: 700,
-                color: 'var(--foreground)',
+                color: "var(--foreground)",
                 margin: 0,
               }}
             >
@@ -69,8 +69,8 @@ export function PendingModulePage({
             </p>
             <p
               style={{
-                fontSize: '0.875rem',
-                color: 'var(--muted-foreground)',
+                fontSize: "0.875rem",
+                color: "var(--muted-foreground)",
                 lineHeight: 1.6,
                 margin: 0,
               }}
@@ -82,21 +82,24 @@ export function PendingModulePage({
           {endpoint && (
             <div
               style={{
-                display: 'flex',
-                alignItems: 'center',
+                display: "flex",
+                alignItems: "center",
                 gap: 8,
-                padding: '8px 16px',
+                padding: "8px 16px",
                 borderRadius: 999,
-                background: 'var(--muted)',
-                border: '1px solid var(--border-solid)',
+                background: "var(--muted)",
+                border: "1px solid var(--border-solid)",
               }}
             >
-              <AlertCircle size={13} style={{ color: 'var(--warning)', flexShrink: 0 }} />
+              <AlertCircle
+                size={13}
+                style={{ color: "var(--warning)", flexShrink: 0 }}
+              />
               <code
                 style={{
-                  fontFamily: 'monospace',
-                  fontSize: '0.78rem',
-                  color: 'var(--muted-foreground)',
+                  fontFamily: "monospace",
+                  fontSize: "0.78rem",
+                  color: "var(--muted-foreground)",
                 }}
               >
                 {endpoint}
@@ -106,22 +109,30 @@ export function PendingModulePage({
         </div>
       </section>
     </motion.div>
-  )
+  );
 }
 
 export function ProfileModulePage() {
-  const { token, user } = useAuth()
-  const [profile, setProfile] = useState<Profile | null>(null)
-  const [loading, setLoading] = useState(true)
+  const { token, user } = useAuth();
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let active = true
+    let active = true;
     getProfile(token)
-      .then((data) => { if (active) setProfile(data) })
-      .catch(() => { if (active) setProfile(null) })
-      .finally(() => { if (active) setLoading(false) })
-    return () => { active = false }
-  }, [token])
+      .then((data) => {
+        if (active) setProfile(data);
+      })
+      .catch(() => {
+        if (active) setProfile(null);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, [token]);
 
   return (
     <motion.div
@@ -132,22 +143,35 @@ export function ProfileModulePage() {
       <PageHero
         eyebrow="Perfil"
         title={user.name}
-        description="Tu perfil y datos personales en Grupo Núcleo."
+        description="Tu perfil y datos personales en la organización."
       />
 
       <PremiumCard title="Datos personales" eyebrow="Perfil" icon={UserCircle}>
         {loading ? (
-          <EmptyState title="Cargando perfil..." description="Consultando tu información." />
+          <EmptyState
+            title="Cargando perfil..."
+            description="Consultando tu información."
+          />
         ) : !profile ? (
-          <EmptyState title="Sin datos" description="No se pudo cargar tu perfil." endpoint="GET /profile" />
+          <EmptyState
+            title="Sin datos"
+            description="No se pudo cargar tu perfil."
+            endpoint="GET /profile"
+          />
         ) : (
-          <div style={{ display: 'grid', gap: 8 }}>
-            <p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', margin: 0 }}>
-              {profile.emailEmpresa || user.email || 'Sin email'}
+          <div style={{ display: "grid", gap: 8 }}>
+            <p
+              style={{
+                fontSize: "0.875rem",
+                color: "var(--muted-foreground)",
+                margin: 0,
+              }}
+            >
+              {profile.emailEmpresa || user.email || "Sin email"}
             </p>
           </div>
         )}
       </PremiumCard>
     </motion.div>
-  )
+  );
 }

@@ -1,15 +1,15 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { ChevronLeft, ChevronRight, Trophy } from 'lucide-react'
-import useEmblaCarousel from 'embla-carousel-react'
-import type { EmblaCarouselType } from 'embla-carousel'
-import type { AniversarioPersona } from '../../services/celebraciones'
-import { BirthdayAvatar } from './BirthdayAvatar'
+import { useCallback, useEffect, useRef, useState } from "react";
+import { ChevronLeft, ChevronRight, Trophy } from "lucide-react";
+import useEmblaCarousel from "embla-carousel-react";
+import type { EmblaCarouselType } from "embla-carousel";
+import type { AniversarioPersona } from "../../services/celebraciones";
+import { BirthdayAvatar } from "./BirthdayAvatar";
 
 function formatDay(date?: string) {
-  if (!date) return 'Sin fecha'
-  const parsed = new Date(date)
-  if (Number.isNaN(parsed.getTime())) return date
-  return parsed.toLocaleDateString('es-AR', { day: '2-digit', month: 'short' })
+  if (!date) return "Sin fecha";
+  const parsed = new Date(date);
+  if (Number.isNaN(parsed.getTime())) return date;
+  return parsed.toLocaleDateString("es-AR", { day: "2-digit", month: "short" });
 }
 
 export function AnniversaryCard({ person }: { person: AniversarioPersona }) {
@@ -28,77 +28,93 @@ export function AnniversaryCard({ person }: { person: AniversarioPersona }) {
         </div>
       </div>
       <div className="anniversary-card__body">
-        <h3>{person.nombreCompleto} cumple {person.anios} años en la empresa</h3>
-        <p>{person.area || 'Grupo Nucleo'}{person.sucursal ? ` · ${person.sucursal}` : ''} · {formatDay(person.fecha)}</p>
+        <h3>
+          {person.nombreCompleto} cumple {person.anios} años en la empresa
+        </h3>
+        <p>
+          {person.area || "Organización"}
+          {person.sucursal ? ` · ${person.sucursal}` : ""} ·{" "}
+          {formatDay(person.fecha)}
+        </p>
       </div>
     </article>
-  )
+  );
 }
 
 interface AnniversaryCarouselProps {
-  people: AniversarioPersona[]
+  people: AniversarioPersona[];
 }
 
 export function AnniversaryCarousel({ people }: AnniversaryCarouselProps) {
-  const autoplayPaused = useRef(false)
-  const [selectedIndex, setSelectedIndex] = useState(0)
-  const [scrollSnaps, setScrollSnaps] = useState<number[]>([])
-  const [prevEnabled, setPrevEnabled] = useState(false)
-  const [nextEnabled, setNextEnabled] = useState(false)
+  const autoplayPaused = useRef(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
+  const [prevEnabled, setPrevEnabled] = useState(false);
+  const [nextEnabled, setNextEnabled] = useState(false);
 
-  const loop = people.length > 1
+  const loop = people.length > 1;
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
-    align: 'start',
+    align: "start",
     loop,
     slidesToScroll: 1,
     duration: 35,
     dragFree: false,
-    containScroll: 'trimSnaps',
-  })
+    containScroll: "trimSnaps",
+  });
 
   const syncCarousel = useCallback((api: EmblaCarouselType) => {
-    setSelectedIndex(api.selectedScrollSnap())
-    setScrollSnaps(api.scrollSnapList())
-    setPrevEnabled(api.canScrollPrev())
-    setNextEnabled(api.canScrollNext())
-  }, [])
+    setSelectedIndex(api.selectedScrollSnap());
+    setScrollSnaps(api.scrollSnapList());
+    setPrevEnabled(api.canScrollPrev());
+    setNextEnabled(api.canScrollNext());
+  }, []);
 
   useEffect(() => {
-    if (!emblaApi) return
-    syncCarousel(emblaApi)
-    emblaApi.on('select', syncCarousel)
-    emblaApi.on('reInit', syncCarousel)
+    if (!emblaApi) return;
+    syncCarousel(emblaApi);
+    emblaApi.on("select", syncCarousel);
+    emblaApi.on("reInit", syncCarousel);
     return () => {
-      emblaApi.off('select', syncCarousel)
-      emblaApi.off('reInit', syncCarousel)
-    }
-  }, [emblaApi, syncCarousel])
+      emblaApi.off("select", syncCarousel);
+      emblaApi.off("reInit", syncCarousel);
+    };
+  }, [emblaApi, syncCarousel]);
 
   useEffect(() => {
-    if (!emblaApi || people.length <= 1) return
+    if (!emblaApi || people.length <= 1) return;
     const interval = window.setInterval(() => {
-      if (autoplayPaused.current) return
-      emblaApi.scrollNext()
-    }, 7000)
-    return () => window.clearInterval(interval)
-  }, [emblaApi, people.length])
+      if (autoplayPaused.current) return;
+      emblaApi.scrollNext();
+    }, 7000);
+    return () => window.clearInterval(interval);
+  }, [emblaApi, people.length]);
 
-  if (people.length === 0) return null
+  if (people.length === 0) return null;
 
   return (
     <section
       className="anniversary-carousel bc-carousel"
       aria-label="Aniversarios de hoy"
-      onMouseEnter={() => { autoplayPaused.current = true }}
-      onMouseLeave={() => { autoplayPaused.current = false }}
+      onMouseEnter={() => {
+        autoplayPaused.current = true;
+      }}
+      onMouseLeave={() => {
+        autoplayPaused.current = false;
+      }}
     >
       <div className="bc-carousel__stage">
         <div className="bc-carousel__viewport-wrap">
-          <div className="bc-carousel__viewport anniversary-carousel__viewport" ref={emblaRef}>
+          <div
+            className="bc-carousel__viewport anniversary-carousel__viewport"
+            ref={emblaRef}
+          >
             <div className="bc-carousel__container">
               {people.map((person) => (
-                <div className="bc-carousel__slide" key={`${person.id}-${person.anios}`}>
+                <div
+                  className="bc-carousel__slide"
+                  key={`${person.id}-${person.anios}`}
+                >
                   <AnniversaryCard person={person} />
                 </div>
               ))}
@@ -130,12 +146,15 @@ export function AnniversaryCarousel({ people }: AnniversaryCarouselProps) {
         </div>
 
         {people.length > 1 && (
-          <div className="bc-carousel__dots" aria-label="Indicadores de aniversarios">
+          <div
+            className="bc-carousel__dots"
+            aria-label="Indicadores de aniversarios"
+          >
             {scrollSnaps.map((_, index) => (
               <button
                 key={index}
                 type="button"
-                className={`bc-carousel__dot${selectedIndex === index ? ' bc-carousel__dot--active' : ''}`}
+                className={`bc-carousel__dot${selectedIndex === index ? " bc-carousel__dot--active" : ""}`}
                 onClick={() => emblaApi?.scrollTo(index)}
                 aria-label={`Ir al aniversario ${index + 1}`}
               />
@@ -144,32 +163,34 @@ export function AnniversaryCarousel({ people }: AnniversaryCarouselProps) {
         )}
       </div>
     </section>
-  )
+  );
 }
 
 function useMediaQuery(query: string) {
   const [matches, setMatches] = useState(() => {
-    if (typeof window === 'undefined') return false
-    return window.matchMedia(query).matches
-  })
+    if (typeof window === "undefined") return false;
+    return window.matchMedia(query).matches;
+  });
 
   useEffect(() => {
-    const mq = window.matchMedia(query)
-    const onChange = () => setMatches(mq.matches)
-    onChange()
-    mq.addEventListener('change', onChange)
-    return () => mq.removeEventListener('change', onChange)
-  }, [query])
+    const mq = window.matchMedia(query);
+    const onChange = () => setMatches(mq.matches);
+    onChange();
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, [query]);
 
-  return matches
+  return matches;
 }
 
 interface AnniversariesHomeSectionProps {
-  people: AniversarioPersona[]
+  people: AniversarioPersona[];
 }
 
-export function AnniversariesHomeSection({ people }: AnniversariesHomeSectionProps) {
-  const isCarousel = useMediaQuery('(max-width: 960px)')
+export function AnniversariesHomeSection({
+  people,
+}: AnniversariesHomeSectionProps) {
+  const isCarousel = useMediaQuery("(max-width: 960px)");
 
   return (
     <section className="employee-home-section">
@@ -187,10 +208,13 @@ export function AnniversariesHomeSection({ people }: AnniversariesHomeSectionPro
       ) : (
         <div className="anniversary-grid anniversary-grid--triple">
           {people.map((person) => (
-            <AnniversaryCard key={`${person.id}-${person.anios}`} person={person} />
+            <AnniversaryCard
+              key={`${person.id}-${person.anios}`}
+              person={person}
+            />
           ))}
         </div>
       )}
     </section>
-  )
+  );
 }

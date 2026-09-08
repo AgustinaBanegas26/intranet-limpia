@@ -1,32 +1,44 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Link } from 'react-router'
-import { ArrowRight, Newspaper, Sparkles } from 'lucide-react'
-import { canPublishNovedades, useAuth, type User } from '../../context/AuthContext'
-import { newsService, type EncuestaDTO, type NovedadDTO } from '../../services/news'
-import { NewsPostCard } from './NewsPostCard'
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Link } from "react-router";
+import { ArrowRight, Newspaper, Sparkles } from "lucide-react";
+import {
+  canPublishNovedades,
+  useAuth,
+  type User,
+} from "../../context/AuthContext";
+import {
+  newsService,
+  type EncuestaDTO,
+  type NovedadDTO,
+} from "../../services/news";
+import { NewsPostCard } from "./NewsPostCard";
 
 type NewsFeedProps = {
-  token: string | null
-  showFooterCta?: boolean
-  showHeading?: boolean
-  showModuleHeader?: boolean
-  refreshKey?: number
-  maxPosts?: number
-}
+  token: string | null;
+  showFooterCta?: boolean;
+  showHeading?: boolean;
+  showModuleHeader?: boolean;
+  refreshKey?: number;
+  maxPosts?: number;
+};
 
 function countRecentPosts(posts: NovedadDTO[], hours = 48) {
-  const cutoff = Date.now() - hours * 3_600_000
+  const cutoff = Date.now() - hours * 3_600_000;
   return posts.filter((post) => {
-    if (!post.fecha) return false
-    const parsed = Date.parse(post.fecha)
-    return !Number.isNaN(parsed) && parsed >= cutoff
-  }).length
+    if (!post.fecha) return false;
+    const parsed = Date.parse(post.fecha);
+    return !Number.isNaN(parsed) && parsed >= cutoff;
+  }).length;
 }
 
 function canManagePost(post: NovedadDTO, user: User, isAdmin: boolean) {
-  if (!canPublishNovedades(user)) return false
-  if (isAdmin) return true
-  return post.publicadoPor != null && user.id != null && String(post.publicadoPor) === String(user.id)
+  if (!canPublishNovedades(user)) return false;
+  if (isAdmin) return true;
+  return (
+    post.publicadoPor != null &&
+    user.id != null &&
+    String(post.publicadoPor) === String(user.id)
+  );
 }
 
 export function NewsFeed({
@@ -37,91 +49,112 @@ export function NewsFeed({
   refreshKey = 0,
   maxPosts,
 }: NewsFeedProps) {
-  const { user, isAdmin } = useAuth()
-  const [posts, setPosts] = useState<NovedadDTO[]>([])
-  const [likedMap, setLikedMap] = useState<Record<string, boolean>>({})
-  const [loading, setLoading] = useState(true)
-  const [apiReady, setApiReady] = useState(false)
+  const { user, isAdmin } = useAuth();
+  const [posts, setPosts] = useState<NovedadDTO[]>([]);
+  const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
+  const [loading, setLoading] = useState(true);
+  const [apiReady, setApiReady] = useState(false);
 
   const loadPosts = useCallback(() => {
-    setLoading(true)
+    setLoading(true);
     newsService
       .getAll(token)
       .then((response) => {
-        const rows = response.data ?? []
-        setPosts(rows)
-        setApiReady(true)
-        const initialLikes: Record<string, boolean> = {}
+        const rows = response.data ?? [];
+        setPosts(rows);
+        setApiReady(true);
+        const initialLikes: Record<string, boolean> = {};
         rows.forEach((post) => {
           if (post.id != null && post.liked) {
-            initialLikes[String(post.id)] = true
+            initialLikes[String(post.id)] = true;
           }
-        })
-        setLikedMap(initialLikes)
+        });
+        setLikedMap(initialLikes);
       })
       .catch(() => {
-        setPosts([])
-        setApiReady(false)
+        setPosts([]);
+        setApiReady(false);
       })
-      .finally(() => setLoading(false))
-  }, [token])
+      .finally(() => setLoading(false));
+  }, [token]);
 
   useEffect(() => {
-    loadPosts()
-  }, [loadPosts, refreshKey])
+    loadPosts();
+  }, [loadPosts, refreshKey]);
 
   const handleToggleLike = useCallback(
     async (id: string | number) => {
-      const key = String(id)
-      const wasLiked = likedMap[key] ?? false
-      setLikedMap((prev) => ({ ...prev, [key]: !wasLiked }))
+      const key = String(id);
+      const wasLiked = likedMap[key] ?? false;
+      setLikedMap((prev) => ({ ...prev, [key]: !wasLiked }));
       setPosts((prev) =>
         prev.map((post) =>
           post.id === id
-            ? { ...post, likes: Math.max(0, (post.likes ?? 0) + (wasLiked ? -1 : 1)) }
-            : post
-        )
-      )
+            ? {
+                ...post,
+                likes: Math.max(0, (post.likes ?? 0) + (wasLiked ? -1 : 1)),
+              }
+            : post,
+        ),
+      );
       try {
-        const result = await newsService.like(id, token)
-        setLikedMap((prev) => ({ ...prev, [key]: result.liked }))
-        setPosts((prev) =>
-          prev.map((post) => (post.id === id ? { ...post, likes: result.likes, liked: result.liked } : post))
-        )
-      } catch {
-        setLikedMap((prev) => ({ ...prev, [key]: wasLiked }))
+        const result = await newsService.like(id, token);
+        setLikedMap((prev) => ({ ...prev, [key]: result.liked }));
         setPosts((prev) =>
           prev.map((post) =>
             post.id === id
-              ? { ...post, likes: Math.max(0, (post.likes ?? 0) + (wasLiked ? 1 : -1)) }
-              : post
-          )
-        )
+              ? { ...post, likes: result.likes, liked: result.liked }
+              : post,
+          ),
+        );
+      } catch {
+        setLikedMap((prev) => ({ ...prev, [key]: wasLiked }));
+        setPosts((prev) =>
+          prev.map((post) =>
+            post.id === id
+              ? {
+                  ...post,
+                  likes: Math.max(0, (post.likes ?? 0) + (wasLiked ? 1 : -1)),
+                }
+              : post,
+          ),
+        );
       }
     },
-    [likedMap, token]
-  )
+    [likedMap, token],
+  );
 
-  const handlePollUpdate = useCallback((id: string | number, encuesta: EncuestaDTO) => {
-    setPosts((prev) => prev.map((post) => (post.id === id ? { ...post, encuesta } : post)))
-  }, [])
+  const handlePollUpdate = useCallback(
+    (id: string | number, encuesta: EncuestaDTO) => {
+      setPosts((prev) =>
+        prev.map((post) => (post.id === id ? { ...post, encuesta } : post)),
+      );
+    },
+    [],
+  );
 
   const handlePostUpdated = useCallback((updated: NovedadDTO) => {
-    setPosts((prev) => prev.map((post) => (post.id === updated.id ? { ...post, ...updated } : post)))
-  }, [])
+    setPosts((prev) =>
+      prev.map((post) =>
+        post.id === updated.id ? { ...post, ...updated } : post,
+      ),
+    );
+  }, []);
 
   const handlePostDeleted = useCallback((id: string | number) => {
-    setPosts((prev) => prev.filter((post) => post.id !== id))
-  }, [])
+    setPosts((prev) => prev.filter((post) => post.id !== id));
+  }, []);
 
   const visiblePosts = useMemo(
     () => (maxPosts != null ? posts.slice(0, maxPosts) : posts),
-    [posts, maxPosts]
-  )
-  const newCount = useMemo(() => countRecentPosts(posts), [posts])
+    [posts, maxPosts],
+  );
+  const newCount = useMemo(() => countRecentPosts(posts), [posts]);
 
   return (
-    <section className={`news-module ${showModuleHeader ? 'news-module--dashboard' : ''}`}>
+    <section
+      className={`news-module ${showModuleHeader ? "news-module--dashboard" : ""}`}
+    >
       {showModuleHeader && (
         <header className="news-module__header">
           <div className="news-module__title-group">
@@ -135,7 +168,7 @@ export function NewsFeed({
             {!loading && newCount > 0 && (
               <span className="news-module__badge">
                 <Sparkles size={12} />
-                {newCount} {newCount === 1 ? 'nueva' : 'nuevas'}
+                {newCount} {newCount === 1 ? "nueva" : "nuevas"}
               </span>
             )}
           </div>
@@ -149,7 +182,7 @@ export function NewsFeed({
       {showHeading && !showModuleHeader && (
         <div className="news-module__simple-heading">
           <h2>Novedades corporativas</h2>
-          <p>Comunicaciones oficiales de Grupo Núcleo</p>
+          <p>Comunicaciones oficiales de la organización</p>
         </div>
       )}
 
@@ -195,5 +228,5 @@ export function NewsFeed({
         </div>
       )}
     </section>
-  )
+  );
 }

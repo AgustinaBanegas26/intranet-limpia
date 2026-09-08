@@ -36,12 +36,11 @@ function loadEnvFile() {
 loadEnvFile();
 
 const DEFAULT_EMAILS = {
-  agustina: process.env.EMAIL_AGUSTINA || "agustinabanegas26@gmail.com",
-  sara: process.env.EMAIL_SARA || "sarawillerslohr08@gmail.com",
-  rrhh: process.env.EMAIL_RRHH || "rrhh@gruponucleo.com.ar",
-  proveedores:
-    process.env.EMAIL_PROVEEDORES || "proveedores@gruponucleo.com.ar",
-  tesoreria: process.env.EMAIL_TESORERIA || "tesoreria@gruponucleo.com.ar",
+  agustina: process.env.EMAIL_AGUSTINA || "",
+  sara: process.env.EMAIL_SARA || "",
+  rrhh: process.env.EMAIL_RRHH || "",
+  proveedores: process.env.EMAIL_PROVEEDORES || "",
+  tesoreria: process.env.EMAIL_TESORERIA || "",
   matias: process.env.EMAIL_MATIAS,
   luciano: process.env.EMAIL_LUCIANO,
   javier: process.env.EMAIL_JAVIER,
@@ -51,8 +50,8 @@ const DEFAULT_EMAILS = {
   cajaMdp:
     process.env.EMAIL_CAJA_MDP ||
     process.env.EMAIL_CAJA ||
-    "cajamdp@gruponucleo.com.ar",
-  cajaBrasil: process.env.EMAIL_CAJA_BRASIL || "cajabrasil@gruponucleo.com.ar",
+    "",
+  cajaBrasil: process.env.EMAIL_CAJA_BRASIL || "",
 };
 
 const TIPOS_AUSENCIAS_RRHH = [
@@ -435,7 +434,7 @@ function buildEmailHtml(solicitud) {
         <h2 style="margin: 0; font-size: 24px;">Nueva solicitud recibida</h2>
       </div>
       <div style="border: 1px solid #e5e7eb; border-top: 0; padding: 24px; border-radius: 0 0 8px 8px; background: #ffffff;">
-        <p style="margin-top: 0;">Se registró una nueva solicitud en la intranet de Grupo Núcleo.</p>
+        <p style="margin-top: 0;">Se registró una nueva solicitud en el portal interno.</p>
         <ul style="padding-left: 20px; line-height: 1.6;">
           <li><strong>Empleado:</strong> ${empleado}</li>
           <li><strong>Email:</strong> ${emailSolicitante}</li>
@@ -453,15 +452,11 @@ function buildEmailHtml(solicitud) {
 }
 
 function createTransporter() {
-  const user = process.env.EMAIL_USER || "gnintranet@gmail.com";
+  const user = String(process.env.EMAIL_USER || "").trim();
   const pass = normalizeEmailPass(process.env.EMAIL_PASS);
 
-  if (!pass || pass === "CONTRASEÑA_DE_APLICACION") {
-    const error = new Error(
-      "EMAIL_PASS no configurada correctamente. Reemplazá el valor por la contraseña de aplicación real de Google, sin espacios y sin comillas.",
-    );
-    error.code = "missing_credentials";
-    throw error;
+  if (!user || !pass || pass === "CONTRASEÑA_DE_APLICACION") {
+    return null;
   }
 
   return nodemailer.createTransport({
@@ -475,17 +470,25 @@ function createTransporter() {
 
 async function sendEmail(asunto, contenidoHtml, destinatarios) {
   try {
+    const recipients = [...new Set((destinatarios || []).filter(Boolean))];
+    if (recipients.length === 0) {
+      return { ok: false, code: "email_not_configured", destinatarios: [] };
+    }
+
     const transporter = createTransporter();
+    if (!transporter) {
+      return { ok: false, code: "email_not_configured", destinatarios: recipients };
+    }
 
     await transporter.sendMail({
-      from: process.env.EMAIL_USER || "gnintranet@gmail.com",
-      to: destinatarios,
+      from: process.env.EMAIL_USER,
+      to: recipients,
       subject: asunto,
       html: contenidoHtml,
     });
 
     console.log("[EMAIL] Correo enviado correctamente");
-    return { ok: true, destinatarios };
+    return { ok: true, destinatarios: recipients };
   } catch (error) {
     console.error(`[EMAIL] Error enviando correo: ${error?.message || error}`);
     return { ok: false, error };
@@ -531,10 +534,10 @@ async function sendSolicitudNotification(solicitud) {
 }
 
 async function sendTestEmail() {
-  const asunto = "Prueba GN Intranet";
+  const asunto = "Prueba de correo del portal interno";
   const contenidoHtml = `
     <div style="font-family: Arial, sans-serif; max-width: 640px; margin: 0 auto;">
-      <h2 style="color: #0f766e;">Prueba GN Intranet</h2>
+      <h2 style="color: #0f766e;">Prueba de correo del portal interno</h2>
       <p>Si recibiste este correo, la configuración de Gmail y Nodemailer funciona correctamente.</p>
     </div>
   `;

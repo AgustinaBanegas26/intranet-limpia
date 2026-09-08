@@ -1,47 +1,48 @@
-import { useEffect, useMemo, useState, useCallback } from 'react'
-import { motion } from 'framer-motion'
+import { useEffect, useMemo, useState, useCallback } from "react";
+import { motion } from "framer-motion";
+import { CalendarDays, UserMinus, Users } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
+import { getEmployees, type Employee } from "../../services/api";
 import {
-  CalendarDays,
-  UserMinus,
-  Users,
-} from 'lucide-react'
-import { useAuth } from '../../context/AuthContext'
-import { getEmployees, type Employee } from '../../services/api'
-import { EmptyState, MetricCard, PageHero, PremiumCard } from '../../components/ui/ProductUI'
-import { Link } from 'react-router'
-import { DashboardBirthdayHero } from '../../components/home/DashboardBirthdayHero'
-import { SliderAdminPanel } from '../../components/admin/SliderAdminPanel'
-import { EventsAdminPanel } from '../../components/admin/EventsAdminPanel'
-import { AbsencesAdminPanel } from '../../components/absences/AbsencesAdminPanel'
-import { EmployeeDetailModal } from '../../components/employees/EmployeeDetailModal'
+  EmptyState,
+  MetricCard,
+  PageHero,
+  PremiumCard,
+} from "../../components/ui/ProductUI";
+import { Link } from "react-router";
+import { DashboardBirthdayHero } from "../../components/home/DashboardBirthdayHero";
+import { SliderAdminPanel } from "../../components/admin/SliderAdminPanel";
+import { EventsAdminPanel } from "../../components/admin/EventsAdminPanel";
+import { AbsencesAdminPanel } from "../../components/absences/AbsencesAdminPanel";
+import { EmployeeDetailModal } from "../../components/employees/EmployeeDetailModal";
 import {
   EmployeeExpandableItem,
   EmployeeExpandableList,
-} from '../../components/employees/EmployeeExpandableItem'
+} from "../../components/employees/EmployeeExpandableItem";
 
 type DashboardEmpleado = {
-  id: string | number
-  legajo?: string | number
-  nombre: string
-  apellido: string
-  email_corporativo: string
-  cargo?: string | null
-  area?: string | null
-  sucursal?: string | null
-  telefono?: string | null
-  foto_url?: string | null
-  activo?: boolean
-  es_director?: boolean
-  work_mode?: string | null
-}
+  id: string | number;
+  legajo?: string | number;
+  nombre: string;
+  apellido: string;
+  email_corporativo: string;
+  cargo?: string | null;
+  area?: string | null;
+  sucursal?: string | null;
+  telefono?: string | null;
+  foto_url?: string | null;
+  activo?: boolean;
+  es_director?: boolean;
+  work_mode?: string | null;
+};
 
 function toDashboardEmpleado(emp: Employee): DashboardEmpleado {
   return {
     id: emp.id,
     legajo: emp.legajo ?? undefined,
-    nombre: emp.nombre || '',
-    apellido: emp.apellido || '',
-    email_corporativo: emp.email_corporativo || '',
+    nombre: emp.nombre || "",
+    apellido: emp.apellido || "",
+    email_corporativo: emp.email_corporativo || "",
     cargo: emp.cargo,
     area: emp.area,
     sucursal: emp.sucursal,
@@ -50,73 +51,90 @@ function toDashboardEmpleado(emp: Employee): DashboardEmpleado {
     activo: emp.activo !== false,
     es_director: emp.es_director,
     work_mode: emp.work_mode,
-  }
+  };
 }
 
 export function AdminDashboard() {
-  const { token, user } = useAuth()
-  const [employees, setEmployees] = useState<Employee[]>([])
-  const [selectedEmployee, setSelectedEmployee] = useState<DashboardEmpleado | null>(null)
-  const [modalMode, setModalMode] = useState<'view' | 'edit' | 'delete'>('view')
-  const [pendingAusencias, setPendingAusencias] = useState(0)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const { token, user } = useAuth();
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [selectedEmployee, setSelectedEmployee] =
+    useState<DashboardEmpleado | null>(null);
+  const [modalMode, setModalMode] = useState<"view" | "edit" | "delete">(
+    "view",
+  );
+  const [pendingAusencias, setPendingAusencias] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const handlePendingChange = useCallback((count: number) => {
-    setPendingAusencias(count)
-  }, [])
+    setPendingAusencias(count);
+  }, []);
   useEffect(() => {
-    let active = true
-    setLoading(true)
-    setError(null)
+    let active = true;
+    setLoading(true);
+    setError(null);
 
-    Promise.all([
-      getEmployees(token),
-    ])
+    Promise.all([getEmployees(token)])
       .then(([rows]) => {
-        if (!active) return
-        setEmployees(rows)
+        if (!active) return;
+        setEmployees(rows);
       })
       .catch((err) => {
-        console.error('Error al cargar empleados:', err)
-        if (active) setError('load_failed')
+        console.error("Error al cargar empleados:", err);
+        if (active) setError("load_failed");
       })
       .finally(() => {
-        if (active) setLoading(false)
-      })
+        if (active) setLoading(false);
+      });
 
-    return () => { active = false }
-  }, [token])
+    return () => {
+      active = false;
+    };
+  }, [token]);
 
   const metrics = useMemo(() => {
-    const active = employees.filter((e) => e.activo !== false)
-    const inactive = employees.filter((e) => e.activo === false)
-    return { total: employees.length, active: active.length, inactive: inactive.length }
-  }, [employees])
+    const active = employees.filter((e) => e.activo !== false);
+    const inactive = employees.filter((e) => e.activo === false);
+    return {
+      total: employees.length,
+      active: active.length,
+      inactive: inactive.length,
+    };
+  }, [employees]);
 
-  const firstName = user.name.trim().split(/\s+/)[0] || user.name
+  const firstName = user.name.trim().split(/\s+/)[0] || user.name;
 
-  const openEmployeeDetail = useCallback((emp: Employee, mode: 'view' | 'edit' | 'delete' = 'view') => {
-    setModalMode(mode)
-    setSelectedEmployee(toDashboardEmpleado(emp))
-  }, [])
+  const openEmployeeDetail = useCallback(
+    (emp: Employee, mode: "view" | "edit" | "delete" = "view") => {
+      setModalMode(mode);
+      setSelectedEmployee(toDashboardEmpleado(emp));
+    },
+    [],
+  );
 
   const handleEmployeeUpdated = useCallback((updated: DashboardEmpleado) => {
     setEmployees((prev) =>
-      prev.map((e) => (String(e.id) === String(updated.id) ? { ...e, ...updated } : e)),
-    )
-    setSelectedEmployee((prev) => (prev?.id === updated.id ? { ...prev, ...updated } : prev))
-  }, [])
+      prev.map((e) =>
+        String(e.id) === String(updated.id) ? { ...e, ...updated } : e,
+      ),
+    );
+    setSelectedEmployee((prev) =>
+      prev?.id === updated.id ? { ...prev, ...updated } : prev,
+    );
+  }, []);
 
-  const handleEmployeeDeleted = useCallback(async (id: string | number) => {
-    setSelectedEmployee(null)
-    try {
-      const rows = await getEmployees(token)
-      setEmployees(rows)
-    } catch {
-      setEmployees((prev) => prev.filter((e) => String(e.id) !== String(id)))
-    }
-  }, [token])
+  const handleEmployeeDeleted = useCallback(
+    async (id: string | number) => {
+      setSelectedEmployee(null);
+      try {
+        const rows = await getEmployees(token);
+        setEmployees(rows);
+      } catch {
+        setEmployees((prev) => prev.filter((e) => String(e.id) !== String(id)));
+      }
+    },
+    [token],
+  );
 
   return (
     <div className="page-root admin-dashboard admin-page">
@@ -125,7 +143,7 @@ export function AdminDashboard() {
       <PageHero
         eyebrow="Panel administrativo"
         title={`Hola, ${firstName}.`}
-        description="Resumen del estado de Grupo Núcleo."
+        description="Resumen del estado de la organización."
       />
 
       <SliderAdminPanel />
@@ -135,18 +153,47 @@ export function AdminDashboard() {
       <section className="metric-grid">
         {loading ? (
           Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="metric-card" style={{ opacity: 0.5, minHeight: 110 }} />
+            <div
+              key={i}
+              className="metric-card"
+              style={{ opacity: 0.5, minHeight: 110 }}
+            />
           ))
         ) : error ? (
-          <div style={{ gridColumn: '1 / -1' }}>
-            <EmptyState title="Sin datos" description="No fue posible obtener la información del resumen." icon={Users} />
+          <div style={{ gridColumn: "1 / -1" }}>
+            <EmptyState
+              title="Sin datos"
+              description="No fue posible obtener la información del resumen."
+              icon={Users}
+            />
           </div>
         ) : (
           [
-            { label: 'Empleados', value: metrics.total, detail: 'Total registrados', icon: Users },
-            { label: 'Activos', value: metrics.active, detail: 'En nómina activa', icon: Users },
-            { label: 'Inactivos', value: metrics.inactive, detail: 'Dados de baja', icon: UserMinus },
-            { label: 'Ausencias pendientes', value: pendingAusencias, detail: 'Requieren resolución', icon: CalendarDays, link: '/ausencias' },
+            {
+              label: "Empleados",
+              value: metrics.total,
+              detail: "Total registrados",
+              icon: Users,
+            },
+            {
+              label: "Activos",
+              value: metrics.active,
+              detail: "En nómina activa",
+              icon: Users,
+            },
+            {
+              label: "Inactivos",
+              value: metrics.inactive,
+              detail: "Dados de baja",
+              icon: UserMinus,
+            },
+            {
+              label: "Ausencias pendientes",
+              value: pendingAusencias,
+              detail: "Requieren resolución",
+              icon: CalendarDays,
+              link: "/ausencias",
+            },
           ].map((m, i) => (
             <motion.div
               key={m.label}
@@ -154,12 +201,29 @@ export function AdminDashboard() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.07, duration: 0.3 }}
             >
-              {'link' in m && m.link ? (
-                <Link to={m.link} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
-                  <MetricCard label={m.label} value={m.value} detail={m.detail} icon={m.icon} />
+              {"link" in m && m.link ? (
+                <Link
+                  to={m.link}
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    display: "block",
+                  }}
+                >
+                  <MetricCard
+                    label={m.label}
+                    value={m.value}
+                    detail={m.detail}
+                    icon={m.icon}
+                  />
                 </Link>
               ) : (
-                <MetricCard label={m.label} value={m.value} detail={m.detail} icon={m.icon} />
+                <MetricCard
+                  label={m.label}
+                  value={m.value}
+                  detail={m.detail}
+                  icon={m.icon}
+                />
               )}
             </motion.div>
           ))
@@ -183,13 +247,23 @@ export function AdminDashboard() {
         }
       >
         {loading ? (
-          <EmptyState title="Cargando…" description="Obteniendo la lista de empleados…" icon={Users} />
+          <EmptyState
+            title="Cargando…"
+            description="Obteniendo la lista de empleados…"
+            icon={Users}
+          />
         ) : employees.length === 0 ? (
-          <EmptyState title="Sin empleados" description="No hay empleados registrados por el momento." icon={Users} />
+          <EmptyState
+            title="Sin empleados"
+            description="No hay empleados registrados por el momento."
+            icon={Users}
+          />
         ) : (
           <EmployeeExpandableList>
             {employees.slice(0, 6).map((emp) => {
-              const name = `${emp.nombre || ''} ${emp.apellido || ''}`.trim() || 'Sin nombre'
+              const name =
+                `${emp.nombre || ""} ${emp.apellido || ""}`.trim() ||
+                "Sin nombre";
               return (
                 <EmployeeExpandableItem
                   key={emp.id}
@@ -204,9 +278,9 @@ export function AdminDashboard() {
                     foto: emp.foto_url,
                   }}
                   showFoto
-                  onEyeClick={() => openEmployeeDetail(emp, 'view')}
+                  onEyeClick={() => openEmployeeDetail(emp, "view")}
                 />
-              )
+              );
             })}
           </EmployeeExpandableList>
         )}
@@ -217,12 +291,12 @@ export function AdminDashboard() {
         token={token}
         initialMode={modalMode}
         onClose={() => {
-          setSelectedEmployee(null)
-          setModalMode('view')
+          setSelectedEmployee(null);
+          setModalMode("view");
         }}
         onUpdated={handleEmployeeUpdated}
         onDeleted={handleEmployeeDeleted}
       />
     </div>
-  )
+  );
 }

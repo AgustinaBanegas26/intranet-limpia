@@ -1,6 +1,83 @@
 {
-  "version": 58,
+  "version": 65,
   "items": [
+    {
+      "id": "9103c220-2bf5-4c0a-acb9-3fd7bafbe635",
+      "createdAt": "2026-09-08T22:37:25.543Z",
+      "action": "login",
+      "actorId": 2,
+      "entityType": "sessions",
+      "entityId": 2,
+      "metadata": {
+        "mustChangePassword": true
+      }
+    },
+    {
+      "id": "39807051-14f7-4f80-b727-3da039eb37fc",
+      "createdAt": "2026-09-08T22:36:35.566Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "not-a-user@example.com"
+      }
+    },
+    {
+      "id": "93fc3dd2-bee9-42c5-9745-26f54d529fd3",
+      "createdAt": "2026-09-08T22:34:54.951Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "wb236.dev@gmail.com"
+      }
+    },
+    {
+      "id": "f58d5557-63d0-4c0c-a5dd-f1cef46a37b8",
+      "createdAt": "2026-09-08T22:34:16.956Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "wb236.dev@gmail.com"
+      }
+    },
+    {
+      "id": "741101e0-e4f9-46e0-b8ca-79e81db76655",
+      "createdAt": "2026-09-08T22:34:14.113Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "wb236.dev@gmail.com"
+      }
+    },
+    {
+      "id": "d9b1ed40-d50b-4668-a978-4f07be848617",
+      "createdAt": "2026-09-08T22:34:07.442Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "wb236.dev@gmail.com"
+      }
+    },
+    {
+      "id": "35458386-3e6e-4915-b493-e81240bad845",
+      "createdAt": "2026-09-08T22:34:00.867Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "wb236.dev@gmail.com"
+      }
+    },
     {
       "id": "a2c33547-fbd4-4fae-8b3a-03dc5c0e6389",
       "createdAt": "2026-08-05T14:05:55.975Z",
@@ -306,7 +383,7 @@
       "entityType": "sessions",
       "entityId": null,
       "metadata": {
-        "email": "gisela@gruponucleo.com.ar"
+        "email": "admin@example.invalid"
       }
     },
     {
@@ -383,7 +460,7 @@
       "entityType": "sessions",
       "entityId": null,
       "metadata": {
-        "email": "juan.perez@gruponucleo.com.ar"
+        "email": "employee@example.invalid"
       }
     },
     {
@@ -449,7 +526,7 @@
       "entityType": "sessions",
       "entityId": null,
       "metadata": {
-        "email": "juan.perez@gruponucleo.com.ar"
+        "email": "employee@example.invalid"
       }
     },
     {
@@ -482,7 +559,7 @@
       "entityType": "sessions",
       "entityId": null,
       "metadata": {
-        "email": "juan.perez@gruponucleo.com.ar"
+        "email": "employee@example.invalid"
       }
     },
     {
@@ -625,7 +702,7 @@
       "entityType": "sessions",
       "entityId": null,
       "metadata": {
-        "email": "gisela@gruponucleo.com.ar"
+        "email": "admin@example.invalid"
       }
     },
     {

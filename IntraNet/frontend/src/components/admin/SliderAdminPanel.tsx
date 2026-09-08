@@ -1,102 +1,110 @@
-import { useCallback, useEffect, useState } from 'react'
-import { ImageIcon, ImagePlus, Loader2, Pencil, PlusCircle, Trash2, X } from 'lucide-react'
-import { PremiumCard } from '../ui/ProductUI'
-import { ConfirmDialog } from '../ui/ConfirmDialog'
-import { sliderService, type SliderSlideDTO } from '../../services/slider'
-import { resizeImageForSlider } from '../../utils/fileUpload'
+import { useCallback, useEffect, useState } from "react";
+import {
+  ImageIcon,
+  ImagePlus,
+  Loader2,
+  Pencil,
+  PlusCircle,
+  Trash2,
+  X,
+} from "lucide-react";
+import { PremiumCard } from "../ui/ProductUI";
+import { ConfirmDialog } from "../ui/ConfirmDialog";
+import { sliderService, type SliderSlideDTO } from "../../services/slider";
+import { resizeImageForSlider } from "../../utils/fileUpload";
 
 const emptyForm = {
-  titulo: '',
-  subtitulo: '',
-  imagen_url: '',
-  enlace: '',
-  orden: '0',
+  titulo: "",
+  subtitulo: "",
+  imagen_url: "",
+  enlace: "",
+  orden: "0",
   activo: true,
   mostrar_titulo: false,
-}
+};
 
 export function SliderAdminPanel() {
-  const [slides, setSlides] = useState<SliderSlideDTO[]>([])
-  const [loading, setLoading] = useState(true)
-  const [showForm, setShowForm] = useState(false)
-  const [submitting, setSubmitting] = useState(false)
-  const [uploadingImage, setUploadingImage] = useState(false)
-  const [editingId, setEditingId] = useState<string | null>(null)
-  const [form, setForm] = useState({ ...emptyForm })
-  const [error, setError] = useState('')
-  const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [slides, setSlides] = useState<SliderSlideDTO[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [form, setForm] = useState({ ...emptyForm });
+  const [error, setError] = useState("");
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
   const load = useCallback(async () => {
-    setLoading(true)
-    setError('')
+    setLoading(true);
+    setError("");
     try {
-      const res = await sliderService.getAll()
-      setSlides(res.data || [])
+      const res = await sliderService.getAll();
+      setSlides(res.data || []);
     } catch {
-      setSlides([])
-      setError('No se pudieron cargar los slides.')
+      setSlides([]);
+      setError("No se pudieron cargar los slides.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    load()
-  }, [load])
+    load();
+  }, [load]);
 
   const resetForm = () => {
-    setForm({ ...emptyForm })
-    setEditingId(null)
-    setShowForm(false)
-    setError('')
-  }
+    setForm({ ...emptyForm });
+    setEditingId(null);
+    setShowForm(false);
+    setError("");
+  };
 
   const handleEdit = (slide: SliderSlideDTO) => {
-    setEditingId(slide.id)
+    setEditingId(slide.id);
     setForm({
       titulo: slide.titulo,
-      subtitulo: slide.subtitulo || '',
+      subtitulo: slide.subtitulo || "",
       imagen_url: slide.imagen_url,
-      enlace: slide.enlace || '',
+      enlace: slide.enlace || "",
       orden: String(slide.orden ?? 0),
       activo: slide.activo !== false,
       mostrar_titulo: slide.mostrar_titulo !== false,
-    })
-    setShowForm(true)
-  }
+    });
+    setShowForm(true);
+  };
 
   const handleGalleryImage = async (file: File | null) => {
-    if (!file) return
-    setUploadingImage(true)
-    setError('')
+    if (!file) return;
+    setUploadingImage(true);
+    setError("");
     try {
-      const dataUrl = await resizeImageForSlider(file)
-      setForm((prev) => ({ ...prev, imagen_url: dataUrl }))
+      const dataUrl = await resizeImageForSlider(file);
+      setForm((prev) => ({ ...prev, imagen_url: dataUrl }));
     } catch (err) {
-      const code = err instanceof Error ? err.message : 'upload_failed'
+      const code = err instanceof Error ? err.message : "upload_failed";
       setError(
-        code === 'file_too_large'
-          ? 'La imagen es demasiado grande. Probá con otra.'
-          : code === 'invalid_file_type' || code === 'invalid_image'
-            ? 'El archivo debe ser una imagen válida.'
-            : 'No se pudo cargar la imagen.',
-      )
+        code === "file_too_large"
+          ? "La imagen es demasiado grande. Probá con otra."
+          : code === "invalid_file_type" || code === "invalid_image"
+            ? "El archivo debe ser una imagen válida."
+            : "No se pudo cargar la imagen.",
+      );
     } finally {
-      setUploadingImage(false)
+      setUploadingImage(false);
     }
-  }
+  };
 
   const handleSave = async () => {
     if (!form.imagen_url.trim()) {
-      setError('La imagen es obligatoria.')
-      return
+      setError("La imagen es obligatoria.");
+      return;
     }
-    const titulo = form.titulo.trim()
-    const subtitulo = form.subtitulo.trim()
-    const mostrarTitulo = form.mostrar_titulo && !!titulo
+    const titulo = form.titulo.trim();
+    const subtitulo = form.subtitulo.trim();
+    const mostrarTitulo = form.mostrar_titulo && !!titulo;
 
-    setSubmitting(true)
-    setError('')
+    setSubmitting(true);
+    setError("");
     try {
       const payload = {
         titulo: titulo || undefined,
@@ -106,82 +114,125 @@ export function SliderAdminPanel() {
         orden: Number(form.orden) || 0,
         activo: form.activo,
         mostrar_titulo: mostrarTitulo,
-      }
+      };
 
       if (editingId) {
-        await sliderService.update(editingId, payload)
+        await sliderService.update(editingId, payload);
       } else {
-        await sliderService.create(payload)
+        await sliderService.create(payload);
       }
-      resetForm()
-      await load()
-      window.dispatchEvent(new CustomEvent('gn:home-slider-changed'))
+      resetForm();
+      await load();
+      window.dispatchEvent(new CustomEvent("portal:home-slider-changed"));
     } catch {
-      setError('No se pudo guardar el slide.')
+      setError("No se pudo guardar el slide.");
     } finally {
-      setSubmitting(false)
+      setSubmitting(false);
     }
-  }
+  };
 
   const handleDelete = async (id: string) => {
-    setSubmitting(true)
-    setError('')
+    setSubmitting(true);
+    setError("");
     try {
-      await sliderService.remove(id)
-      if (editingId === id) resetForm()
-      await load()
-      setDeleteId(null)
-      window.dispatchEvent(new CustomEvent('gn:home-slider-changed'))
+      await sliderService.remove(id);
+      if (editingId === id) resetForm();
+      await load();
+      setDeleteId(null);
+      window.dispatchEvent(new CustomEvent("portal:home-slider-changed"));
     } catch {
-      setError('No se pudo eliminar el slide.')
+      setError("No se pudo eliminar el slide.");
     } finally {
-      setSubmitting(false)
+      setSubmitting(false);
     }
-  }
+  };
 
   return (
-    <PremiumCard title="Slider principal" eyebrow="Inicio del empleado" icon={ImageIcon}>
-      <p style={{ margin: '0 0 14px', fontSize: '0.8125rem', color: 'var(--muted-foreground)', lineHeight: 1.55 }}>
-        Gestioná las imágenes del carrusel del inicio. Los slides marcados como <strong>Visibles</strong> los ven todos los empleados en su pantalla de inicio.
-        Preferí subir la imagen desde galería o usar una URL directa al archivo (.jpg, .png, .webp).
+    <PremiumCard
+      title="Slider principal"
+      eyebrow="Inicio del empleado"
+      icon={ImageIcon}
+    >
+      <p
+        style={{
+          margin: "0 0 14px",
+          fontSize: "0.8125rem",
+          color: "var(--muted-foreground)",
+          lineHeight: 1.55,
+        }}
+      >
+        Gestioná las imágenes del carrusel del inicio. Los slides marcados como{" "}
+        <strong>Visibles</strong> los ven todos los empleados en su pantalla de
+        inicio. Preferí subir la imagen desde galería o usar una URL directa al
+        archivo (.jpg, .png, .webp).
       </p>
 
       {error && (
-        <p style={{ color: 'var(--danger)', fontSize: '0.8125rem', margin: '0 0 12px' }}>{error}</p>
+        <p
+          style={{
+            color: "var(--danger)",
+            fontSize: "0.8125rem",
+            margin: "0 0 12px",
+          }}
+        >
+          {error}
+        </p>
       )}
 
       <button
         type="button"
-        className={`btn btn-md ${showForm ? 'btn-ghost' : 'btn-primary-fill'}`}
+        className={`btn btn-md ${showForm ? "btn-ghost" : "btn-primary-fill"}`}
         onClick={() => (showForm ? resetForm() : setShowForm(true))}
       >
         <PlusCircle size={16} />
-        {showForm ? 'Cancelar' : 'Agregar slide'}
+        {showForm ? "Cancelar" : "Agregar slide"}
       </button>
 
       {showForm && (
-        <div style={{ marginTop: 16, display: 'grid', gap: 12 }}>
+        <div style={{ marginTop: 16, display: "grid", gap: 12 }}>
           <label className="form-field slider-checkbox-field">
             <input
               type="checkbox"
               checked={form.mostrar_titulo}
-              onChange={(e) => setForm((p) => ({ ...p, mostrar_titulo: e.target.checked }))}
+              onChange={(e) =>
+                setForm((p) => ({ ...p, mostrar_titulo: e.target.checked }))
+              }
             />
             <span className="form-label">Mostrar título sobre la imagen</span>
           </label>
-          <p style={{ margin: '-4px 0 0', fontSize: '0.75rem', color: 'var(--muted-foreground)', lineHeight: 1.45 }}>
-            Desactivá esta opción para mostrar solo la imagen, sin texto ni difuminado.
+          <p
+            style={{
+              margin: "-4px 0 0",
+              fontSize: "0.75rem",
+              color: "var(--muted-foreground)",
+              lineHeight: 1.45,
+            }}
+          >
+            Desactivá esta opción para mostrar solo la imagen, sin texto ni
+            difuminado.
           </p>
 
           {form.mostrar_titulo && (
             <>
               <label className="form-field">
                 <span className="form-label">Título</span>
-                <input className="form-input" value={form.titulo} onChange={(e) => setForm((p) => ({ ...p, titulo: e.target.value }))} />
+                <input
+                  className="form-input"
+                  value={form.titulo}
+                  onChange={(e) =>
+                    setForm((p) => ({ ...p, titulo: e.target.value }))
+                  }
+                />
               </label>
               <label className="form-field">
                 <span className="form-label">Subtítulo (opcional)</span>
-                <input className="form-input" value={form.subtitulo} onChange={(e) => setForm((p) => ({ ...p, subtitulo: e.target.value }))} />
+                <input
+                  className="form-input"
+                  value={form.subtitulo}
+                  onChange={(e) =>
+                    setForm((p) => ({ ...p, subtitulo: e.target.value }))
+                  }
+                />
               </label>
             </>
           )}
@@ -190,7 +241,11 @@ export function SliderAdminPanel() {
             <span className="form-label">Imagen del slide</span>
             <div className="slider-image-actions">
               <label className="btn btn-sm btn-ghost slider-gallery-btn">
-                {uploadingImage ? <Loader2 size={15} className="spin" /> : <ImagePlus size={15} />}
+                {uploadingImage ? (
+                  <Loader2 size={15} className="spin" />
+                ) : (
+                  <ImagePlus size={15} />
+                )}
                 Elegir desde galería
                 <input
                   type="file"
@@ -198,16 +253,18 @@ export function SliderAdminPanel() {
                   hidden
                   disabled={uploadingImage || submitting}
                   onChange={(e) => {
-                    void handleGalleryImage(e.target.files?.[0] ?? null)
-                    e.target.value = ''
+                    void handleGalleryImage(e.target.files?.[0] ?? null);
+                    e.target.value = "";
                   }}
                 />
               </label>
             </div>
             <input
               className="form-input"
-              value={form.imagen_url.startsWith('data:') ? '' : form.imagen_url}
-              onChange={(e) => setForm((p) => ({ ...p, imagen_url: e.target.value }))}
+              value={form.imagen_url.startsWith("data:") ? "" : form.imagen_url}
+              onChange={(e) =>
+                setForm((p) => ({ ...p, imagen_url: e.target.value }))
+              }
               placeholder="O pegá una URL: /logo.png o https://..."
               style={{ marginTop: 8 }}
             />
@@ -218,7 +275,7 @@ export function SliderAdminPanel() {
                   type="button"
                   className="slider-image-preview__remove"
                   aria-label="Quitar imagen"
-                  onClick={() => setForm((p) => ({ ...p, imagen_url: '' }))}
+                  onClick={() => setForm((p) => ({ ...p, imagen_url: "" }))}
                 >
                   <X size={14} />
                 </button>
@@ -228,27 +285,74 @@ export function SliderAdminPanel() {
 
           <label className="form-field">
             <span className="form-label">Enlace (opcional)</span>
-            <input className="form-input" value={form.enlace} onChange={(e) => setForm((p) => ({ ...p, enlace: e.target.value }))} placeholder="/novedades o https://..." />
+            <input
+              className="form-input"
+              value={form.enlace}
+              onChange={(e) =>
+                setForm((p) => ({ ...p, enlace: e.target.value }))
+              }
+              placeholder="/novedades o https://..."
+            />
           </label>
           <label className="form-field">
             <span className="form-label">Orden</span>
-            <input className="form-input" type="number" value={form.orden} onChange={(e) => setForm((p) => ({ ...p, orden: e.target.value }))} />
+            <input
+              className="form-input"
+              type="number"
+              value={form.orden}
+              onChange={(e) =>
+                setForm((p) => ({ ...p, orden: e.target.value }))
+              }
+            />
           </label>
           <label className="form-field slider-checkbox-field">
-            <input type="checkbox" checked={form.activo} onChange={(e) => setForm((p) => ({ ...p, activo: e.target.checked }))} />
+            <input
+              type="checkbox"
+              checked={form.activo}
+              onChange={(e) =>
+                setForm((p) => ({ ...p, activo: e.target.checked }))
+              }
+            />
             <span className="form-label">Visible en el inicio</span>
           </label>
-          <button type="button" className="btn btn-md btn-primary-fill" disabled={submitting || uploadingImage} onClick={handleSave}>
-            {submitting ? <Loader2 size={16} className="spin" /> : editingId ? 'Guardar cambios' : 'Publicar slide'}
+          <button
+            type="button"
+            className="btn btn-md btn-primary-fill"
+            disabled={submitting || uploadingImage}
+            onClick={handleSave}
+          >
+            {submitting ? (
+              <Loader2 size={16} className="spin" />
+            ) : editingId ? (
+              "Guardar cambios"
+            ) : (
+              "Publicar slide"
+            )}
           </button>
         </div>
       )}
 
-      <div style={{ marginTop: 18, display: 'grid', gap: 10 }}>
+      <div style={{ marginTop: 18, display: "grid", gap: 10 }}>
         {loading ? (
-          <p style={{ color: 'var(--muted-foreground)', fontSize: '0.875rem', margin: 0 }}>Cargando slides…</p>
+          <p
+            style={{
+              color: "var(--muted-foreground)",
+              fontSize: "0.875rem",
+              margin: 0,
+            }}
+          >
+            Cargando slides…
+          </p>
         ) : slides.length === 0 ? (
-          <p style={{ color: 'var(--muted-foreground)', fontSize: '0.875rem', margin: 0 }}>No hay slides configurados.</p>
+          <p
+            style={{
+              color: "var(--muted-foreground)",
+              fontSize: "0.875rem",
+              margin: 0,
+            }}
+          >
+            No hay slides configurados.
+          </p>
         ) : (
           slides.map((slide) => (
             <div key={slide.id} className="slider-admin-row">
@@ -256,15 +360,33 @@ export function SliderAdminPanel() {
                 <img src={slide.imagen_url} alt="" />
               </div>
               <div className="slider-admin-row__body">
-                <strong>{slide.titulo?.trim() ? slide.titulo : 'Solo imagen'}</strong>
-                {slide.titulo?.trim() && slide.subtitulo && <span>{slide.subtitulo}</span>}
-                <em>{slide.activo === false ? 'Oculto' : 'Visible'} · Orden {slide.orden ?? 0}{!slide.titulo?.trim() ? ' · Sin título' : ''}</em>
+                <strong>
+                  {slide.titulo?.trim() ? slide.titulo : "Solo imagen"}
+                </strong>
+                {slide.titulo?.trim() && slide.subtitulo && (
+                  <span>{slide.subtitulo}</span>
+                )}
+                <em>
+                  {slide.activo === false ? "Oculto" : "Visible"} · Orden{" "}
+                  {slide.orden ?? 0}
+                  {!slide.titulo?.trim() ? " · Sin título" : ""}
+                </em>
               </div>
               <div className="slider-admin-row__actions">
-                <button type="button" className="btn btn-sm btn-ghost" onClick={() => handleEdit(slide)} disabled={submitting}>
+                <button
+                  type="button"
+                  className="btn btn-sm btn-ghost"
+                  onClick={() => handleEdit(slide)}
+                  disabled={submitting}
+                >
                   <Pencil size={14} />
                 </button>
-                <button type="button" className="btn btn-sm btn-ghost" onClick={() => setDeleteId(slide.id)} disabled={submitting}>
+                <button
+                  type="button"
+                  className="btn btn-sm btn-ghost"
+                  onClick={() => setDeleteId(slide.id)}
+                  disabled={submitting}
+                >
                   <Trash2 size={14} />
                 </button>
               </div>
@@ -280,8 +402,10 @@ export function SliderAdminPanel() {
         confirmLabel="Eliminar"
         loading={submitting}
         onCancel={() => setDeleteId(null)}
-        onConfirm={async () => { if (deleteId != null) await handleDelete(deleteId) }}
+        onConfirm={async () => {
+          if (deleteId != null) await handleDelete(deleteId);
+        }}
       />
     </PremiumCard>
-  )
+  );
 }

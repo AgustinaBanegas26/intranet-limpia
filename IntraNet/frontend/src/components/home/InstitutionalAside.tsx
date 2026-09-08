@@ -1,14 +1,21 @@
 type InstitutionalAsideProps = {
-  sucursal?: string | null
-  sector?: string | null
-}
+  sucursal?: string | null;
+  sector?: string | null;
+};
 
-export function InstitutionalAside({ sucursal, sector }: InstitutionalAsideProps) {
+export function InstitutionalAside({
+  sucursal,
+  sector,
+}: InstitutionalAsideProps) {
   return (
-    <aside className="gn-aside-card gn-aside-card--institutional" aria-label="Información institucional">
-      <p className="gn-institutional-brand">Grupo Núcleo</p>
+    <aside
+      className="gn-aside-card gn-aside-card--institutional"
+      aria-label="Información institucional"
+    >
+      <p className="gn-institutional-brand">Portal interno</p>
       <p className="gn-institutional-quote">
-        Construimos juntos el futuro de la empresa, con compromiso, transparencia y trabajo en equipo.
+        Construimos juntos el futuro de la empresa, con compromiso,
+        transparencia y trabajo en equipo.
       </p>
       {(sector || sucursal) && (
         <dl className="gn-institutional-meta">
@@ -27,5 +34,5 @@ export function InstitutionalAside({ sucursal, sector }: InstitutionalAsideProps
         </dl>
       )}
     </aside>
-  )
+  );
 }

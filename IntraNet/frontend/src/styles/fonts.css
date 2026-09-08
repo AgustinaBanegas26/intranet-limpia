@@ -1,24 +1,15 @@
-/* ─── Tipografía del sistema — Grupo Núcleo Intranet ─────────────────────────
+/* ─── Tipografía del sistema — Portal interno ─────────────────────────
    Se usa el stack de fuentes del sistema operativo para máxima legibilidad y
    rendimiento. En el futuro reemplazar con la fuente corporativa oficial.
    ─────────────────────────────────────────────────────────────────────────── */
 
 :root {
   --font-sans:
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    'Inter',
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", "Helvetica Neue",
+    Arial, sans-serif;
 
   --font-mono:
-    'SF Mono',
-    'Cascadia Code',
-    'Fira Code',
-    ui-monospace,
-    'Courier New',
+    "SF Mono", "Cascadia Code", "Fira Code", ui-monospace, "Courier New",
     monospace;
 }
 

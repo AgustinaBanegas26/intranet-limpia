@@ -1,13 +1,13 @@
-# Requerimientos — Web privada Grupo Núcleo
+# Requerimientos — Portal interno
 
-Documento fuente: `Requerimientos para el desarrollo de la Web privada GRUPO NÚCLEO.pdf`
+Documento funcional para el desarrollo del portal interno.
 
 ## Dos aplicaciones en el mismo frontend
 
-| Área | Usuario | Carpeta | Descripción |
-|------|---------|---------|-------------|
-| **Panel administrador** | Gisela (admin) | `src/app/` | Gestión: empleados CRUD, aprobar solicitudes, calendario reservas, ausencias, publicar novedades |
-| **Intranet empleados** | Todos los empleados | `src/intranet/` | Consulta y solicitudes: vacaciones, novedades (like), reservas auto/hotel, perfil, etc. |
+| Área                    | Usuario             | Carpeta         | Descripción                                                                                      |
+| ----------------------- | ------------------- | --------------- | ------------------------------------------------------------------------------------------------ |
+| **Panel administrador** | Gisela (admin)      | `src/app/`      | Gestión: empleados CRUD, aprobar solicitudes, calendario reservas, ausencias, publicar novedades |
+| **Intranet empleados**  | Todos los empleados | `src/intranet/` | Consulta y solicitudes: vacaciones, novedades (like), reservas auto/hotel, perfil, etc.          |
 
 ## Módulos intranet (empleados)
 
