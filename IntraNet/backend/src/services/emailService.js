@@ -47,10 +47,7 @@ const DEFAULT_EMAILS = {
   sistemas: process.env.EMAIL_SISTEMAS,
   auditoria: process.env.EMAIL_AUDITORIA,
   // EMAIL_CAJA se conserva como compatibilidad con la configuración anterior.
-  cajaMdp:
-    process.env.EMAIL_CAJA_MDP ||
-    process.env.EMAIL_CAJA ||
-    "",
+  cajaMdp: process.env.EMAIL_CAJA_MDP || process.env.EMAIL_CAJA || "",
   cajaBrasil: process.env.EMAIL_CAJA_BRASIL || "",
 };
 
@@ -477,7 +474,11 @@ async function sendEmail(asunto, contenidoHtml, destinatarios) {
 
     const transporter = createTransporter();
     if (!transporter) {
-      return { ok: false, code: "email_not_configured", destinatarios: recipients };
+      return {
+        ok: false,
+        code: "email_not_configured",
+        destinatarios: recipients,
+      };
     }
 
     await transporter.sendMail({
