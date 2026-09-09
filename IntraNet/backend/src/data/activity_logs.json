@@ -1,6 +1,17 @@
 {
-  "version": 69,
+  "version": 70,
   "items": [
+    {
+      "id": "e9a3bea1-3caf-4450-921a-7fa593d191de",
+      "createdAt": "2026-09-09T14:56:25.073Z",
+      "action": "login",
+      "actorId": 3,
+      "entityType": "sessions",
+      "entityId": 3,
+      "metadata": {
+        "mustChangePassword": false
+      }
+    },
     {
       "id": "1543fb77-4c01-484f-936d-35144200a827",
       "createdAt": "2026-09-09T14:47:50.666Z",
