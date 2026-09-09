@@ -1,6 +1,50 @@
 {
-  "version": 65,
+  "version": 69,
   "items": [
+    {
+      "id": "1543fb77-4c01-484f-936d-35144200a827",
+      "createdAt": "2026-09-09T14:47:50.666Z",
+      "action": "login",
+      "actorId": 3,
+      "entityType": "sessions",
+      "entityId": 3,
+      "metadata": {
+        "mustChangePassword": true
+      }
+    },
+    {
+      "id": "6638953f-e275-496e-89bb-8e07b7592c2e",
+      "createdAt": "2026-09-09T14:47:29.471Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "test@example.com"
+      }
+    },
+    {
+      "id": "0b328ee0-1ad3-4215-a63c-ee326017241d",
+      "createdAt": "2026-09-08T22:58:53.155Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "agustinabanegas26@gmail.com"
+      }
+    },
+    {
+      "id": "4f2e5204-b9ad-4140-a062-3da08fee59b0",
+      "createdAt": "2026-09-08T22:54:44.564Z",
+      "action": "login_failed",
+      "actorId": null,
+      "entityType": "sessions",
+      "entityId": null,
+      "metadata": {
+        "email": "agustinabanegas26@gmail.com"
+      }
+    },
     {
       "id": "9103c220-2bf5-4c0a-acb9-3fd7bafbe635",
       "createdAt": "2026-09-08T22:37:25.543Z",

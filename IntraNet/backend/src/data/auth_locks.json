@@ -1,5 +1,5 @@
 {
-  "version": 173,
+  "version": 188,
   "items": [
     {
       "email": "employee@example.invalid",
@@ -51,15 +51,15 @@
     },
     {
       "email": "test@example.com",
-      "failedCount": 1,
+      "failedCount": 2,
       "lockedUntil": null,
-      "updatedAt": "2026-08-03T13:33:14.173Z"
+      "updatedAt": "2026-09-09T14:47:29.392Z"
     },
     {
       "email": "agustinabanegas26@gmail.com",
       "failedCount": 0,
       "lockedUntil": null,
-      "updatedAt": "2026-08-05T14:05:55.847Z"
+      "updatedAt": "2026-09-09T14:47:50.343Z"
     },
     {
       "email": "wb236.dev@gmail.com",
