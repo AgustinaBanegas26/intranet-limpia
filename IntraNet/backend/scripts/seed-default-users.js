@@ -1,3 +1,6 @@
+//este archivo sirve para crear o actualizar los usuarios por defecto en la base de datos, 
+// como el administrador y algunos empleados de prueba. 
+// Se puede ejecutar con `node scripts/seed-default-users.js`.
 require("dotenv").config({
   path: require("path").join(__dirname, "..", ".env"),
 });

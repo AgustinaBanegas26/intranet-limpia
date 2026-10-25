@@ -1,4 +1,5 @@
-#!/usr/bin/env node
+//este archivo chequea que las variables de entorno estén correctamente configuradas, 
+// y si no lo están, termina el proceso con un error.
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') })
 const { validateEnv } = require('../src/config/validateEnv')
 
