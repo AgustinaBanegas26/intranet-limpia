@@ -1,9 +1,14 @@
+// Middleware de JWT propio para las rutas protegidas de Express. El login firma
+// el token y este módulo valida firma, versión de credenciales y cambio obligatorio.
 const { getMustChangePassword } = require('../services/empleados.service')
 
+// Obtiene el secreto de firma desde el entorno del backend, nunca desde Vite.
 function getJwtSecret() {
   return process.env.JWT_SECRET
 }
 
+// Verifica los JWT propios que emite el login del portal y compara credential_version
+// para rechazar sesiones emitidas antes de un cambio de contraseña.
 async function authenticateToken(req, res, next) {
   const jwt = require('jsonwebtoken')
   const supabase = require('../config/supabase')
@@ -14,44 +19,34 @@ async function authenticateToken(req, res, next) {
     return res.status(401).json({ error: 'unauthorized_token_missing' })
   }
 
-  try {
-    // 1. Intentar validar con Supabase Auth primero
-    const { data: { user }, error: sbError } = await supabase.auth.getUser(token)
-    
-    if (!sbError && user) {
-      // 2. Si es válido en Supabase, buscamos el empleado asociado
-      const { data: empleado, error: empError } = await supabase
-        .from('empleados')
-        .select('id, role, es_director')
-        .eq('auth_user_id', user.id)
-        .maybeSingle()
-
-      if (empError || !empleado) {
-        return res.status(403).json({ error: 'empleado_not_found_for_auth_user' })
-      }
-
-      req.user = {
-        sub: empleado.id,
-        role: empleado.role || (empleado.es_director ? 'director' : 'empleado'),
-        email: user.email
-      }
-      return next()
-    }
-  } catch (err) {
-    console.error('[auth] Supabase token verification failed:', err)
-  }
-
-  // 3. Fallback: Si no era un token de Supabase, validamos como token heredado
   const secret = getJwtSecret()
-  jwt.verify(token, secret, (err, decoded) => {
+  jwt.verify(token, secret, async (err, decoded) => {
     if (err) {
       return res.status(403).json({ error: 'invalid_token' })
     }
+
+    try {
+      const { data, error } = await supabase
+        .from('empleados')
+        .select('credential_version')
+        .eq('id', decoded.sub)
+        .maybeSingle()
+      if (error) {
+        return res.status(503).json({ error: 'service_unavailable' })
+      }
+      if (!data || Number(decoded.credentialVersion || 0) !== Number(data.credential_version || 0)) {
+        return res.status(403).json({ error: 'invalid_token' })
+      }
+    } catch {
+      return res.status(503).json({ error: 'service_unavailable' })
+    }
+
     req.user = decoded
-    next()
+    return next()
   })
 }
 
+// Reconoce la ruta excepcional de cambio forzoso para permitir resolverla.
 function isChangePasswordRoute(req) {
   return (
     req.method === 'PUT' &&
@@ -59,6 +54,7 @@ function isChangePasswordRoute(req) {
   )
 }
 
+// Deja consultar el perfil incluso cuando falta el cambio de primera contraseña.
 function isProfileRoute(req) {
   return req.method === 'GET' && (req.path === '/profile' || req.originalUrl.endsWith('/profile'))
 }
@@ -98,6 +94,7 @@ async function requirePasswordChanged(req, res, next) {
   })
 }
 
+// Firma la sesión propia por 24 horas; el número de credencial permite revocarla.
 function signToken(payload) {
   const jwt = require('jsonwebtoken')
   return jwt.sign(payload, getJwtSecret(), { expiresIn: '24h' })

@@ -1,3 +1,6 @@
+// Este servicio concentra las consultas y cambios de empleados en PostgreSQL.
+// El login lo usa para buscar y comprobar bcrypt; la recuperación reutiliza su
+// política de hash al actualizar password_hash, sin tocar roles ni relaciones.
 const supabase = require("../config/supabase");
 const bcrypt = require("bcrypt");
 
@@ -153,6 +156,8 @@ async function getAllEmployees({
   }
 }
 
+// Busca el empleado por correo corporativo para el login y devuelve sus columnas
+// almacenadas; recibe un correo normalizado y propaga errores reales de Supabase.
 async function buscarEmpleadoPorEmail(email) {
   if (!supabase || typeof supabase.from !== "function") {
     const err = new Error("Supabase client not initialized");
@@ -211,6 +216,8 @@ async function buscarEmpleadoPorEmail(email) {
   }
 }
 
+// Crea la fila de empleado con una contraseña inicial bcrypt para el login propio.
+// No crea una identidad en Supabase Auth; los roles y datos quedan en empleados.
 async function createEmployee(employee) {
   if (!supabase || typeof supabase.from !== "function") {
     const err = new Error("Supabase client not initialized");
@@ -221,29 +228,9 @@ async function createEmployee(employee) {
   const passwordHash = await bcrypt.hash(DEFAULT_NEW_EMPLOYEE_PASSWORD, 10);
   const corporativo = normalizeEmail(employee.email_corporativo);
 
-  let authUserId = null;
-  try {
-    const { data: authData, error: authError } =
-      await supabase.auth.admin.createUser({
-        email: corporativo,
-        password: DEFAULT_NEW_EMPLOYEE_PASSWORD,
-        email_confirm: true,
-      });
-    if (authError) {
-      console.error(
-        "[empleados.service] SUPABASE AUTH ERROR createEmployee:",
-        authError,
-      );
-      throw authError;
-    }
-    authUserId = authData.user.id;
-  } catch (err) {
-    console.error("[empleados.service] Failed to create auth user:", err);
-    throw err;
-  }
-
   const payload = {
-    auth_user_id: authUserId,
+    // Se conserva la columna heredada, pero el portal ya no crea usuarios Auth.
+    auth_user_id: null,
     legajo: employee.legajo || null,
     nombre: employee.nombre,
     apellido: employee.apellido,
@@ -266,15 +253,11 @@ async function createEmployee(employee) {
       .from("empleados")
       .insert(payload)
       .select(
-        `id, auth_user_id, legajo, nombre, apellido, email_corporativo, cargo, sucursal, area, telefono, activo, es_director, work_mode`,
+        `id, legajo, nombre, apellido, email_corporativo, cargo, sucursal, area, telefono, activo, es_director, work_mode`,
       )
       .single();
 
     if (error) {
-      // Revertir la creación en Auth si falla la base de datos
-      if (authUserId) {
-        await supabase.auth.admin.deleteUser(authUserId).catch(() => {});
-      }
       console.error(
         "[empleados.service] SUPABASE ERROR createEmployee:",
         error,
@@ -307,6 +290,8 @@ async function getMustChangePassword(userId) {
   return Boolean(data.must_change_password);
 }
 
+// Compara la contraseña recibida con password_hash usando bcrypt; sólo retorna
+// true/false y nunca entrega el hash al frontend.
 async function verifyEmployeePassword(userId, plainPassword) {
   if (!supabase || typeof supabase.from !== "function") {
     throw new Error("Supabase client not initialized");
@@ -401,6 +386,7 @@ async function deactivateEmployee(id) {
   return removeEmployee(id);
 }
 
+// Elimina al empleado y limpia sus relaciones del portal; no llama a Supabase Auth.
 async function removeEmployee(id) {
   if (!supabase || typeof supabase.from !== "function") {
     const err = new Error("Supabase client not initialized");
@@ -413,7 +399,7 @@ async function removeEmployee(id) {
   try {
     const { data: existing, error: findErr } = await supabase
       .from("empleados")
-      .select("id, nombre, apellido, email_corporativo, auth_user_id")
+      .select("id, nombre, apellido, email_corporativo")
       .eq("id", employeeId)
       .maybeSingle();
 
@@ -447,18 +433,6 @@ async function removeEmployee(id) {
       throw err;
     }
 
-    // Si todo salió bien y tenía auth_user_id, eliminar el usuario de Auth
-    if (existing.auth_user_id) {
-      await supabase.auth.admin
-        .deleteUser(existing.auth_user_id)
-        .catch((err) => {
-          console.error(
-            "[empleados.service] Error deleting user from Supabase Auth:",
-            err,
-          );
-        });
-    }
-
     return { success: true, data, deleted: true };
   } catch (err) {
     console.error("[empleados.service] Unexpected error removeEmployee:", err);
@@ -466,6 +440,9 @@ async function removeEmployee(id) {
   }
 }
 
+// Genera el mismo hash bcrypt que el login verifica y actualiza la contraseña.
+// Ejecuta una función SQL que incrementa credential_version para invalidar JWT
+// anteriores; devuelve los datos mínimos para que el endpoint emita uno nuevo.
 async function updateEmployeePassword(userId, newPassword) {
   if (!supabase || typeof supabase.from !== "function") {
     const err = new Error("Supabase client not initialized");
@@ -482,14 +459,10 @@ async function updateEmployeePassword(userId, newPassword) {
   const passwordHash = await bcrypt.hash(String(newPassword), 10);
 
   try {
-    const { data, error } = await supabase
-      .from("empleados")
-      .update({ password_hash: passwordHash, must_change_password: false })
-      .eq("id", userId)
-      .select(
-        `id, legajo, nombre, apellido, email_corporativo, cargo, sucursal, area, telefono, activo, es_director, work_mode, must_change_password`,
-      )
-      .single();
+    const { data, error } = await supabase.rpc("update_employee_password", {
+      p_employee_id: userId,
+      p_password_hash: passwordHash,
+    });
 
     if (error) {
       console.error(
@@ -499,7 +472,7 @@ async function updateEmployeePassword(userId, newPassword) {
       throw error;
     }
 
-    return data;
+    return Array.isArray(data) ? data[0] || null : data || null;
   } catch (err) {
     console.error(
       "[empleados.service] Unexpected error updateEmployeePassword:",

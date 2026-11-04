@@ -1,3 +1,6 @@
+// API REST de la intranet: monta Express, aplica seguridad global y coordina
+// autenticación propia, servicios Supabase y endpoints de cada módulo. Los
+// servicios en src/services encapsulan consultas; el frontend consume estas rutas.
 require('dotenv').config()
 
 const { validateEnv } = require('./config/validateEnv')
@@ -40,6 +43,12 @@ const {
   verifyEmployeePassword,
   getMustChangePassword,
 } = require('./services/empleados.service')
+const {
+  requestRecovery,
+  verifyRecoveryCode,
+  resetPassword,
+  RECOVERY_MESSAGE,
+} = require('./services/passwordRecovery.service')
 const {
   getAllNovedades,
   getMisNovedades,
@@ -327,6 +336,7 @@ app.delete('/sectores/:id', authenticateToken, requirePasswordChanged, async (re
 })
 
 // POST /auth/login { email, password }
+// Valida credenciales bcrypt guardadas en empleados y emite un JWT propio del portal.
 app.post('/auth/login', async (req, res) => {
   const email = String(req.body?.email || '').trim().toLowerCase()
   const password = String(req.body?.password || '')
@@ -388,6 +398,7 @@ app.post('/auth/login', async (req, res) => {
     email: user.email,
     name: user.name,
     mustChangePassword,
+    credentialVersion: user.credentialVersion,
   })
 
   appendActivityLog({
@@ -413,9 +424,86 @@ app.post('/auth/login', async (req, res) => {
   })
 })
 
-// Endpoints de recuperación de contraseña eliminados:
-// El frontend ahora interactúa directamente con Supabase Auth usando `supabase.auth.resetPasswordForEmail`
-// y `supabase.auth.updateUser`, por lo que estos endpoints ya no son necesarios.
+// Endpoints públicos de recuperación: responden de forma genérica al correo,
+// mientras que el código y la identidad se validan exclusivamente en backend.
+const recoveryRequestLimiter = rateLimit({
+  windowMs: 15 * 60_000,
+  limit: 5,
+  standardHeaders: 'draft-8',
+  legacyHeaders: false,
+  message: { error: 'recovery_rate_limited' },
+})
+const recoveryVerifyLimiter = rateLimit({
+  windowMs: 15 * 60_000,
+  limit: 10,
+  standardHeaders: 'draft-8',
+  legacyHeaders: false,
+  message: { error: 'recovery_rate_limited' },
+})
+
+// POST /auth/password-recovery/request { email }
+// Valida el formato, registra el límite por correo e IP y envía un código si
+// existe una cuenta activa. La respuesta nunca confirma la existencia del correo.
+app.post('/auth/password-recovery/request', recoveryRequestLimiter, async (req, res) => {
+  const email = String(req.body?.email || '').trim().toLowerCase()
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) {
+    return res.status(400).json({ error: 'invalid_email' })
+  }
+
+  try {
+    await requestRecovery(email, req.ip)
+    return res.status(202).json({ ok: true, message: RECOVERY_MESSAGE })
+  } catch (error) {
+    // No se imprime email, código, token, datos del empleado ni credenciales SMTP.
+    console.error('[auth-recovery] No se pudo procesar la solicitud:', error?.code || 'internal_error')
+    // Se conserva el mismo estado y texto para cuentas existentes y desconocidas.
+    return res.status(202).json({ ok: true, message: RECOVERY_MESSAGE })
+  }
+})
+
+// POST /auth/password-recovery/verify { email, code }
+// Comprueba código, vencimiento y contador de intentos; la transacción SQL
+// bloquea la fila para que verificaciones concurrentes no eludan el máximo.
+app.post('/auth/password-recovery/verify', recoveryVerifyLimiter, async (req, res) => {
+  const email = String(req.body?.email || '').trim().toLowerCase()
+  const code = String(req.body?.code || '').trim().toLowerCase()
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !/^[a-f0-9]{64}$/.test(code)) {
+    return res.status(400).json({ error: 'invalid_recovery_code' })
+  }
+
+  try {
+    const valid = await verifyRecoveryCode(email, code)
+    if (!valid) return res.status(400).json({ error: 'invalid_or_expired_recovery_code' })
+    return res.json({ ok: true })
+  } catch (error) {
+    console.error('[auth-recovery] No se pudo verificar el código:', error?.code || 'internal_error')
+    return res.status(503).json({ error: 'recovery_temporarily_unavailable' })
+  }
+})
+
+// POST /auth/password-recovery/reset { email, code, password }
+// Reutiliza bcrypt y sólo confirma el cambio cuando la función SQL consume el
+// código vigente y actualiza la fila de empleados dentro de la misma transacción.
+app.post('/auth/password-recovery/reset', recoveryVerifyLimiter, async (req, res) => {
+  const email = String(req.body?.email || '').trim().toLowerCase()
+  const code = String(req.body?.code || '').trim().toLowerCase()
+  const password = String(req.body?.password || '')
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !/^[a-f0-9]{64}$/.test(code)) {
+    return res.status(400).json({ error: 'invalid_recovery_code' })
+  }
+  if (password.length < 8 || Buffer.byteLength(password, 'utf8') > 72) {
+    return res.status(400).json({ error: 'invalid_password', message: 'La contraseña debe tener entre 8 y 72 bytes.' })
+  }
+
+  try {
+    const updated = await resetPassword(email, code, password)
+    if (!updated) return res.status(400).json({ error: 'invalid_or_expired_recovery_code' })
+    return res.json({ ok: true, message: 'La contraseña se actualizó. Iniciá sesión con la nueva contraseña.' })
+  } catch (error) {
+    console.error('[auth-recovery] No se pudo actualizar la contraseña:', error?.code || 'internal_error')
+    return res.status(503).json({ error: 'recovery_temporarily_unavailable' })
+  }
+})
 
 // GET /profile - Get logged-in user profile
 app.get('/profile', authenticateToken, requirePasswordChanged, async (req, res) => {
@@ -1786,6 +1874,7 @@ app.put('/auth/change-password', authenticateToken, async (req, res) => {
       email: req.user.email,
       name: req.user.name,
       mustChangePassword: false,
+      credentialVersion: updated.credential_version,
     })
 
     return res.json({ ok: true, mustChangePassword: false, token: newToken })

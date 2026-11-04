@@ -1,4 +1,7 @@
+// Pantalla pública de inicio de sesión: valida con la API Express propia y
+// deriva la recuperación a su flujo independiente en /reset-password.
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   AlertCircle,
@@ -17,12 +20,13 @@ import {
 import { InstallAppButton } from "../../components/InstallAppButton";
 import { useTheme } from "../../context/ThemeContext";
 import { getBackendUrl, login, type Session } from "../../services/auth";
-import { supabase } from "../../config/supabase";
+import { requestPasswordRecovery } from "../../services/passwordRecovery";
 
 interface Props {
   onLogin: (session: Session) => void;
 }
 
+// Traduce errores funcionales del backend a mensajes breves para quien inicia sesión.
 function formatError(fullMessage: string) {
   // We expect errors in the form "code:message" when thrown from `login()`.
   const parts = String(fullMessage || "").split(":");
@@ -43,7 +47,7 @@ function formatError(fullMessage: string) {
   if (code === "login_failed")
     return "No se pudo iniciar sesión. Revisá el servidor.";
 
-  // If we have a detailed message from Supabase, include it for debugging in the UI.
+  // El backend puede adjuntar un detalle funcional para explicar el rechazo.
   if (detail) return `${detail.trim()}`;
 
   return "Ocurrió un error. Intentá nuevamente.";
@@ -70,12 +74,16 @@ const slideLeft = {
   visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease } },
 };
 
+// Crea la secuencia de entrada escalonada que usa el contenido visual de la pantalla.
 const stagger = (delay = 0) => ({
   hidden: {},
   visible: { transition: { staggerChildren: 0.1, delayChildren: delay } },
 });
 
+// Muestra el formulario de acceso y permite comenzar la recuperación pública.
+// Recibe onLogin para que App.tsx guarde la sesión emitida por Express.
 export function LoginPage({ onLogin }: Props) {
+  const navigate = useNavigate();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
@@ -85,6 +93,7 @@ export function LoginPage({ onLogin }: Props) {
   const [recoveryLoading, setRecoveryLoading] = useState(false);
   const { theme, setTheme } = useTheme();
 
+  // Envía correo y contraseña al login existente; entrega la sesión al componente padre.
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const form = event.target as HTMLFormElement;
@@ -113,6 +122,7 @@ export function LoginPage({ onLogin }: Props) {
     }
   };
 
+  // Solicita el código al backend propio y conserva un mensaje genérico por privacidad.
   const handleRecoverySubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!recoveryEmail) return;
@@ -121,29 +131,12 @@ export function LoginPage({ onLogin }: Props) {
     setRecoveryMessage("");
 
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(
-        recoveryEmail,
-        {
-          redirectTo: `${window.location.origin}/reset-password`,
-        },
-      );
-
-      if (error) {
-        throw error;
-      }
-
+      setRecoveryMessage(await requestPasswordRecovery(recoveryEmail.trim()));
+    } catch {
+      // No se revela si el email existe ni se exponen detalles del proveedor SMTP.
       setRecoveryMessage(
-        "¡Correo enviado con éxito! Revisá tu bandeja de entrada (y la carpeta de spam).",
+        "No se pudo procesar la solicitud ahora. Intentá nuevamente más tarde.",
       );
-    } catch (err: any) {
-      console.error("[Recuperar Contraseña] Excepción:", err);
-      const isConfigError =
-        err.message?.includes("FetchError") ||
-        err.message?.includes("Configuration");
-      const errorMsg = isConfigError
-        ? "Error de conexión. Verificá tu URL y Key de Supabase en .env.local."
-        : `Error inesperado: ${err.message || String(err)}`;
-      setRecoveryMessage(errorMsg);
     } finally {
       setRecoveryLoading(false);
     }
@@ -409,7 +402,7 @@ export function LoginPage({ onLogin }: Props) {
                 >
                   <p
                     style={{
-                      color: recoveryMessage.startsWith("Error")
+                      color: recoveryMessage.startsWith("No se pudo")
                         ? "var(--danger)"
                         : "var(--success)",
                     }}
@@ -420,13 +413,19 @@ export function LoginPage({ onLogin }: Props) {
                     type="button"
                     className="login-recovery-btn"
                     onClick={() => {
+                      const failed = recoveryMessage.startsWith("No se pudo");
+                      const target = failed
+                        ? "/reset-password"
+                        : `/reset-password?email=${encodeURIComponent(recoveryEmail.trim())}`;
                       setShowRecovery(false);
                       setRecoveryMessage("");
-                      setRecoveryEmail("");
+                      navigate(target);
                     }}
                     style={{ marginTop: "16px" }}
                   >
-                    Entendido
+                    {recoveryMessage.startsWith("No se pudo")
+                      ? "Intentar nuevamente"
+                      : "Ingresar código"}
                   </button>
                 </div>
               ) : (

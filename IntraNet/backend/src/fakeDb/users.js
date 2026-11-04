@@ -1,3 +1,6 @@
+// Este módulo adapta el modelo real de empleados al formato que consume el login.
+// También conserva el bloqueo local de intentos fallidos; index.js lo utiliza para
+// validar credenciales con bcrypt y firmar el JWT propio del portal.
 const { readEntity, updateEntity } = require("./entityStore");
 const { buscarEmpleadoPorEmail } = require("../services/empleados.service");
 const { resolveRole } = require("../utils/roles");
@@ -5,12 +8,15 @@ const { resolveRole } = require("../utils/roles");
 const AUTH_LOCKS_ENTITY = "auth_locks";
 const isVercel = process.env.VERCEL === "1";
 
+// Normaliza el correo para que login y el contador de intentos comparen igual.
 function normalizeEmail(email) {
   return String(email || "")
     .trim()
     .toLowerCase();
 }
 
+// Busca el empleado real por correo y adapta sus columnas a la estructura usada
+// por /auth/login; devuelve null si no existe y lanza error ante fallas de datos.
 async function getUserByEmail(email) {
   const normalizedEmail = normalizeEmail(email);
 
@@ -36,6 +42,7 @@ async function getUserByEmail(email) {
         empleado.mustChangePassword || empleado.must_change_password || false,
       ),
       passwordHash: empleado.passwordHash || empleado.password_hash || "",
+      credentialVersion: Number(empleado.credential_version || 0),
       foto: empleado.foto_url || null,
     };
   } catch (error) {
@@ -53,6 +60,7 @@ async function getUserByEmail(email) {
   */
 }
 
+// Lee del almacenamiento local el estado de bloqueo de un correo.
 function getAuthLock(email) {
   if (isVercel) return null;
 
@@ -62,6 +70,7 @@ function getAuthLock(email) {
   return row;
 }
 
+// Suma un intento fallido y aplica bloqueo temporal al alcanzar el umbral local.
 function recordFailedLogin(email) {
   if (isVercel) {
     return null;
@@ -99,6 +108,7 @@ function recordFailedLogin(email) {
   return getAuthLock(key) || next.items.find((r) => r.email === key) || null;
 }
 
+// Reinicia el contador después de un inicio de sesión correcto.
 function clearAuthLock(email) {
   if (isVercel) {
     return;
@@ -119,6 +129,7 @@ function clearAuthLock(email) {
   });
 }
 
+// Determina si el bloqueo guardado sigue vigente según la hora actual.
 function isLocked(lockRow) {
   if (!lockRow?.lockedUntil) return false;
   const until = Date.parse(lockRow.lockedUntil);
