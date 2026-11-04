@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS public.password_recovery_requests (
 COMMENT ON TABLE public.password_recovery_requests IS
   'Solicitudes de recuperación: sólo hashes de correo, IP y código; nunca guarda el código original.';
 
--- La versión permite revocar JWT propios sin invalidar las cuentas ni cambiar roles.
+-- La versión permite revocar JWT propios sin invalidar las cuentas ni cambiar roles..
 ALTER TABLE public.empleados
   ADD COLUMN IF NOT EXISTS credential_version integer NOT NULL DEFAULT 0;
 
