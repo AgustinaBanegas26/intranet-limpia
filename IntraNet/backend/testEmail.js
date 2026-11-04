@@ -2,7 +2,7 @@ const path = require('path')
 require('dotenv').config({ path: path.resolve(__dirname, '.env') })
 
 const { sendTestEmail } = require('./src/services/emailService')
-//
+
 async function main() {
   try {
     const result = await sendTestEmail()
