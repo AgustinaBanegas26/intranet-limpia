@@ -37,6 +37,7 @@ const COLORS = [
   "#8B5CF6",
 ];
 
+// Gestiona la operacion fmtDate.
 function fmtDate(d?: string | null) {
   if (!d) return "—";
   return new Date(d.includes("T") ? d : `${d}T00:00:00`).toLocaleDateString(
@@ -45,6 +46,7 @@ function fmtDate(d?: string | null) {
   );
 }
 
+// Gestiona la operacion PoliciesPage.
 export function PoliciesPage() {
   const { isAdmin } = useAuth();
   const [items, setItems] = useState<PoliticaDTO[]>([]);
@@ -94,6 +96,7 @@ export function PoliciesPage() {
           (p) => (p.categoria || "").toLowerCase() === activeCategory,
         );
 
+  // Limpia el estado o los datos correspondientes.
   const resetForm = () => {
     setForm({
       titulo: "",
@@ -107,6 +110,7 @@ export function PoliciesPage() {
     setShowForm(false);
   };
 
+  // Gestiona la accion correspondiente.
   const handlePdfUpload = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
@@ -124,6 +128,7 @@ export function PoliciesPage() {
     event.target.value = "";
   };
 
+  // Gestiona la accion correspondiente.
   const handleCreate = async () => {
     if (!form.titulo.trim()) return;
     setSubmitting(true);
@@ -147,6 +152,7 @@ export function PoliciesPage() {
     }
   };
 
+  // Gestiona la accion correspondiente.
   const handleEdit = (policy: PoliticaDTO) => {
     setEditingId(policy.id);
     setForm({
@@ -159,11 +165,13 @@ export function PoliciesPage() {
     setPdfName(policy.archivo_url ? "PDF cargado" : "");
     setShowForm(true);
   };
+  // Gestiona la accion correspondiente.
   const handleDelete = async (id: number) => {
     await policiesService.remove(id);
     setItems((prev) => prev.filter((p) => p.id !== id));
   };
 
+  // Gestiona la accion correspondiente.
   const handleMarkRead = async (id: number) => {
     setMarkingId(id);
     try {

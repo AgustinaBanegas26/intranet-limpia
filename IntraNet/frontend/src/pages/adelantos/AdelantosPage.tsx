@@ -13,11 +13,13 @@ const statusConfig: Record<AdelantoEstado, { label: string; color: string; bg: s
   rechazada: { label: 'Rechazada', color: 'var(--danger)', bg: 'var(--danger-bg)' },
 }
 
+// Gestiona la operacion money.
 function money(value?: number | null) {
   if (value == null) return '—'
   return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(value)
 }
 
+// Prepara el valor para su uso.
 function formatDate(value?: string | null) {
   if (!value) return '—'
   const date = new Date(value)
@@ -39,6 +41,7 @@ type FormState = {
 
 const initialForm: FormState = { nombre: '', apellido: '', email: '', empresa: '', monto: '' }
 
+// Gestiona la operacion EmployeeView.
 function EmployeeView() {
   const { token, user } = useAuth()
   const [form, setForm] = useState<FormState>(initialForm)
@@ -93,6 +96,7 @@ function EmployeeView() {
     return () => { cancelled = true }
   }, [token, user.id, user.name])
 
+  // Gestiona la accion correspondiente.
   const handleSubmit = async () => {
     const monto = Number(form.monto)
     const empresa = form.empresa.trim()
@@ -123,6 +127,7 @@ function EmployeeView() {
     }
   }
 
+  // Gestiona la accion correspondiente.
   const handleDelete = async (id: number) => {
     setLoading(true)
     try {
@@ -254,6 +259,7 @@ function EmployeeView() {
   )
 }
 
+// Gestiona la operacion AdminView.
 function AdminView() {
   const [items, setItems] = useState<AdelantoDTO[]>([])
   const [filter, setFilter] = useState<'todos' | AdelantoEstado>('todos')
@@ -277,6 +283,7 @@ function AdminView() {
 
   useEffect(() => { load() }, [load])
 
+  // Gestiona la operacion approve.
   const approve = async (id: number) => {
     setActionId(id)
     try {
@@ -290,6 +297,7 @@ function AdminView() {
     }
   }
 
+  // Gestiona la operacion reject.
   const reject = async (id: number) => {
     setActionId(id)
     try {
@@ -388,6 +396,7 @@ function AdminView() {
   )
 }
 
+// Gestiona la operacion AdelantosPage.
 export function AdelantosPage() {
   const { isAdmin } = useAuth()
   return isAdmin ? <AdminView /> : <EmployeeView />

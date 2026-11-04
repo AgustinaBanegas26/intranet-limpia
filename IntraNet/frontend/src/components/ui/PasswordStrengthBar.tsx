@@ -1,5 +1,6 @@
 export type PasswordStrength = 'weak' | 'medium' | 'strong'
 
+// Gestiona la operacion evaluatePasswordStrength.
 export function evaluatePasswordStrength(password: string): {
   level: PasswordStrength
   label: string
@@ -31,6 +32,7 @@ type Props = {
   password: string
 }
 
+// Gestiona la operacion PasswordStrengthBar.
 export function PasswordStrengthBar({ password }: Props) {
   const { level, label, checks } = evaluatePasswordStrength(password)
   const pct = password ? (Object.values(checks).filter(Boolean).length / 5) * 100 : 0

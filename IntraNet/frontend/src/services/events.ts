@@ -18,8 +18,10 @@ export type EventoDTO = {
 }
 
 export const eventsService = {
+  // Obtiene los datos necesarios.
   getAll: () => apiClient.get<{ data: EventoDTO[] }>('/eventos'),
 
+  // Crea el registro o elemento correspondiente.
   create: (payload: {
     titulo: string
     descripcion?: string
@@ -31,12 +33,15 @@ export const eventsService = {
     sucursales_destino?: string[]
   }) => apiClient.post<{ data: EventoDTO }>('/eventos', payload),
 
+  // Actualiza los datos correspondientes.
   update: (id: number | string, payload: Partial<EventoDTO> & { sucursales_destino?: string[] }) =>
     apiClient.put<{ data: EventoDTO }>(`/eventos/${id}`, payload),
 
+  // Elimina el elemento indicado.
   remove: (id: number | string) =>
     apiClient.delete<{ success: boolean }>(`/eventos/${id}`),
 
+  // Gestiona la operacion rsvp.
   rsvp: (id: number | string) =>
     apiClient.post<{ data: { confirmado: boolean; asistentes: number } }>(`/eventos/${id}/rsvp`, {}),
 }

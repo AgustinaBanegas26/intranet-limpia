@@ -8,12 +8,14 @@ type Props = {
   post: NovedadDTO;
 };
 
+// Calcula el resultado correspondiente.
 function summary(text: string, max = 120) {
   const clean = text.replace(/\s+/g, " ").trim();
   if (clean.length <= max) return clean;
   return `${clean.slice(0, max).trim()}…`;
 }
 
+// Gestiona la operacion NewsPostCompact.
 export function NewsPostCompact({ post }: Props) {
   const authorName = post.autor?.trim() || "Administración";
   const meta = [post.autorSector, post.autorSucursal]

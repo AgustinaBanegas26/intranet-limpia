@@ -6,6 +6,7 @@ const VALID_ESTADOS = ['pendiente', 'aprobada', 'rechazada']
 const EMPLEADO_SELECT = 'id, nombre, apellido, email_corporativo, area, sucursal, cargo, legajo, foto_url'
 const TIPO_LLEGADA_TARDE = 'llegada_tarde'
 
+// Procesa los elementos de la coleccion.
 function mapEmpleado(emp) {
   if (!emp) return null
   return {
@@ -20,6 +21,7 @@ function mapEmpleado(emp) {
   }
 }
 
+// Gestiona la operacion diffDays.
 function diffDays(desde, hasta) {
   if (!desde || !hasta) return 1
   const a = new Date(`${desde}T00:00:00`)
@@ -27,6 +29,7 @@ function diffDays(desde, hasta) {
   return Math.max(1, Math.round((b - a) / 86400000) + 1)
 }
 
+// Prepara el valor para su uso.
 function normalizeDateInput(value) {
   if (value == null || value === '') return null
   const s = String(value).trim().slice(0, 10)
@@ -37,6 +40,7 @@ function normalizeDateInput(value) {
   return s
 }
 
+// Gestiona la operacion assertValidDateRange.
 function assertValidDateRange(fechaDesde, fechaHasta) {
   const desde = normalizeDateInput(fechaDesde)
   const hasta = normalizeDateInput(fechaHasta)
@@ -56,6 +60,7 @@ function assertValidDateRange(fechaDesde, fechaHasta) {
   return { fechaDesde: desde, fechaHasta: hasta }
 }
 
+// Comprueba los datos o la condicion indicada.
 function isLlegadaTardeTipo(tipo) {
   const normalized = String(tipo || '')
     .trim()
@@ -66,6 +71,7 @@ function isLlegadaTardeTipo(tipo) {
   return normalized === TIPO_LLEGADA_TARDE
 }
 
+// Obtiene los datos necesarios.
 function getArgentinaTodayIso() {
   const parts = new Intl.DateTimeFormat('en-US', {
     timeZone: 'America/Argentina/Buenos_Aires',
@@ -77,12 +83,14 @@ function getArgentinaTodayIso() {
   return `${values.year}-${values.month}-${values.day}`
 }
 
+// Prepara el valor para su uso.
 function normalizeTimeInput(value) {
   const time = String(value || '').trim()
   if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(time)) return null
   return time
 }
 
+// Gestiona la operacion assertValidTimeRange.
 function assertValidTimeRange(horaDesde, horaHasta) {
   const desde = normalizeTimeInput(horaDesde)
   const hasta = normalizeTimeInput(horaHasta)
@@ -99,6 +107,7 @@ function assertValidTimeRange(horaDesde, horaHasta) {
   return { horaDesde: desde, horaHasta: hasta }
 }
 
+// Procesa los elementos de la coleccion.
 function mapAusencia(row) {
   return {
     id: row.id,
@@ -119,6 +128,7 @@ function mapAusencia(row) {
   }
 }
 
+// Comprueba los datos o la condicion indicada.
 function isVigenteAusencia(row, todayIso) {
   if (row.estado !== 'aprobada') return false
   const desde = String(row.fecha_desde || '').slice(0, 10)
@@ -126,15 +136,18 @@ function isVigenteAusencia(row, todayIso) {
   return desde <= todayIso && hasta >= todayIso
 }
 
+// Comprueba los datos o la condicion indicada.
 function isVacacionTipo(tipo) {
   return String(tipo || '').toLowerCase().includes('vacacion')
 }
 
+// Obtiene los datos necesarios.
 async function fetchEmpleadosMap(ids) {
   if (!ids.length) return new Map()
   const extended = await supabase.from('empleados').select(EMPLEADO_SELECT).in('id', ids)
   if (!extended.error) {
     const map = new Map()
+    // Recorre los elementos de la coleccion.
     for (const emp of extended.data || []) map.set(emp.id, emp)
     return map
   }
@@ -147,6 +160,7 @@ async function fetchEmpleadosMap(ids) {
       .in('id', ids)
     if (base.error) throw base.error
     const map = new Map()
+    // Recorre los elementos de la coleccion.
     for (const emp of base.data || []) map.set(emp.id, emp)
     return map
   }
@@ -154,6 +168,7 @@ async function fetchEmpleadosMap(ids) {
   throw extended.error
 }
 
+// Obtiene los datos necesarios.
 async function listAusencias({
   empleadoId = null,
   estado = null,
@@ -197,6 +212,7 @@ async function listAusencias({
   return results
 }
 
+// Crea el registro o elemento correspondiente.
 async function createAusencia(empleadoId, body) {
   const tipo = String(body.tipo || '').trim()
   const motivo = String(body.motivo || body.reason || '').trim()
@@ -270,6 +286,7 @@ async function createAusencia(empleadoId, body) {
   return mapped
 }
 
+// Gestiona la operacion applyVacacionesSaldoOnApprove.
 async function applyVacacionesSaldoOnApprove(ausenciaRow) {
   if (!String(ausenciaRow.tipo || '').toLowerCase().includes('vacacion')) return
 
@@ -301,6 +318,7 @@ async function applyVacacionesSaldoOnApprove(ausenciaRow) {
   }
 }
 
+// Gestiona la operacion resolveAusencia.
 async function resolveAusencia(id, { estado, comentario, resueltoPor }) {
   if (!VALID_ESTADOS.includes(estado) || estado === 'pendiente') {
     const err = new Error('invalid_estado')
@@ -378,6 +396,7 @@ async function resolveAusencia(id, { estado, comentario, resueltoPor }) {
   return mapped
 }
 
+// Elimina el elemento indicado.
 async function removeAusencia(id, { empleadoId = null, isAdmin = false } = {}) {
   const { data: existing, error: fetchError } = await supabase
     .from('ausencias')
@@ -410,6 +429,7 @@ async function removeAusencia(id, { empleadoId = null, isAdmin = false } = {}) {
   return { success: true }
 }
 
+// Actualiza los datos correspondientes.
 async function updateAusencia(id, empleadoId, body, { isAdmin = false } = {}) {
   const { data: existing, error: fetchError } = await supabase
     .from('ausencias')

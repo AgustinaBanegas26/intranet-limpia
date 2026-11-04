@@ -15,6 +15,7 @@ export type ConfirmDialogProps = {
   onCancel: () => void
 }
 
+// Prepara el estado o comportamiento del componente.
 function useBodyScrollLock(locked: boolean) {
   useEffect(() => {
     if (!locked) return
@@ -26,6 +27,7 @@ function useBodyScrollLock(locked: boolean) {
   }, [locked])
 }
 
+// Gestiona la operacion ConfirmDialog.
 export function ConfirmDialog({
   open,
   title,
@@ -43,6 +45,7 @@ export function ConfirmDialog({
 
   useEffect(() => {
     if (!open) return
+    // Gestiona la accion correspondiente.
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && !busy && !loading) onCancel()
     }
@@ -50,6 +53,7 @@ export function ConfirmDialog({
     return () => window.removeEventListener('keydown', onKey)
   }, [open, busy, loading, onCancel])
 
+  // Gestiona la accion correspondiente.
   const handleConfirm = async () => {
     setBusy(true)
     try {
@@ -126,6 +130,7 @@ type AlertDialogProps = {
   onClose: () => void
 }
 
+// Gestiona la operacion AlertDialog.
 export function AlertDialog({
   open,
   title,
@@ -138,6 +143,7 @@ export function AlertDialog({
 
   useEffect(() => {
     if (!open) return
+    // Gestiona la accion correspondiente.
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
     }

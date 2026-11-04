@@ -10,6 +10,7 @@ const statusConfig = {
   rechazada: { label: 'Rechazada', icon: XCircle, color: 'var(--danger)', bg: 'var(--danger-bg)' },
 } as const
 
+// Gestiona la operacion fmtDate.
 function fmtDate(d: string) {
   return new Date(d.includes('T') ? d : `${d}T00:00:00`).toLocaleDateString('es-AR', {
     day: 'numeric',
@@ -18,6 +19,7 @@ function fmtDate(d: string) {
   })
 }
 
+// Gestiona la operacion ProfileAbsencesAccordion.
 export function ProfileAbsencesAccordion() {
   const [items, setItems] = useState<AusenciaDTO[]>([])
   const [loading, setLoading] = useState(true)

@@ -13,15 +13,18 @@ interface BirthdayCarouselProps {
   className?: string
 }
 
+// Calcula el resultado correspondiente.
 function computeIsToday(p: CelebracionPersona) {
   return p.esHoy === true || p.diasRestantes === 0
 }
 
+// Calcula el resultado correspondiente.
 function computeIsUpcoming(p: CelebracionPersona) {
   const today = computeIsToday(p)
   return !today && (p.diasRestantes ?? 99) < 7
 }
 
+// Gestiona la operacion BirthdayCarousel.
 export function BirthdayCarousel({
   persons,
   autoplayInterval = 5000,
@@ -76,6 +79,7 @@ export function BirthdayCarousel({
   useEffect(() => {
     if (!emblaApi || autoplayInterval <= 0) return
 
+    // Gestiona la operacion tick.
     const tick = () => {
       if (autoplayPaused.current) return
       emblaApi.scrollNext()

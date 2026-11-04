@@ -30,6 +30,7 @@ type NewsPostCardProps = {
   onDeleted?: (id: string | number) => void;
 };
 
+// Gestiona la operacion needsExpand.
 function needsExpand(text: string) {
   const clean = text.trim();
   return (
@@ -37,12 +38,14 @@ function needsExpand(text: string) {
   );
 }
 
+// Gestiona la operacion postTypeLabel.
 function postTypeLabel(post: NovedadDTO) {
   if (post.encuesta?.pregunta) return { icon: "🗳", label: "Encuesta interna" };
   if (post.importante) return { icon: "📢", label: "Comunicación importante" };
   return { icon: "📢", label: "Comunicación interna" };
 }
 
+// Prepara el estado o comportamiento del componente.
 function useMediaQuery(query: string) {
   const [matches, setMatches] = useState(() =>
     typeof window !== "undefined" ? window.matchMedia(query).matches : false,
@@ -50,6 +53,7 @@ function useMediaQuery(query: string) {
 
   useEffect(() => {
     const mq = window.matchMedia(query);
+    // Gestiona la accion correspondiente.
     const onChange = () => setMatches(mq.matches);
     onChange();
     mq.addEventListener("change", onChange);
@@ -59,6 +63,7 @@ function useMediaQuery(query: string) {
   return matches;
 }
 
+// Gestiona la operacion NewsPostCard.
 export function NewsPostCard({
   post,
   liked = false,
@@ -92,6 +97,7 @@ export function NewsPostCard({
 
   useEffect(() => {
     if (!menuOpen) return;
+    // Gestiona la operacion close.
     const close = (e: globalThis.MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setMenuOpen(false);
@@ -111,8 +117,10 @@ export function NewsPostCard({
   const showExpand = needsExpand(post.contenido);
   const likesCount = post.likes ?? 0;
 
+  // Gestiona la operacion openModal.
   const openModal = () => setModalOpen(true);
 
+  // Gestiona la accion correspondiente.
   const handleLike = () => {
     if (!post.id || !onToggleLike || !canLike) return;
     setLikeAnimating(true);
@@ -120,11 +128,13 @@ export function NewsPostCard({
     window.setTimeout(() => setLikeAnimating(false), 320);
   };
 
+  // Gestiona la operacion flashDoubleTapHeart.
   const flashDoubleTapHeart = () => {
     setShowDoubleTapHeart(true);
     window.setTimeout(() => setShowDoubleTapHeart(false), 700);
   };
 
+  // Comprueba los datos o la condicion indicada.
   const isInteractiveTarget = (target: EventTarget | null) => {
     const el = target as HTMLElement | null;
     return Boolean(
@@ -132,6 +142,7 @@ export function NewsPostCard({
     );
   };
 
+  // Gestiona la accion correspondiente.
   const handleDoubleLike = (
     e: React.MouseEvent<HTMLElement> | React.TouchEvent<HTMLElement>,
   ) => {
@@ -140,6 +151,7 @@ export function NewsPostCard({
     flashDoubleTapHeart();
   };
 
+  // Gestiona la accion correspondiente.
   const handleCardTouchEnd = (e: React.TouchEvent<HTMLElement>) => {
     if (isCompact || isInteractiveTarget(e.target) || !canLike) return;
     const now = Date.now();
@@ -153,6 +165,7 @@ export function NewsPostCard({
     }
   };
 
+  // Gestiona la accion correspondiente.
   const handleRemove = async () => {
     if (!token || post.id == null) return;
     setRemoving(true);
@@ -169,6 +182,7 @@ export function NewsPostCard({
     }
   };
 
+  // Gestiona la accion correspondiente.
   const handleCardClick = (e: React.MouseEvent<HTMLElement>) => {
     if (!isCompact || isInteractiveTarget(e.target)) return;
     openModal();

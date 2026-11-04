@@ -7,12 +7,14 @@ const bcrypt = require("bcrypt");
 const DEFAULT_NEW_EMPLOYEE_PASSWORD =
   process.env.DEFAULT_NEW_EMPLOYEE_PASSWORD || "Empleado123!";
 
+// Prepara el valor para su uso.
 function normalizeEmail(email) {
   return String(email || "")
     .trim()
     .toLowerCase();
 }
 
+// Prepara el valor para su uso.
 function normalizeSucursales(input) {
   if (Array.isArray(input)) {
     const items = input.map((s) => String(s || "").trim()).filter(Boolean);
@@ -22,6 +24,7 @@ function normalizeSucursales(input) {
   return raw || null;
 }
 
+// Prepara el valor para su uso.
 function parseSucursalesFromStored(value) {
   if (!value) return [];
   return String(value)
@@ -30,6 +33,7 @@ function parseSucursalesFromStored(value) {
     .filter(Boolean);
 }
 
+// Prepara el valor para su uso.
 function normalizeEmployeeId(id) {
   const n = Number(id);
   if (!Number.isFinite(n) || n <= 0) {
@@ -40,9 +44,11 @@ function normalizeEmployeeId(id) {
   return n;
 }
 
+// Elimina el elemento indicado.
 async function deleteEmployeeRelations(employeeId) {
   const id = employeeId;
 
+  // Gestiona la operacion safeDelete.
   const safeDelete = async (table, column) => {
     const { error } = await supabase.from(table).delete().eq(column, id);
     if (!error) return;
@@ -102,6 +108,7 @@ async function deleteEmployeeRelations(employeeId) {
     throw eventosErr;
 }
 
+// Obtiene los datos necesarios.
 async function getAllEmployees({
   includePhoto = false,
   includeInactive = false,
@@ -272,6 +279,7 @@ async function createEmployee(employee) {
   }
 }
 
+// Obtiene los datos necesarios.
 async function getMustChangePassword(userId) {
   if (!supabase || typeof supabase.from !== "function") {
     return false;
@@ -310,6 +318,7 @@ async function verifyEmployeePassword(userId, plainPassword) {
   return bcrypt.compare(String(plainPassword || ""), data.password_hash);
 }
 
+// Actualiza los datos correspondientes.
 async function updateEmployee(id, employee) {
   if (!supabase || typeof supabase.from !== "function") {
     const err = new Error("Supabase client not initialized");
@@ -382,6 +391,7 @@ async function updateEmployee(id, employee) {
   }
 }
 
+// Elimina el elemento indicado.
 async function deactivateEmployee(id) {
   return removeEmployee(id);
 }

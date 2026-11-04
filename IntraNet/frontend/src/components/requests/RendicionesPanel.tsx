@@ -26,6 +26,7 @@ const GASTO_ERROR_MESSAGES: Record<string, string> = {
   missing_comprobante: 'El comprobante es obligatorio para este medio de pago.',
 }
 
+// Gestiona la operacion fmtDate.
 function fmtDate(value?: string | null) {
   if (!value) return '—'
   return new Date(value.includes('T') ? value : `${value}T00:00:00`).toLocaleDateString('es-AR', {
@@ -35,20 +36,24 @@ function fmtDate(value?: string | null) {
   })
 }
 
+// Gestiona la operacion fmtMoney.
 function fmtMoney(value?: number | null) {
   if (value == null) return '—'
   return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(value)
 }
 
+// Prepara el valor para su uso.
 function normalizeDateInput(value?: string | null) {
   if (!value) return ''
   return value.includes('T') ? value.slice(0, 10) : value
 }
 
+// Comprueba los datos o la condicion indicada.
 function isEditable(rendicion?: RendicionDTO | null) {
   return rendicion?.estado === 'pendiente' || rendicion?.estado === 'devuelta'
 }
 
+// Gestiona la operacion emptyGasto.
 function emptyGasto(): RendicionGastoPayload {
   return {
     fecha: new Date().toISOString().slice(0, 10),
@@ -61,6 +66,7 @@ function emptyGasto(): RendicionGastoPayload {
   }
 }
 
+// Comprueba los datos o la condicion indicada.
 function validateGasto(rendicion: RendicionDTO, form: RendicionGastoPayload): string | null {
   const fecha = normalizeDateInput(form.fecha)
   if (!fecha) return 'La fecha es obligatoria.'
@@ -87,11 +93,13 @@ function validateGasto(rendicion: RendicionDTO, form: RendicionGastoPayload): st
   return null
 }
 
+// Gestiona la operacion gastoErrorMessage.
 function gastoErrorMessage(err: unknown) {
   const code = err instanceof Error ? err.message : ''
   return GASTO_ERROR_MESSAGES[code] || 'No se pudo guardar el gasto.'
 }
 
+// Gestiona la operacion RendicionGastoRow.
 function RendicionGastoRow({
   gasto,
   editable,
@@ -131,6 +139,7 @@ function RendicionGastoRow({
   )
 }
 
+// Gestiona la operacion RendicionSummaryCard.
 function RendicionSummaryCard({
   item,
   onOpen,
@@ -164,6 +173,7 @@ function RendicionSummaryCard({
   )
 }
 
+// Gestiona la operacion RendicionDetailModal.
 function RendicionDetailModal({
   rendicion,
   onClose,
@@ -186,6 +196,7 @@ function RendicionDetailModal({
   const fin = normalizeDateInput(rendicion.viatico?.fecha_finalizacion)
 
   useEffect(() => {
+    // Gestiona la accion correspondiente.
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onClose()
     }
@@ -201,6 +212,7 @@ function RendicionDetailModal({
     setError('')
   }, [rendicion.id, rendicion.observaciones])
 
+  // Gestiona la accion correspondiente.
   const handleSaveObservaciones = async () => {
     setBusyId(rendicion.id)
     setError('')
@@ -214,6 +226,7 @@ function RendicionDetailModal({
     }
   }
 
+  // Gestiona la accion correspondiente.
   const handleSaveGasto = async () => {
     const validationError = validateGasto(rendicion, gastoForm)
     if (validationError) {
@@ -244,6 +257,7 @@ function RendicionDetailModal({
     }
   }
 
+  // Gestiona la accion correspondiente.
   const handleEditGasto = (gasto: RendicionGastoDTO) => {
     setGastoIdEdit(gasto.id)
     setGastoForm({
@@ -258,6 +272,7 @@ function RendicionDetailModal({
     setFormError('')
   }
 
+  // Gestiona la accion correspondiente.
   const handleDeleteGasto = async () => {
     if (!confirmDelete) return
     setBusyId(confirmDelete.id)
@@ -276,6 +291,7 @@ function RendicionDetailModal({
     }
   }
 
+  // Gestiona la accion correspondiente.
   const handleSend = async () => {
     setBusyId('send')
     setError('')
@@ -448,6 +464,7 @@ function RendicionDetailModal({
   )
 }
 
+// Gestiona la operacion RendicionesPanel.
 export function RendicionesPanel() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -456,6 +473,7 @@ export function RendicionesPanel() {
   const [search, setSearch] = useState('')
   const [detailId, setDetailId] = useState<number | null>(null)
 
+  // Obtiene los datos necesarios.
   const load = async () => {
     setLoading(true)
     setError('')
@@ -505,6 +523,7 @@ export function RendicionesPanel() {
     aprobadas: items.filter((item) => item.estado === 'aprobada').length,
   }
 
+  // Gestiona la accion correspondiente.
   const handleUpdated = (updated: RendicionDTO) => {
     setItems((current) => current.map((item) => (item.id === updated.id ? updated : item)))
   }

@@ -1,3 +1,4 @@
+// Obtiene los datos necesarios.
 export function getInitials(name?: string) {
   const safeName = String(name || '')
   const parts = safeName.trim().split(/\s+/).filter(Boolean)

@@ -23,6 +23,7 @@ export const absenceStatusConfig = {
   rechazada: { label: 'Rechazada', icon: XCircle, color: 'var(--danger)', bg: 'var(--danger-bg)' },
 } as const
 
+// Gestiona la operacion fmtDate.
 function fmtDate(d?: string | null) {
   if (!d) return '—'
   return new Date(d.includes('T') ? d : `${d}T00:00:00`).toLocaleDateString('es-AR', {
@@ -32,6 +33,7 @@ function fmtDate(d?: string | null) {
   })
 }
 
+// Gestiona la operacion fmtPeriod.
 function fmtPeriod(absence: AusenciaDTO) {
   if (absence.hora_desde && absence.hora_hasta) {
     return `${fmtDate(absence.fecha_desde)} · ${absence.hora_desde} → ${absence.hora_hasta}`
@@ -48,6 +50,7 @@ interface AbsencesAdminPanelProps {
   onPendingChange?: (count: number) => void
 }
 
+// Gestiona la operacion AbsencesAdminPanel.
 export function AbsencesAdminPanel({
   embedded = false,
   defaultEstado = 'pendiente',
@@ -101,7 +104,9 @@ export function AbsencesAdminPanel({
   }, [load])
 
   useEffect(() => {
+    // Gestiona la accion correspondiente.
     const onFocus = () => { load() }
+    // Gestiona la accion correspondiente.
     const onVisibility = () => {
       if (document.visibilityState === 'visible') load()
     }
@@ -147,6 +152,7 @@ export function AbsencesAdminPanel({
     rechazadas: filtered.filter((a) => a.estado === 'rechazada').length,
   }), [filtered])
 
+  // Gestiona la accion correspondiente.
   const handleApprove = async () => {
     if (approveId == null) return
     setActionId(approveId)
@@ -162,6 +168,7 @@ export function AbsencesAdminPanel({
     }
   }
 
+  // Gestiona la accion correspondiente.
   const handleReject = async () => {
     if (rejectId == null) return
     setActionId(rejectId)
@@ -177,6 +184,7 @@ export function AbsencesAdminPanel({
     }
   }
 
+  // Gestiona la accion correspondiente.
   const handleDelete = async (id: number) => {
     setDeleteBusy(true)
     setError('')

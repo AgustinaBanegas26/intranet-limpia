@@ -119,6 +119,7 @@ const employeeNavMore: NavItem[] = [
   { icon: UserCircle, label: "Mi perfil", path: "/perfil" },
 ];
 
+// Gestiona la operacion notificationTone.
 function notificationTone(titulo: string): string {
   const t = titulo.toLowerCase();
   if (
@@ -133,6 +134,7 @@ function notificationTone(titulo: string): string {
   return "accent";
 }
 
+// Prepara el valor para su uso.
 function formatNotificationDate(fecha?: string) {
   if (!fecha) return "";
   const parsed = new Date(fecha);
@@ -152,6 +154,7 @@ type NotificationMenuAnchor = {
   width?: number;
 };
 
+// Gestiona la operacion NotificationCenter.
 function NotificationCenter({
   compact = false,
   mode,
@@ -195,9 +198,11 @@ function NotificationCenter({
   }, [load]);
 
   useEffect(() => {
+    // Gestiona la accion correspondiente.
     const onFocus = () => {
       load(true);
     };
+    // Gestiona la accion correspondiente.
     const onVisibility = () => {
       if (document.visibilityState === "visible") load(true);
     };
@@ -213,6 +218,7 @@ function NotificationCenter({
 
   const unread = items.filter((n) => !n.leida);
 
+  // Gestiona la accion correspondiente.
   const handleOpen = () => {
     setOpen((value) => {
       const next = !value;
@@ -224,6 +230,7 @@ function NotificationCenter({
     });
   };
 
+  // Gestiona la accion correspondiente.
   const handleMarkRead = async (id: number | string) => {
     try {
       await notificationsService.markRead(id);
@@ -238,6 +245,7 @@ function NotificationCenter({
     }
   };
 
+  // Gestiona la accion correspondiente.
   const handleMarkAllRead = async () => {
     try {
       await notificationsService.markAllRead();
@@ -248,6 +256,7 @@ function NotificationCenter({
     }
   };
 
+  // Gestiona la accion correspondiente.
   const handleDelete = async (id: number | string) => {
     try {
       await notificationsService.remove(id);
@@ -258,6 +267,7 @@ function NotificationCenter({
     }
   };
 
+  // Gestiona la accion correspondiente.
   const handleDeleteAll = async () => {
     setConfirmBusy(true);
     try {
@@ -272,6 +282,7 @@ function NotificationCenter({
     }
   };
 
+  // Gestiona la operacion runConfirmAction.
   const runConfirmAction = async () => {
     if (!confirmAction) return;
     if (confirmAction.type === "all") {
@@ -292,6 +303,7 @@ function NotificationCenter({
       setAnchor(null);
       return;
     }
+    // Actualiza los datos correspondientes.
     const update = () => {
       const el = triggerRef.current;
       if (!el) return;
@@ -901,6 +913,7 @@ export function PageHero({
   );
 }
 
+// Gestiona la operacion PremiumCard.
 export function PremiumCard({
   title,
   eyebrow,
@@ -946,6 +959,7 @@ export function PremiumCard({
   );
 }
 
+// Gestiona la operacion MetricCard.
 export function MetricCard({
   label,
   value,
@@ -979,6 +993,7 @@ export function MetricCard({
   );
 }
 
+// Gestiona la operacion EmptyState.
 export function EmptyState({
   title,
   description,
@@ -1004,6 +1019,7 @@ export function EmptyState({
   );
 }
 
+// Gestiona la operacion EndpointBadge.
 export function EndpointBadge({
   label,
   endpoint,
@@ -1025,6 +1041,7 @@ export function EndpointBadge({
   );
 }
 
+// Gestiona la operacion ModuleLink.
 export function ModuleLink({
   title,
   description,

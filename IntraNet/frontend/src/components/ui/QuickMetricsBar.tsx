@@ -11,6 +11,7 @@ type QuickMetricsBarProps = {
   className?: string
 }
 
+// Gestiona la operacion QuickMetricsBar.
 export function QuickMetricsBar({ metrics, className = '' }: QuickMetricsBarProps) {
   return (
     <div className={`grid grid-cols-2 lg:grid-cols-4 gap-4 ${className}`}>

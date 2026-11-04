@@ -1,11 +1,13 @@
 const supabase = require('../config/supabase')
 
+// Gestiona la operacion startOfDay.
 function startOfDay(date) {
   const d = new Date(date)
   d.setHours(0, 0, 0, 0)
   return d
 }
 
+// Prepara el valor para su uso.
 function parseDateOnly(value) {
   if (!value) return null
   const raw = String(value).slice(0, 10)
@@ -14,6 +16,7 @@ function parseDateOnly(value) {
   return { year, month, day }
 }
 
+// Gestiona la operacion nextAnnualOccurrence.
 function nextAnnualOccurrence(month, day, fromDate = new Date()) {
   const base = startOfDay(fromDate)
   let candidate = new Date(base.getFullYear(), month - 1, day)
@@ -23,15 +26,18 @@ function nextAnnualOccurrence(month, day, fromDate = new Date()) {
   return candidate
 }
 
+// Gestiona la operacion daysUntil.
 function daysUntil(fromDate, targetDate) {
   const ms = startOfDay(targetDate).getTime() - startOfDay(fromDate).getTime()
   return Math.round(ms / 86_400_000)
 }
 
+// Prepara el valor para su uso.
 function formatShortDate(date) {
   return new Intl.DateTimeFormat('es-AR', { day: 'numeric', month: 'short' }).format(date)
 }
 
+// Procesa los elementos de la coleccion.
 function mapPerson(row) {
   return {
     id: row.id,
@@ -44,6 +50,7 @@ function mapPerson(row) {
   }
 }
 
+// Obtiene los datos necesarios.
 async function getCelebraciones({ upcomingDays = 14 } = {}) {
   if (!supabase || typeof supabase.from !== 'function') {
     throw new Error('Supabase client not initialized')
@@ -68,6 +75,7 @@ async function getCelebraciones({ upcomingDays = 14 } = {}) {
   const aniversariosHoy = []
   const currentDay = today.getDate()
 
+  // Recorre los elementos de la coleccion.
   for (const row of empleados || []) {
     const person = mapPerson(row)
     const birth = parseDateOnly(row.fecha_nacimiento)

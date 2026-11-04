@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 
 const ON_BALANCE_URL = 'https://onbalance.thomsonreuters.com.ar'
 
+// Gestiona la accion correspondiente.
 export function OnBalancePage() {
   return (
     <motion.div

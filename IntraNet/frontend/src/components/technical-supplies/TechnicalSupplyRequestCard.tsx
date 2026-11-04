@@ -7,11 +7,13 @@ const statusConfig: Record<TechnicalSupplyStatus, { label: string; color: string
   rechazada: { label: 'Rechazada', color: 'var(--danger)', bg: 'var(--danger-bg)' },
 }
 
+// Gestiona la operacion money.
 function money(value?: number | null) {
   if (value == null) return '-'
   return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(value)
 }
 
+// Prepara el valor para su uso.
 function formatDate(value?: string | null) {
   if (!value) return '-'
   const date = new Date(value)
@@ -19,6 +21,7 @@ function formatDate(value?: string | null) {
   return date.toLocaleDateString('es-AR', { day: '2-digit', month: 'short', year: 'numeric' })
 }
 
+// Gestiona la operacion TechnicalSupplyStatusBadge.
 export function TechnicalSupplyStatusBadge({ status }: { status: TechnicalSupplyStatus }) {
   const cfg = statusConfig[status] || statusConfig.pendiente
   return (
@@ -28,6 +31,7 @@ export function TechnicalSupplyStatusBadge({ status }: { status: TechnicalSupply
   )
 }
 
+// Gestiona la operacion TechnicalSupplyRequestCard.
 export function TechnicalSupplyRequestCard({
   request,
   busy,

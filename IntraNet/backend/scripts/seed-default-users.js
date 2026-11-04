@@ -34,6 +34,7 @@ const users = [
   },
 ];
 
+// Actualiza los datos correspondientes.
 async function saveUser(user) {
   const email = user.email.toLowerCase();
   const password_hash = await bcrypt.hash(user.password, 10);
@@ -76,7 +77,9 @@ async function saveUser(user) {
   console.log(`Created ${email} as ${user.role}`);
 }
 
+// Gestiona la operacion main.
 async function main() {
+  // Recorre los elementos de la coleccion.
   for (const user of users) await saveUser(user);
   console.log("Default users synchronized.");
 }

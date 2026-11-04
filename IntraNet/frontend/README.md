@@ -1,30 +1,49 @@
-# React + TypeScript + Vite
+# Frontend de la intranet
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicación de una sola página desarrollada con React 18, TypeScript, Vite y
+React Router. Incluye una interfaz adaptable e instalación como PWA.
 
-Currently, two official plugins are available: hello
+## Módulos
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- `src/App.tsx`: restaura la sesión, procesa el inicio/cierre de sesión y monta
+  las rutas públicas.
+- `src/routes/`: organiza las rutas autenticadas y aplica restricciones por rol.
+- `src/pages/`: páginas de acceso, inicio, solicitudes, empleados, perfil,
+  noticias, eventos, ausencias, beneficios y otros módulos.
+- `src/components/`: componentes reutilizables, formularios, paneles de
+  administración y elementos de navegación.
+- `src/context/`: estado compartido de autenticación, tema e instalación PWA.
+- `src/services/`: solicitudes a la API y acceso a los módulos de datos.
+- `src/utils/`: validaciones, formato y funciones auxiliares.
+- `src/pwa/`, `public/` y `scripts/`: registro de service worker, recursos PWA
+  y generación de iconos.
 
-## Expanding the ESLint configuration
+La sesión JWT se conserva mediante el servicio de autenticación. `apiClient`
+adjunta el token a las solicitudes protegidas y comunica a la aplicación los
+errores de sesión o el cambio de contraseña obligatorio. Las reglas de acceso
+del frontend son una ayuda de navegación; el backend vuelve a validar cada
+permiso.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Desarrollo
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+```sh
+npm install
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Configurar `VITE_BACKEND_URL` en `.env.local` con el origen del backend; por
+ejemplo, `http://localhost:4000`. Luego ejecutar:
+
+```sh
+npm run dev
+```
+
+## Comandos
+
+- `npm run lint`: analiza los archivos TypeScript y TSX.
+- `npm run build`: genera iconos PWA, comprueba los tipos y crea el bundle.
+- `npm run preview`: sirve localmente el bundle generado.
+- `npm run pwa:icons`: genera los iconos que usa la configuración PWA.
+
+Consulta la [guía del proyecto](../../README.md) y la
+[documentación técnica](../../DOCUMENTACION_TECNICA.md) para el flujo completo
+de desarrollo y la configuración del backend.

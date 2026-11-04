@@ -7,6 +7,7 @@ type PersonRowProps = {
   meta: string
 }
 
+// Gestiona la operacion PersonRow.
 export function PersonRow({ nombreCompleto, area, foto, meta }: PersonRowProps) {
   const initials = getInitials(nombreCompleto)
 

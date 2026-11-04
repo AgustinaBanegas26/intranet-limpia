@@ -9,10 +9,12 @@ import './calendar.css'
 const weekDays = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
 const maxVisibleEvents = 4
 
+// Prepara el valor para su uso.
 function parseDate(value: string) {
   return new Date(`${value.slice(0, 10)}T12:00:00`)
 }
 
+// Gestiona la operacion dateKey.
 function dateKey(date: Date) {
   const y = date.getFullYear()
   const m = String(date.getMonth() + 1).padStart(2, '0')
@@ -20,19 +22,23 @@ function dateKey(date: Date) {
   return `${y}-${m}-${d}`
 }
 
+// Comprueba los datos o la condicion indicada.
 function isInEvent(date: Date, event: CalendarEvent) {
   const current = dateKey(date)
   return current >= event.fecha_desde.slice(0, 10) && current <= event.fecha_hasta.slice(0, 10)
 }
 
+// Prepara el valor para su uso.
 function formatDate(value: string) {
   return new Intl.DateTimeFormat('es-AR', { day: 'numeric', month: 'short', year: 'numeric' }).format(parseDate(value))
 }
 
+// Gestiona la operacion eventLabel.
 function eventLabel(event: CalendarEvent) {
   return `${event.empleado} — ${calendarRequestTypes[event.tipo].label}`
 }
 
+// Gestiona la operacion EventButton.
 function EventButton({ event, onClick }: { event: CalendarEvent; onClick: () => void }) {
   const color = calendarRequestTypes[event.tipo]
   return (
@@ -48,6 +54,7 @@ function EventButton({ event, onClick }: { event: CalendarEvent; onClick: () => 
   )
 }
 
+// Gestiona la operacion CalendarPage.
 export function CalendarPage() {
   const [events, setEvents] = useState<CalendarEvent[]>([])
   const [selectedTypes, setSelectedTypes] = useState<CalendarRequestType[]>(Object.keys(calendarRequestTypes) as CalendarRequestType[])
@@ -86,6 +93,7 @@ export function CalendarPage() {
   const monthTitle = new Intl.DateTimeFormat('es-AR', { month: 'long', year: 'numeric' }).format(month)
   const todayKey = dateKey(new Date())
 
+  // Alterna el estado correspondiente.
   const toggleType = (type: CalendarRequestType) => {
     setSelectedTypes((current) => current.includes(type)
       ? current.filter((item) => item !== type)

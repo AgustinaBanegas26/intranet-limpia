@@ -7,6 +7,7 @@ type RequestOptions = {
   token?: string | null;
 };
 
+// envia la solicitud correspondiente.
 async function request<T>(
   path: string,
   options: RequestOptions = {},
@@ -51,11 +52,15 @@ async function request<T>(
 }
 
 export const apiClient = {
+  // Obtiene los datos necesarios.
   get: <T>(path: string, token?: string | null) => request<T>(path, { token }),
+  // Gestiona la operacion post.
   post: <T>(path: string, body: unknown, token?: string | null) =>
     request<T>(path, { method: "POST", body, token }),
+  // Gestiona la operacion put.
   put: <T>(path: string, body: unknown, token?: string | null) =>
     request<T>(path, { method: "PUT", body, token }),
+  // Elimina el elemento indicado.
   delete: <T>(path: string, token?: string | null) =>
     request<T>(path, { method: "DELETE", token }),
 };

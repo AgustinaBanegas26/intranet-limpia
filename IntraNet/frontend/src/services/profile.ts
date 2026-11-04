@@ -39,6 +39,7 @@ export type ProfileUpdatePayload = Pick<
   | "foto"
 >;
 
+// Procesa los elementos de la coleccion.
 export function mapProfileToApi(data: ProfileData): ProfileUpdatePayload {
   const payload: ProfileUpdatePayload = {};
 
@@ -64,6 +65,7 @@ export function mapProfileToApi(data: ProfileData): ProfileUpdatePayload {
   return payload;
 }
 
+// Obtiene los datos necesarios.
 export async function getProfile(token: string): Promise<ProfileData> {
   const url = `${getBackendUrl()}/profile`;
   const res = await fetch(url, {
@@ -85,6 +87,7 @@ export async function getProfile(token: string): Promise<ProfileData> {
   return res.json() as Promise<ProfileData>;
 }
 
+// Actualiza los datos correspondientes.
 export async function updateProfile(
   token: string,
   data: ProfileData,
@@ -117,6 +120,7 @@ export async function updateProfile(
   return res.json() as Promise<ProfileData>;
 }
 
+// Gestiona la operacion requireToken.
 export function requireToken(): string {
   const session = getSession();
   if (!session?.token) throw new Error("not_authenticated");

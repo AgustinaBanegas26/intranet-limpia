@@ -1,12 +1,16 @@
+// Obtiene los datos necesarios.
 export function readFileAsDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
+    // Gestiona la accion correspondiente.
     reader.onload = () => resolve(reader.result as string)
+    // Gestiona la accion correspondiente.
     reader.onerror = () => reject(new Error('failed_to_read_file'))
     reader.readAsDataURL(file)
   })
 }
 
+// Obtiene los datos necesarios.
 export async function readPdfAsDataUrl(file: File, maxMb = 8): Promise<string> {
   if (file.type && file.type !== 'application/pdf') {
     throw new Error('invalid_file_type')
@@ -35,6 +39,7 @@ export async function resizeImageForSlider(
   return resizeImage(file, maxWidth, quality)
 }
 
+// Gestiona la operacion resizeImage.
 async function resizeImage(file: File, maxSize: number, quality: number): Promise<string> {
   if (!file.type.startsWith('image/')) {
     throw new Error('invalid_file_type')
@@ -47,6 +52,7 @@ async function resizeImage(file: File, maxSize: number, quality: number): Promis
 
   return new Promise((resolve, reject) => {
     const img = new Image()
+    // Gestiona la accion correspondiente.
     img.onload = () => {
       const scale = Math.min(1, maxSize / Math.max(img.width, img.height))
       const width = Math.max(1, Math.round(img.width * scale))
@@ -62,6 +68,7 @@ async function resizeImage(file: File, maxSize: number, quality: number): Promis
       ctx.drawImage(img, 0, 0, width, height)
       resolve(canvas.toDataURL('image/jpeg', quality))
     }
+    // Gestiona la accion correspondiente.
     img.onerror = () => reject(new Error('invalid_image'))
     img.src = dataUrl
   })

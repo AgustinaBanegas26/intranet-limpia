@@ -22,11 +22,13 @@ const STATUS_COLORS: Record<NonNullable<SugerenciaDTO['estado']>, { color: strin
   rejected: { color: 'var(--danger)', bg: 'var(--danger-bg)' },
 }
 
+// Gestiona la operacion fmtDate.
 function fmtDate(d?: string) {
   if (!d) return '—'
   return new Date(d).toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
 }
 
+// Gestiona la operacion SuggestionsEmployeeView.
 function SuggestionsEmployeeView() {
   const [text, setText] = useState('')
   const [category, setCategory] = useState('General')
@@ -34,6 +36,7 @@ function SuggestionsEmployeeView() {
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
 
+  // Gestiona la accion correspondiente.
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
     if (!text.trim()) return
@@ -93,6 +96,7 @@ function SuggestionsEmployeeView() {
   )
 }
 
+// Gestiona la operacion SuggestionsAdminView.
 function SuggestionsAdminView() {
   const [items, setItems] = useState<SugerenciaDTO[]>([])
   const [loading, setLoading] = useState(true)
@@ -121,6 +125,7 @@ function SuggestionsAdminView() {
 
   const filtered = filter === 'todos' ? items : items.filter((s) => s.estado === filter)
 
+  // Gestiona la accion correspondiente.
   const handleStatusChange = async (id: string | number, estado: SugerenciaDTO['estado']) => {
     if (!estado) return
     setUpdatingId(id)
@@ -133,6 +138,7 @@ function SuggestionsAdminView() {
     }
   }
 
+  // Gestiona la accion correspondiente.
   const handleDelete = async (id: string | number) => {
     setDeleteBusy(true)
     setError('')
@@ -287,6 +293,7 @@ function SuggestionsAdminView() {
   )
 }
 
+// Gestiona la operacion SuggestionsPage.
 export function SuggestionsPage() {
   const { isAdmin } = useAuth()
   return isAdmin ? <SuggestionsAdminView /> : <SuggestionsEmployeeView />

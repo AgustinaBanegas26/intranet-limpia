@@ -9,6 +9,7 @@ import { DashboardBirthdayHero } from '../../components/home/DashboardBirthdayHe
 import { MainSlider } from '../../components/home/MainSlider'
 import { NewsFeed } from '../../components/home/NewsFeed'
 
+// Gestiona la operacion EmployeeDashboard.
 export function EmployeeDashboard() {
   const { token, user } = useAuth()
   const [profile, setProfile] = useState<Profile | null>(null)

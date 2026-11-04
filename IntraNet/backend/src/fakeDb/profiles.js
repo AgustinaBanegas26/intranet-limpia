@@ -58,6 +58,7 @@ const API_TO_DB_MAP = {
   fechaIngreso: 'fecha_ingreso',
 }
 
+// Gestiona la operacion splitNombreCompleto.
 function splitNombreCompleto(full) {
   const trimmed = String(full || '').trim()
   if (!trimmed) return { nombre: null, apellido: null }
@@ -67,6 +68,7 @@ function splitNombreCompleto(full) {
   return { nombre: parts.join(' '), apellido }
 }
 
+// Comprueba los datos o la condicion indicada.
 function isValidEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || '').trim())
 }
@@ -107,6 +109,7 @@ function mapEmpleadoToProfile(data) {
   }
 }
 
+// Procesa los elementos de la coleccion.
 function mapProfilePatchToDb(apiPatch) {
   if (!apiPatch || typeof apiPatch !== 'object') {
     return {}
@@ -120,6 +123,7 @@ function mapProfilePatchToDb(apiPatch) {
     if (apellido != null) dbPatch.apellido = apellido
   }
 
+  // Recorre los elementos de la coleccion.
   for (const [apiKey, dbKey] of Object.entries(API_TO_DB_MAP)) {
     if (apiKey === 'tel' || apiKey === 'celPersonal') continue
     if (!(apiKey in apiPatch)) continue
@@ -183,6 +187,7 @@ function mapProfilePatchToDb(apiPatch) {
 
   // Seguridad: filtrar cualquier clave snake_case directa del cliente
   const safePatch = {}
+  // Recorre los elementos de la coleccion.
   for (const [key, value] of Object.entries(dbPatch)) {
     if (ALLOWED_DB_COLUMNS.has(key) && !BLOCKED_FIELDS.has(key)) {
       safePatch[key] = value
@@ -192,6 +197,7 @@ function mapProfilePatchToDb(apiPatch) {
   return safePatch
 }
 
+// Obtiene los datos necesarios.
 async function getProfileByUserId(userId) {
   if (!supabase || typeof supabase.from !== 'function') {
     return null
@@ -214,6 +220,7 @@ async function getProfileByUserId(userId) {
   return mapEmpleadoToProfile(data)
 }
 
+// Actualiza los datos correspondientes.
 async function updateProfile(userId, apiPatch) {
   if (!supabase || typeof supabase.from !== 'function') {
     return null

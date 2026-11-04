@@ -5,6 +5,7 @@ import { Accordion } from '../ui/Accordion'
 import { getInitials } from '../../context/AuthContext'
 import { absencesService, type AusenciaDTO } from '../../services/absences'
 
+// Gestiona la operacion fmtDate.
 function fmtDate(d: string) {
   return new Date(d.includes('T') ? d : `${d}T00:00:00`).toLocaleDateString('es-AR', {
     day: 'numeric',
@@ -12,6 +13,7 @@ function fmtDate(d: string) {
   })
 }
 
+// Gestiona la operacion AbsenceHomeRow.
 function AbsenceHomeRow({ item }: { item: AusenciaDTO }) {
   const nombre = item.solicitante?.nombre || 'Sin nombre'
   const foto = item.solicitante?.foto
@@ -41,6 +43,7 @@ function AbsenceHomeRow({ item }: { item: AusenciaDTO }) {
   )
 }
 
+// Gestiona la operacion AbsencesHomeSection.
 export function AbsencesHomeSection() {
   const [items, setItems] = useState<AusenciaDTO[]>([])
   const [loading, setLoading] = useState(true)
@@ -62,7 +65,9 @@ export function AbsencesHomeSection() {
   }, [load])
 
   useEffect(() => {
+    // Gestiona la accion correspondiente.
     const onFocus = () => { load() }
+    // Gestiona la accion correspondiente.
     const onVisibility = () => {
       if (document.visibilityState === 'visible') load()
     }

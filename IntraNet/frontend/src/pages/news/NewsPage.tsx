@@ -4,11 +4,13 @@ import { NewsComposer } from "../../components/news/NewsComposer";
 import { PageHero } from "../../components/ui/ProductUI";
 import { canPublishNovedades, useAuth } from "../../context/AuthContext";
 
+// Gestiona la operacion NewsPage.
 export function NewsPage() {
   const { token, user } = useAuth();
   const canPublish = canPublishNovedades(user);
   const [refreshKey, setRefreshKey] = useState(0);
 
+  // Gestiona la operacion bumpRefresh.
   const bumpRefresh = () => setRefreshKey((k) => k + 1);
 
   return (

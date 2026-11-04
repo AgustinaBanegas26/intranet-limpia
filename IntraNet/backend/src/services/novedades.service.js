@@ -28,6 +28,7 @@ const NOVEDADES_SELECT_BASE = `
   empleados:publicado_por (nombre, apellido, foto_url, sucursal, area)
 `
 
+// Procesa los elementos de la coleccion.
 function mapAuthorMeta(empleado) {
   if (!empleado) {
     return {
@@ -45,10 +46,12 @@ function mapAuthorMeta(empleado) {
   }
 }
 
+// Procesa los elementos de la coleccion.
 function mapAuthor(empleado) {
   return mapAuthorMeta(empleado).autor
 }
 
+// Prepara el valor para su uso.
 function parseOpciones(raw) {
   if (!raw) return []
   if (Array.isArray(raw)) return raw
@@ -63,6 +66,7 @@ function parseOpciones(raw) {
   return []
 }
 
+// Procesa los elementos de la coleccion.
 function mapArchivo(row) {
   if (!row.archivo_url) return null
   return {
@@ -72,6 +76,7 @@ function mapArchivo(row) {
   }
 }
 
+// Construye el valor o recurso necesario.
 function buildEncuestaFromRow(row, voteCounts = {}, miVoto = null) {
   const pregunta = row.encuesta_pregunta
   const opcionesRaw = parseOpciones(row.encuesta_opciones)
@@ -97,6 +102,7 @@ function buildEncuestaFromRow(row, voteCounts = {}, miVoto = null) {
   }
 }
 
+// Procesa los elementos de la coleccion.
 function mapNovedad(row, likeCount = 0, liked = false, encuesta = null) {
   const author = mapAuthorMeta(row.empleados)
   return {
@@ -120,16 +126,19 @@ function mapNovedad(row, likeCount = 0, liked = false, encuesta = null) {
   }
 }
 
+// Obtiene los datos necesarios.
 async function getEmpleadoSucursalNorm(empleadoId) {
   return getEmpleadoSucursal(supabase, empleadoId)
 }
 
+// Construye el valor o recurso necesario.
 function buildDestacadoHasta(dias = ADMIN_DESTACADO_DIAS_DEFAULT) {
   const hasta = new Date()
   hasta.setDate(hasta.getDate() + dias)
   return hasta.toISOString()
 }
 
+// Construye el valor o recurso necesario.
 function buildEncuestaOpciones(encuesta) {
   if (!encuesta?.pregunta || !Array.isArray(encuesta.opciones)) return null
 
@@ -148,6 +157,7 @@ function buildEncuestaOpciones(encuesta) {
   }
 }
 
+// Obtiene los datos necesarios.
 async function fetchNovedadesRows() {
   const extended = await supabase
     .from('novedades')
@@ -172,6 +182,7 @@ async function fetchNovedadesRows() {
   throw extended.error
 }
 
+// Obtiene los datos necesarios.
 async function loadEncuestaVotes(novedadIds, empleadoId) {
   const result = { counts: {}, miVotos: {} }
   if (!novedadIds.length) return result
@@ -188,6 +199,7 @@ async function loadEncuestaVotes(novedadIds, empleadoId) {
     throw error
   }
 
+  // Recorre los elementos de la coleccion.
   for (const vote of data || []) {
     const nid = String(vote.novedad_id)
     const oid = String(vote.opcion_id)
@@ -201,6 +213,7 @@ async function loadEncuestaVotes(novedadIds, empleadoId) {
   return result
 }
 
+// Obtiene los datos necesarios.
 async function getAllNovedades(empleadoId, options = {}) {
   if (!supabase || typeof supabase.from !== 'function') {
     throw new Error('Supabase client not initialized')
@@ -229,6 +242,7 @@ async function getAllNovedades(empleadoId, options = {}) {
   const countByNovedad = {}
   const likedSet = new Set()
 
+  // Recorre los elementos de la coleccion.
   for (const like of likes || []) {
     countByNovedad[like.novedad_id] = (countByNovedad[like.novedad_id] || 0) + 1
     if (empleadoId != null && String(like.empleado_id) === String(empleadoId)) {
@@ -252,6 +266,7 @@ async function getAllNovedades(empleadoId, options = {}) {
   })
 }
 
+// Obtiene los datos necesarios.
 async function getMisNovedades(publicadoPor) {
   if (!supabase || typeof supabase.from !== 'function') {
     throw new Error('Supabase client not initialized')
@@ -297,6 +312,7 @@ async function getMisNovedades(publicadoPor) {
     .map((row) => mapNovedad(row, 0, false, buildEncuestaFromRow(row)))
 }
 
+// Alterna el estado correspondiente.
 async function toggleLike(novedadId, empleadoId) {
   if (!supabase || typeof supabase.from !== 'function') {
     throw new Error('Supabase client not initialized')
@@ -335,6 +351,7 @@ async function toggleLike(novedadId, empleadoId) {
   return { likes: count || 0, liked: !existing }
 }
 
+// Crea el registro o elemento correspondiente.
 async function createNovedad(payload, publicadoPor) {
   if (!supabase || typeof supabase.from !== 'function') {
     throw new Error('Supabase client not initialized')
@@ -404,6 +421,7 @@ async function createNovedad(payload, publicadoPor) {
   return mapNovedad(data, 0, false, buildEncuestaFromRow(data))
 }
 
+// Gestiona la operacion voteEncuesta.
 async function voteEncuesta(novedadId, opcionId, empleadoId) {
   if (!supabase || typeof supabase.from !== 'function') {
     throw new Error('Supabase client not initialized')
@@ -465,6 +483,7 @@ async function voteEncuesta(novedadId, opcionId, empleadoId) {
   return buildEncuestaFromRow(row, encuestaVotes.counts[nid] || {}, encuestaVotes.miVotos[nid] || null)
 }
 
+// Obtiene los datos necesarios.
 async function loadLikeMeta(ids, empleadoId) {
   const { data: likes, error } = await supabase
     .from('novedades_likes')
@@ -474,6 +493,7 @@ async function loadLikeMeta(ids, empleadoId) {
   if (error) throw error
 
   const meta = {}
+  // Recorre los elementos de la coleccion.
   for (const like of likes || []) {
     const nid = String(like.novedad_id)
     if (!meta[nid]) meta[nid] = { count: 0, liked: false }
@@ -485,6 +505,7 @@ async function loadLikeMeta(ids, empleadoId) {
   return meta
 }
 
+// Actualiza los datos correspondientes.
 async function updateNovedad(novedadId, payload, empleadoId, isAdminUser) {
   if (!supabase || typeof supabase.from !== 'function') {
     throw new Error('Supabase client not initialized')
@@ -555,7 +576,9 @@ async function updateNovedad(novedadId, payload, empleadoId, isAdminUser) {
   return mapNovedad(data, likeMeta.count, likeMeta.liked, encuesta)
 }
 
+// Elimina el elemento indicado.
 async function deleteNovedadRelations(novedadId) {
+  // Gestiona la operacion safeDelete.
   const safeDelete = async (table, column, value) => {
     const { error } = await supabase.from(table).delete().eq(column, value)
     if (!error) return
@@ -569,6 +592,7 @@ async function deleteNovedadRelations(novedadId) {
   await safeDelete('novedades_comentarios', 'novedad_id', novedadId)
 }
 
+// Elimina el elemento indicado.
 async function deactivateNovedad(novedadId, publicadoPor, isAdmin) {
   if (!supabase || typeof supabase.from !== 'function') {
     throw new Error('Supabase client not initialized')

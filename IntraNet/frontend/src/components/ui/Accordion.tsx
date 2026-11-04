@@ -15,6 +15,7 @@ export interface AccordionProps {
   id?: string
 }
 
+// Gestiona la operacion Accordion.
 export function Accordion({
   title,
   children,

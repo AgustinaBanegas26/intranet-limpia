@@ -83,35 +83,45 @@ export type RendicionSendPayload = {
 }
 
 export const rendicionesService = {
+  // Obtiene los datos necesarios.
   getAll: async (estado?: string) => {
     const qs = estado && estado !== 'todos' ? `?estado=${encodeURIComponent(estado)}` : ''
     return apiClient.get<{ data: RendicionDTO[] }>(`/rendiciones${qs}`)
   },
 
+  // Obtiene los datos necesarios.
   getById: async (id: number | string) =>
     apiClient.get<{ data: RendicionDTO }>(`/rendiciones/${id}`),
 
+  // Obtiene los datos necesarios.
   getByViaticoId: async (viaticoId: number | string) =>
     apiClient.get<{ data: RendicionDTO }>(`/rendiciones/viatico/${viaticoId}`),
 
+  // Actualiza los datos correspondientes.
   update: async (id: number | string, payload: RendicionUpdatePayload) =>
     apiClient.put<{ data: RendicionDTO }>(`/rendiciones/${id}`, payload),
 
+  // Crea el registro o elemento correspondiente.
   addGasto: async (id: number | string, payload: RendicionGastoPayload) =>
     apiClient.post<{ data: RendicionDTO }>(`/rendiciones/${id}/gastos`, payload),
 
+  // Actualiza los datos correspondientes.
   updateGasto: async (id: number | string, gastoId: number | string, payload: RendicionGastoPayload) =>
     apiClient.put<{ data: RendicionDTO }>(`/rendiciones/${id}/gastos/${gastoId}`, payload),
 
+  // Elimina el elemento indicado.
   removeGasto: async (id: number | string, gastoId: number | string) =>
     apiClient.delete<{ success: boolean }>(`/rendiciones/${id}/gastos/${gastoId}`),
 
+  // envia la solicitud correspondiente.
   send: async (id: number | string, payload: RendicionSendPayload = {}) =>
     apiClient.put<{ data: RendicionDTO }>(`/rendiciones/${id}/enviar`, payload),
 
+  // Gestiona la operacion approve.
   approve: async (id: number | string, comentario?: string) =>
     apiClient.put<{ data: RendicionDTO }>(`/rendiciones/${id}/aprobar`, { comentario: comentario || '' }),
 
+  // Gestiona la operacion reject.
   reject: async (id: number | string, comentario?: string) =>
     apiClient.put<{ data: RendicionDTO }>(`/rendiciones/${id}/devolver`, { comentario: comentario || '' }),
 }

@@ -28,6 +28,7 @@ export type AdelantoDTO = {
 }
 
 export const adelantosService = {
+  // Obtiene los datos necesarios.
   getAll: (filters?: { estado?: string; empleado?: string }) => {
     const params = new URLSearchParams()
     if (filters?.estado && filters.estado !== 'todos') params.set('estado', filters.estado)
@@ -36,15 +37,19 @@ export const adelantosService = {
     return apiClient.get<{ data: AdelantoDTO[] }>(`/adelantos${qs ? `?${qs}` : ''}`)
   },
 
+  // Crea el registro o elemento correspondiente.
   create: (payload: { monto: number; empresa: string }) =>
     apiClient.post<{ data: AdelantoDTO }>('/adelantos', payload),
 
+  // Gestiona la operacion approve.
   approve: (id: number | string, comentario?: string) =>
     apiClient.put<{ data: AdelantoDTO }>(`/adelantos/${id}/approve`, { comentario: comentario || '' }),
 
+  // Gestiona la operacion reject.
   reject: (id: number | string, comentario?: string) =>
     apiClient.put<{ data: AdelantoDTO }>(`/adelantos/${id}/reject`, { comentario: comentario || '' }),
 
+  // Elimina el elemento indicado.
   remove: (id: number | string) =>
     apiClient.delete<{ success: boolean }>(`/adelantos/${id}`),
 }

@@ -4,6 +4,7 @@ const { listAdelantos } = require('./adelantos.service')
 
 const CALENDAR_TIPOS = new Set(['viaticos', 'hotel', 'auto', 'rendicion_viaticos'])
 
+// Comprueba los datos o la condicion indicada.
 function isApproved(estado) {
   return String(estado || '').trim().toLowerCase() === 'aprobada'
     || String(estado || '').trim().toLowerCase() === 'aprobado'

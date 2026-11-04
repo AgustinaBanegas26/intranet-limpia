@@ -43,6 +43,7 @@ const EXTRA_FIELD_LABELS: Record<string, string> = {
   updated_at: 'Última actualización',
 }
 
+// Gestiona la operacion fmtDate.
 function fmtDate(d?: string | null) {
   if (!d) return '—'
   return new Date(d.includes('T') ? d : `${d}T00:00:00`).toLocaleDateString('es-AR', {
@@ -52,6 +53,7 @@ function fmtDate(d?: string | null) {
   })
 }
 
+// Gestiona la operacion fmtDateTime.
 function fmtDateTime(d?: string | null) {
   if (!d) return '—'
   return new Date(d).toLocaleString('es-AR', {
@@ -63,11 +65,13 @@ function fmtDateTime(d?: string | null) {
   })
 }
 
+// Gestiona la operacion fmtMoney.
 function fmtMoney(n?: number | null) {
   if (n == null) return '—'
   return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(n)
 }
 
+// Prepara el valor para su uso.
 function formatExtraValue(value: unknown): string {
   if (value == null || value === '') return '—'
   if (typeof value === 'boolean') return value ? 'Sí' : 'No'
@@ -75,6 +79,7 @@ function formatExtraValue(value: unknown): string {
   return String(value)
 }
 
+// Gestiona la operacion DetailItem.
 function DetailItem({ label, value }: { label: string; value?: string | null }) {
   const filled = value != null && value.trim() !== '' && value !== '—'
   return (
@@ -85,6 +90,7 @@ function DetailItem({ label, value }: { label: string; value?: string | null }) 
   )
 }
 
+// Gestiona la operacion DetailSection.
 function DetailSection({ title, icon: Icon, children }: { title: string; icon: typeof FileText; children: ReactNode }) {
   return (
     <section className="request-detail-section">
@@ -104,9 +110,11 @@ interface RequestDetailModalProps {
   statusConfig: Record<SolicitudEstado, { label: string; color: string; bg: string }>
 }
 
+// envia la solicitud correspondiente.
 export function RequestDetailModal({ request, onClose, typeLabels, statusConfig }: RequestDetailModalProps) {
   useEffect(() => {
     if (!request) return
+    // Gestiona la accion correspondiente.
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
     }

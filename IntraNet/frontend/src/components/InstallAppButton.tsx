@@ -16,6 +16,7 @@ const variantClasses = {
     'bg-transparent text-foreground hover:bg-muted border border-border',
 }
 
+// Gestiona la operacion InstallAppButton.
 export function InstallAppButton({
   className = '',
   variant = 'primary',

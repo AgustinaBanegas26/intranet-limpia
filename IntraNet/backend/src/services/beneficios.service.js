@@ -1,5 +1,6 @@
 const supabase = require('../config/supabase')
 
+// Procesa los elementos de la coleccion.
 function mapBeneficio(row) {
   return {
     id: row.id,
@@ -12,6 +13,7 @@ function mapBeneficio(row) {
   }
 }
 
+// Obtiene los datos necesarios.
 async function listBeneficios({ includeInactive = false } = {}) {
   let query = supabase.from('beneficios').select('*').order('created_at', { ascending: false })
   if (!includeInactive) query = query.eq('activo', true)
@@ -21,6 +23,7 @@ async function listBeneficios({ includeInactive = false } = {}) {
   return (data || []).map(mapBeneficio)
 }
 
+// Crea el registro o elemento correspondiente.
 async function createBeneficio(body) {
   const nombre = String(body.nombre || body.title || '').trim()
   if (!nombre) {
@@ -45,6 +48,7 @@ async function createBeneficio(body) {
   return mapBeneficio(data)
 }
 
+// Actualiza los datos correspondientes.
 async function updateBeneficio(id, body) {
   const patch = {}
   if (body.nombre != null || body.title != null) patch.nombre = String(body.nombre || body.title).trim()
@@ -65,6 +69,7 @@ async function updateBeneficio(id, body) {
   return mapBeneficio(data)
 }
 
+// Elimina el elemento indicado.
 async function removeBeneficio(id) {
   const { data, error } = await supabase.from('beneficios').delete().eq('id', id).select('id').maybeSingle()
 

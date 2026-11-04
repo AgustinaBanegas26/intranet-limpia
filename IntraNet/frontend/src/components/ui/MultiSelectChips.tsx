@@ -7,7 +7,9 @@ type Props = {
   hint?: string
 }
 
+// Gestiona la operacion MultiSelectChips.
 export function MultiSelectChips({ options, value, onChange, max, label, hint }: Props) {
+  // Alterna el estado correspondiente.
   const toggle = (option: string) => {
     if (value.includes(option)) {
       onChange(value.filter((v) => v !== option))
@@ -52,6 +54,7 @@ type SingleSelectProps = {
   placeholder?: string
 }
 
+// Gestiona la operacion AreaSelect.
 export function AreaSelect({ options, value, onChange, label = 'Área', placeholder = 'Seleccionar área…' }: SingleSelectProps) {
   return (
     <div className="form-field">

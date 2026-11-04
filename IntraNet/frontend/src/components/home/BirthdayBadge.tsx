@@ -2,6 +2,7 @@ interface BirthdayBadgeProps {
   variant: 'today' | 'upcoming'
 }
 
+// Gestiona la operacion BirthdayBadge.
 export function BirthdayBadge({ variant }: BirthdayBadgeProps) {
   const isToday = variant === 'today'
   return (

@@ -14,8 +14,10 @@ export type ManualDTO = {
 }
 
 export const manualsService = {
+  // Obtiene los datos necesarios.
   getAll: () => apiClient.get<{ data: ManualDTO[] }>('/manuales'),
 
+  // Crea el registro o elemento correspondiente.
   create: (payload: {
     titulo: string
     descripcion?: string
@@ -25,9 +27,11 @@ export const manualsService = {
     paginas?: number
   }) => apiClient.post<{ data: ManualDTO }>('/manuales', payload),
 
+  // Actualiza los datos correspondientes.
   update: (id: number | string, payload: Partial<ManualDTO>) =>
     apiClient.put<{ data: ManualDTO }>(`/manuales/${id}`, payload),
 
+  // Elimina el elemento indicado.
   remove: (id: number | string) =>
     apiClient.delete<{ success: boolean }>(`/manuales/${id}`),
 }

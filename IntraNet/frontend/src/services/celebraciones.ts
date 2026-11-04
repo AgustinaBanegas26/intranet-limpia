@@ -33,6 +33,7 @@ export type CelebracionesDTO = {
 }
 
 export const celebracionesService = {
+  // Obtiene los datos necesarios.
   getAll: (token?: string | null, days = 14) =>
     apiClient.get<{ data: CelebracionesDTO }>(`/birthdays?days=${days}`, token),
 }

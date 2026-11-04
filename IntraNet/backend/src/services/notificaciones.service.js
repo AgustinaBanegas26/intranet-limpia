@@ -53,6 +53,7 @@ async function notifyNovedadPublished({
   }
 }
 
+// Obtiene los datos necesarios.
 async function getNotificacionesForEmpleado(empleadoId) {
   if (!supabase || typeof supabase.from !== "function") {
     throw new Error("Supabase client not initialized");
@@ -80,6 +81,7 @@ async function getNotificacionesForEmpleado(empleadoId) {
   }));
 }
 
+// Gestiona la operacion inferTipoNotificacion.
 function inferTipoNotificacion(titulo, mensaje) {
   const text = `${titulo || ""} ${mensaje || ""}`.toLowerCase();
   if (text.includes("novedad") || text.includes("comunicado")) return "novedad";
@@ -112,6 +114,7 @@ function inferTipoNotificacion(titulo, mensaje) {
   return "general";
 }
 
+// Gestiona la operacion markAllNotificacionesLeidas.
 async function markAllNotificacionesLeidas(empleadoId) {
   if (!supabase || typeof supabase.from !== "function") {
     throw new Error("Supabase client not initialized");
@@ -127,6 +130,7 @@ async function markAllNotificacionesLeidas(empleadoId) {
   return { success: true };
 }
 
+// Gestiona la operacion markNotificacionLeida.
 async function markNotificacionLeida(notificacionId, empleadoId) {
   if (!supabase || typeof supabase.from !== "function") {
     throw new Error("Supabase client not initialized");
@@ -142,6 +146,7 @@ async function markNotificacionLeida(notificacionId, empleadoId) {
   return { success: true };
 }
 
+// Elimina el elemento indicado.
 async function deleteNotificacion(notificacionId, empleadoId) {
   if (!supabase || typeof supabase.from !== "function") {
     throw new Error("Supabase client not initialized");
@@ -164,6 +169,7 @@ async function deleteNotificacion(notificacionId, empleadoId) {
   return { success: true };
 }
 
+// Elimina el elemento indicado.
 async function deleteAllNotificaciones(empleadoId) {
   if (!supabase || typeof supabase.from !== "function") {
     throw new Error("Supabase client not initialized");
@@ -189,6 +195,7 @@ const TIPO_LABELS = {
   "insumos Técnicos": "Insumos Técnicos",
 };
 
+// Obtiene los datos necesarios.
 async function getActiveAdminIds() {
   const { data: admins, error } = await supabase
     .from("empleados")
@@ -306,6 +313,7 @@ async function notifyAdminsNewSolicitud({
   }
 }
 
+// Gestiona la operacion notifyEmpleadoRendicionHabilitada.
 async function notifyEmpleadoRendicionHabilitada({
   empleadoId,
   destino,
@@ -340,6 +348,7 @@ async function notifyEmpleadoRendicionHabilitada({
     .is("habilitada_notificada_at", null);
 }
 
+// Gestiona la operacion notifyAdminsNewAusencia.
 async function notifyAdminsNewAusencia({ solicitante, tipo, motivo }) {
   if (!supabase || typeof supabase.from !== "function") return;
 
@@ -381,6 +390,7 @@ async function notifyAdminsNewAusencia({ solicitante, tipo, motivo }) {
   await supabase.from("notificaciones").insert(rows);
 }
 
+// Gestiona la operacion notifyAdminsNewAdelanto.
 async function notifyAdminsNewAdelanto({ solicitante, monto, empresa }) {
   if (!supabase || typeof supabase.from !== "function") return;
 
@@ -422,6 +432,7 @@ async function notifyAdminsNewAdelanto({ solicitante, monto, empresa }) {
   await supabase.from("notificaciones").insert(rows);
 }
 
+// Gestiona la operacion notifyEmpleadoAusenciaResuelta.
 async function notifyEmpleadoAusenciaResuelta({
   empleadoId,
   tipo,
@@ -493,6 +504,7 @@ async function notifyEmpleadoSolicitudResuelta({
   });
 }
 
+// Gestiona la operacion notifyEmpleadoAdelantoResuelta.
 async function notifyEmpleadoAdelantoResuelta({
   empleadoId,
   estado,

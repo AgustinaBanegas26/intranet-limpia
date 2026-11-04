@@ -36,6 +36,7 @@ type DashboardEmpleado = {
   work_mode?: string | null;
 };
 
+// Gestiona la operacion toDashboardEmpleado.
 function toDashboardEmpleado(emp: Employee): DashboardEmpleado {
   return {
     id: emp.id,
@@ -54,6 +55,7 @@ function toDashboardEmpleado(emp: Employee): DashboardEmpleado {
   };
 }
 
+// Gestiona la operacion AdminDashboard.
 export function AdminDashboard() {
   const { token, user } = useAuth();
   const [employees, setEmployees] = useState<Employee[]>([]);

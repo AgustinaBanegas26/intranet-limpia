@@ -23,17 +23,20 @@ import { AdelantosPage } from '../pages/adelantos/AdelantosPage'
 import { TechnicalSuppliesPage } from '../pages/technical-supplies/TechnicalSuppliesPage'
 import { CalendarPage } from '../pages/calendar/CalendarPage'
 
+// Gestiona la operacion DashboardRoute.
 function DashboardRoute() {
   const { user } = useAuth()
   return isAdminUser(user) ? <AdminDashboard /> : <EmployeeDashboard />
 }
 
+// Gestiona la operacion AdminOnly.
 function AdminOnly({ children }: { children: ReactNode }) {
   const { user } = useAuth()
   if (!isAdminUser(user)) return <Navigate to="/" replace />
   return <>{children}</>
 }
 
+// Gestiona la operacion StaffOnly.
 function StaffOnly({ children }: { children: ReactNode }) {
   const { user } = useAuth()
   if (!canListEmployees(user)) return <Navigate to="/" replace />
@@ -41,12 +44,14 @@ function StaffOnly({ children }: { children: ReactNode }) {
 }
 
 
+// Gestiona la operacion EmployeeOnly.
 function EmployeeOnly({ children }: { children: ReactNode }) {
   const { user } = useAuth()
   if (isAdminUser(user)) return <Navigate to="/" replace />
   return <>{children}</>
 }
 
+// Gestiona la operacion AuthenticatedRoutes.
 export function AuthenticatedRoutes() {
   return (
     <Routes>

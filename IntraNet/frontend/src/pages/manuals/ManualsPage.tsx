@@ -28,6 +28,7 @@ const COLORS = [
   "#10B981",
 ];
 
+// Gestiona la operacion fmtDate.
 function fmtDate(d?: string | null) {
   if (!d) return "—";
   return new Date(d.includes("T") ? d : `${d}T00:00:00`).toLocaleDateString(
@@ -36,6 +37,7 @@ function fmtDate(d?: string | null) {
   );
 }
 
+// Gestiona la operacion ManualsPage.
 export function ManualsPage() {
   const { isAdmin } = useAuth();
   const [items, setItems] = useState<ManualDTO[]>([]);
@@ -92,6 +94,7 @@ export function ManualsPage() {
     return matchesCategory && matchesSearch;
   });
 
+  // Limpia el estado o los datos correspondientes.
   const resetForm = () => {
     setForm({
       titulo: "",
@@ -106,6 +109,7 @@ export function ManualsPage() {
     setShowForm(false);
   };
 
+  // Gestiona la accion correspondiente.
   const handlePdfUpload = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
@@ -123,6 +127,7 @@ export function ManualsPage() {
     event.target.value = "";
   };
 
+  // Gestiona la accion correspondiente.
   const handleCreate = async () => {
     if (!form.titulo.trim()) return;
     setSubmitting(true);
@@ -147,6 +152,7 @@ export function ManualsPage() {
     }
   };
 
+  // Gestiona la accion correspondiente.
   const handleEdit = (manual: ManualDTO) => {
     setEditingId(manual.id);
     setForm({
@@ -161,6 +167,7 @@ export function ManualsPage() {
     setShowForm(true);
   };
 
+  // Gestiona la accion correspondiente.
   const handleDelete = async (id: number) => {
     await manualsService.remove(id);
     setItems((prev) => prev.filter((m) => m.id !== id));

@@ -16,6 +16,7 @@ const statusConfig = {
   rechazada: { label: 'Rechazada', icon: XCircle, color: 'var(--danger)', bg: 'var(--danger-bg)' },
 } as const
 
+// Gestiona la operacion fmtDate.
 function fmtDate(d?: string | null) {
   if (!d) return '—'
   return new Date(d.includes('T') ? d : `${d}T00:00:00`).toLocaleDateString('es-AR', {
@@ -25,17 +26,20 @@ function fmtDate(d?: string | null) {
   })
 }
 
+// Gestiona la operacion fmtSchedule.
 function fmtSchedule(absence: AusenciaDTO) {
   if (absence.hora_desde && absence.hora_hasta) return `${fmtDate(absence.fecha_desde)} · ${absence.hora_desde} → ${absence.hora_hasta}`
   return `${fmtDate(absence.fecha_desde)} — ${fmtDate(absence.fecha_hasta)} · ${absence.dias ?? '—'} días`
 }
 
+// Gestiona la operacion absenceDeleteErrorMessage.
 function absenceDeleteErrorMessage(code: string) {
   if (code === 'cannot_delete_resolved') return 'Solo se pueden eliminar solicitudes pendientes.'
   if (code === 'forbidden') return 'No tenés permisos para eliminar esta solicitud.'
   return 'No se pudo eliminar la solicitud.'
 }
 
+// Gestiona la operacion AbsencesEmployeeView.
 function AbsencesEmployeeView() {
   const [activeTab, setActiveTab] = useState<'ausencias' | 'llegadas-tarde'>('ausencias')
   const [items, setItems] = useState<AusenciaDTO[]>([])
@@ -66,6 +70,7 @@ function AbsencesEmployeeView() {
 
   const pendientes = items.filter((a) => a.estado === 'pendiente').length
 
+  // Gestiona la accion correspondiente.
   const handleEdit = (abs: AusenciaDTO) => {
     if (abs.estado !== 'pendiente') return
     setEditId(Number(abs.id))
@@ -78,6 +83,7 @@ function AbsencesEmployeeView() {
     setEditError('')
   }
 
+  // Gestiona la accion correspondiente.
   const handleSaveEdit = async () => {
     if (editId == null) return
     if (!editForm.fecha_desde || !editForm.fecha_hasta || !editForm.motivo.trim()) {
@@ -106,6 +112,7 @@ function AbsencesEmployeeView() {
     }
   }
 
+  // Gestiona la accion correspondiente.
   const handleDelete = async (id: number) => {
     setDeleteBusy(true)
     setDeleteError('')
@@ -273,6 +280,7 @@ function AbsencesEmployeeView() {
   )
 }
 
+// Gestiona la operacion AbsencesAdminView.
 function AbsencesAdminView() {
   const [filter, setFilter] = useState<'todos' | 'pendiente' | 'aprobada' | 'rechazada'>('pendiente')
   const [items, setItems] = useState<AusenciaDTO[]>([])
@@ -303,6 +311,7 @@ function AbsencesAdminView() {
     load()
   }, [load])
 
+  // Gestiona la accion correspondiente.
   const handleApprove = async () => {
     if (approveId == null) return
     setActionId(approveId)
@@ -317,6 +326,7 @@ function AbsencesAdminView() {
     }
   }
 
+  // Gestiona la accion correspondiente.
   const handleReject = async () => {
     if (rejectId == null) return
     setActionId(rejectId)
@@ -330,6 +340,7 @@ function AbsencesAdminView() {
     }
   }
 
+  // Gestiona la accion correspondiente.
   const handleDelete = async (id: number) => {
     setDeleteBusy(true)
     setDeleteError('')
@@ -516,6 +527,7 @@ function AbsencesAdminView() {
   )
 }
 
+// Gestiona la operacion AbsencesPage.
 export function AbsencesPage() {
   const { isAdmin } = useAuth()
   return isAdmin ? <AbsencesAdminView /> : <AbsencesEmployeeView />

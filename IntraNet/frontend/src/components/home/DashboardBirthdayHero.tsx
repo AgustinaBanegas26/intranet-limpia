@@ -40,6 +40,7 @@ interface DashboardBirthdayHeroProps {
 
 
 
+// Gestiona la operacion DashboardBirthdayHero.
 export function DashboardBirthdayHero({
 
   token,

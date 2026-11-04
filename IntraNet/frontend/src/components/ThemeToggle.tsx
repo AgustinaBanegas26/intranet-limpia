@@ -5,6 +5,7 @@ type ThemeToggleProps = {
   className?: string
 }
 
+// Gestiona la operacion ThemeToggle.
 export function ThemeToggle({ className = '' }: ThemeToggleProps) {
   const { theme, toggleTheme } = useTheme()
 

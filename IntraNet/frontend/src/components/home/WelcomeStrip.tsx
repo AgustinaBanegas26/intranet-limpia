@@ -9,6 +9,7 @@ type WelcomeStripProps = {
   loading?: boolean
 }
 
+// Gestiona la operacion WelcomeStrip.
 export function WelcomeStrip({ user, profile, loading }: WelcomeStripProps) {
   const displayName = profile?.nombreCompleto || user.name
   const firstName = displayName.trim().split(/\s+/)[0] || displayName

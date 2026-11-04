@@ -15,10 +15,12 @@ import { BirthdayCarousel } from "../../components/home/BirthdayCarousel";
 import { BirthdayUpcomingAccordion } from "../../components/home/BirthdayUpcomingAccordion";
 import { PageHero, PremiumCard } from "../../components/ui/ProductUI";
 
+// Calcula el resultado correspondiente.
 function computeIsToday(p: CelebracionPersona) {
   return p.esHoy === true || p.diasRestantes === 0;
 }
 
+// Genera la vista del componente.
 function renderBirthdaySection(
   allPersons: CelebracionPersona[],
   upcoming: CelebracionPersona[],
@@ -40,6 +42,7 @@ function renderBirthdaySection(
   return <BirthdayCarousel persons={allPersons} upcomingPersons={upcoming} />;
 }
 
+// Gestiona la operacion BirthdaysPage.
 export function BirthdaysPage() {
   const { token } = useAuth();
   const [data, setData] = useState<CelebracionesDTO | null>(null);

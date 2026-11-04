@@ -3,6 +3,7 @@ type InstitutionalAsideProps = {
   sector?: string | null;
 };
 
+// Gestiona la operacion InstitutionalAside.
 export function InstitutionalAside({
   sucursal,
   sector,

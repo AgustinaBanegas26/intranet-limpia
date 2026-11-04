@@ -12,6 +12,7 @@ type Props = {
 
 const emptyForm = { tipo: 'Enfermedad', fecha_desde: '', fecha_hasta: '', motivo: '' }
 
+// Gestiona la operacion AbsenceRequestForm.
 export function AbsenceRequestForm({ compact = false, onSuccess }: Props) {
   const [showForm, setShowForm] = useState(!compact)
   const [form, setForm] = useState({ ...emptyForm })
@@ -19,6 +20,7 @@ export function AbsenceRequestForm({ compact = false, onSuccess }: Props) {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
 
+  // Gestiona la accion correspondiente.
   const handleSubmit = async () => {
     if (!form.fecha_desde) {
       setError('Debe seleccionar una fecha de inicio.')

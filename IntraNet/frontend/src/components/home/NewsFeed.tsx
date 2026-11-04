@@ -22,6 +22,7 @@ type NewsFeedProps = {
   maxPosts?: number;
 };
 
+// Calcula el resultado correspondiente.
 function countRecentPosts(posts: NovedadDTO[], hours = 48) {
   const cutoff = Date.now() - hours * 3_600_000;
   return posts.filter((post) => {
@@ -31,6 +32,7 @@ function countRecentPosts(posts: NovedadDTO[], hours = 48) {
   }).length;
 }
 
+// Comprueba los datos o la condicion indicada.
 function canManagePost(post: NovedadDTO, user: User, isAdmin: boolean) {
   if (!canPublishNovedades(user)) return false;
   if (isAdmin) return true;
@@ -41,6 +43,7 @@ function canManagePost(post: NovedadDTO, user: User, isAdmin: boolean) {
   );
 }
 
+// Gestiona la operacion NewsFeed.
 export function NewsFeed({
   token,
   showFooterCta = false,

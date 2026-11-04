@@ -24,45 +24,55 @@ const TIPO_LABELS: Record<string, string> = {
   general: 'General',
 }
 
+// Obtiene los datos necesarios.
 export function getNotificationTypeLabel(tipo?: string) {
   if (!tipo) return 'General'
   return TIPO_LABELS[tipo] || tipo.charAt(0).toUpperCase() + tipo.slice(1)
 }
 
+// Gestiona la operacion notificationText.
 function notificationText(item: NotificacionDTO) {
   return `${item.titulo || ''} ${item.mensaje || ''}`.toLowerCase()
 }
 
+// Gestiona la operacion matchesRendicion.
 function matchesRendicion(text: string, tipo?: string) {
   return tipo === 'rendicion_viaticos' || text.includes('rendición') || text.includes('rendicion')
 }
 
+// Gestiona la operacion matchesViatico.
 function matchesViatico(text: string, tipo?: string) {
   if (matchesRendicion(text, tipo)) return false
   return tipo === 'viaticos' || text.includes('viático') || text.includes('viatico')
 }
 
+// Gestiona la operacion matchesHotel.
 function matchesHotel(text: string, tipo?: string) {
   return tipo === 'hotel' || text.includes('hotel')
 }
 
+// Gestiona la operacion matchesAuto.
 function matchesAuto(text: string, tipo?: string) {
   if (matchesViatico(text, tipo) || matchesRendicion(text, tipo)) return false
   return tipo === 'auto' || text.includes(' auto') || text.startsWith('auto') || text.includes('vehículo') || text.includes('vehiculo')
 }
 
+// Gestiona la operacion matchesAdelanto.
 function matchesAdelanto(text: string, tipo?: string) {
   return tipo === 'adelanto' || text.includes('adelanto')
 }
 
+// Gestiona la operacion matchesVacacion.
 function matchesVacacion(text: string) {
   return text.includes('vacacion')
 }
 
+// Gestiona la operacion matchesAusencia.
 function matchesAusencia(text: string, tipo?: string) {
   return tipo === 'ausencia' || text.includes('ausencia') || text.includes('licencia')
 }
 
+// Gestiona la operacion matchesInsumos.
 function matchesInsumos(text: string, tipo?: string) {
   return tipo === 'insumos' || text.includes('insumo')
 }
@@ -134,17 +144,22 @@ export function getNotificationModulePath(item: NotificacionDTO, isAdmin: boolea
 }
 
 export const notificationsService = {
+  // Obtiene los datos necesarios.
   getAll: () => apiClient.get<{ data: NotificacionDTO[] }>('/notificaciones'),
 
+  // Gestiona la operacion markRead.
   markRead: (id: number | string) =>
     apiClient.put<{ success: boolean }>(`/notificaciones/${id}/leer`, {}),
 
+  // Gestiona la operacion markAllRead.
   markAllRead: () =>
     apiClient.put<{ success: boolean }>('/notificaciones/leer-todas', {}),
 
+  // Elimina el elemento indicado.
   remove: (id: number | string) =>
     apiClient.delete<{ success: boolean }>(`/notificaciones/${id}`),
 
+  // Elimina el elemento indicado.
   removeAll: () =>
     apiClient.delete<{ success: boolean }>(`/notificaciones/todas`),
 }

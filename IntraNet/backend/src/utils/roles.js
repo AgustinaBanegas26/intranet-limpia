@@ -15,50 +15,62 @@ function resolveRole(empleado) {
   return 'empleado'
 }
 
+// Comprueba los datos o la condicion indicada.
 function isAdmin(role) {
   return role === 'admin'
 }
 
+// Comprueba los datos o la condicion indicada.
 function isRRHH(role) {
   return role === 'rrhh'
 }
 
+// Comprueba los datos o la condicion indicada.
 function isDirector(role) {
   return role === 'director'
 }
 
+// Comprueba los datos o la condicion indicada.
 function canListEmployees(role) {
   return isAdmin(role)
 }
 
+// Comprueba los datos o la condicion indicada.
 function canManageEmployees(role) {
   return isAdmin(role)
 }
 
+// Comprueba los datos o la condicion indicada.
 function canPublishNovedades(role) {
   return isAdmin(role)
 }
 
+// Comprueba los datos o la condicion indicada.
 function canManageSolicitudes(role) {
   return isAdmin(role)
 }
 
+// Comprueba los datos o la condicion indicada.
 function canCreateSolicitud(role) {
   return !isAdmin(role)
 }
 
+// Comprueba los datos o la condicion indicada.
 function canManageAusencias(role) {
   return isAdmin(role)
 }
 
+// Comprueba los datos o la condicion indicada.
 function canCreateAusencia(role) {
   return !isAdmin(role)
 }
 
+// Comprueba los datos o la condicion indicada.
 function canManageCatalog(role) {
   return isAdmin(role)
 }
 
+// Comprueba los datos o la condicion indicada.
 function canManageSugerencias(role) {
   return isAdmin(role)
 }

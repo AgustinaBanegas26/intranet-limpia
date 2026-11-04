@@ -24,15 +24,19 @@ type NewsComposerProps = {
   onPublished?: () => void
 }
 
+// Obtiene los datos necesarios.
 function readFileAsDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
+    // Gestiona la accion correspondiente.
     reader.onload = () => resolve(String(reader.result))
+    // Gestiona la accion correspondiente.
     reader.onerror = () => reject(new Error('read_failed'))
     reader.readAsDataURL(file)
   })
 }
 
+// Gestiona la operacion NewsComposer.
 export function NewsComposer({ token, onPublished }: NewsComposerProps) {
   const [open, setOpen] = useState(false)
   const [titulo, setTitulo] = useState('')
@@ -65,6 +69,7 @@ export function NewsComposer({ token, onPublished }: NewsComposerProps) {
     setError(null)
   }, [])
 
+  // Gestiona la accion correspondiente.
   const handleImage = async (file: File | null) => {
     if (!file) return
     if (!file.type.startsWith('image/')) {
@@ -81,6 +86,7 @@ export function NewsComposer({ token, onPublished }: NewsComposerProps) {
     setError(null)
   }
 
+  // Gestiona la accion correspondiente.
   const handleArchivo = async (file: File | null) => {
     if (!file) return
     if (file.size > MAX_FILE_MB * 1024 * 1024) {
@@ -92,21 +98,25 @@ export function NewsComposer({ token, onPublished }: NewsComposerProps) {
     setError(null)
   }
 
+  // Actualiza los datos correspondientes.
   const updateOpcion = (index: number, value: string) => {
     setOpcionesEncuesta((prev) => prev.map((op, i) => (i === index ? value : op)))
   }
 
+  // Crea el registro o elemento correspondiente.
   const addOpcion = () => {
     if (opcionesEncuesta.length < 6) {
       setOpcionesEncuesta((prev) => [...prev, ''])
     }
   }
 
+  // Elimina el elemento indicado.
   const removeOpcion = (index: number) => {
     if (opcionesEncuesta.length <= 2) return
     setOpcionesEncuesta((prev) => prev.filter((_, i) => i !== index))
   }
 
+  // Gestiona la accion correspondiente.
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)

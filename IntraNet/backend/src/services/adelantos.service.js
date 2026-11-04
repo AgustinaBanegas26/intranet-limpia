@@ -5,6 +5,7 @@ const { sendSolicitudNotification } = require('./emailService')
 const VALID_ESTADOS = ['pendiente', 'aprobada', 'rechazada']
 const EMPLEADO_SELECT = 'id, nombre, apellido, email_corporativo, area, sucursal, cargo, legajo, foto_url'
 
+// Procesa los elementos de la coleccion.
 function mapEmpleado(emp) {
   if (!emp) return null
   return {
@@ -21,6 +22,7 @@ function mapEmpleado(emp) {
   }
 }
 
+// Procesa los elementos de la coleccion.
 function mapAdelanto(row) {
   return {
     id: row.id,
@@ -37,11 +39,13 @@ function mapAdelanto(row) {
   }
 }
 
+// Obtiene los datos necesarios.
 async function fetchEmpleadosMap(ids) {
   if (!ids.length) return new Map()
   const extended = await supabase.from('empleados').select(EMPLEADO_SELECT).in('id', ids)
   if (!extended.error) {
     const map = new Map()
+    // Recorre los elementos de la coleccion.
     for (const emp of extended.data || []) map.set(emp.id, emp)
     return map
   }
@@ -54,6 +58,7 @@ async function fetchEmpleadosMap(ids) {
       .in('id', ids)
     if (base.error) throw base.error
     const map = new Map()
+    // Recorre los elementos de la coleccion.
     for (const emp of base.data || []) map.set(emp.id, emp)
     return map
   }
@@ -61,6 +66,7 @@ async function fetchEmpleadosMap(ids) {
   throw extended.error
 }
 
+// Prepara el valor para su uso.
 function parseMonto(value) {
   if (value == null || value === '') return null
   const n = Number(value)
@@ -68,6 +74,7 @@ function parseMonto(value) {
   return Math.round(n * 100) / 100
 }
 
+// Obtiene los datos necesarios.
 async function listAdelantos({ empleadoId = null, estado = null, empleadoQuery = null } = {}) {
   let query = supabase.from('adelantos').select('*').order('created_at', { ascending: false })
   if (empleadoId) query = query.eq('empleado_id', empleadoId)
@@ -88,6 +95,7 @@ async function listAdelantos({ empleadoId = null, estado = null, empleadoQuery =
   return results
 }
 
+// Crea el registro o elemento correspondiente.
 async function createAdelanto(empleadoId, body) {
   const monto = parseMonto(body.monto ?? body.monto_solicitado)
   const empresa = String(body.empresa || '').trim()
@@ -142,6 +150,7 @@ async function createAdelanto(empleadoId, body) {
   return mapped
 }
 
+// Gestiona la operacion resolveAdelanto.
 async function resolveAdelanto(id, { estado, comentario, resueltoPor }) {
   if (!VALID_ESTADOS.includes(estado) || estado === 'pendiente') {
     const err = new Error('invalid_estado')
@@ -214,6 +223,7 @@ async function resolveAdelanto(id, { estado, comentario, resueltoPor }) {
   return mapped
 }
 
+// Elimina el elemento indicado.
 async function removeAdelanto(id, { empleadoId = null, isAdmin = false } = {}) {
   const { data: existing, error: fetchError } = await supabase
     .from('adelantos')

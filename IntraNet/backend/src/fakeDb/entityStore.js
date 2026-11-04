@@ -3,10 +3,12 @@ const { readJsonFile, writeJsonFile } = require('./jsonStore')
 
 const dataRoot = path.join(__dirname, '..', 'data')
 
+// Obtiene los datos necesarios.
 function getEntityFilePath(entityName) {
   return path.join(dataRoot, `${entityName}.json`)
 }
 
+// Obtiene los datos necesarios.
 function readEntity(entityName) {
   const filePath = getEntityFilePath(entityName)
   const initial = { version: 0, items: [] }
@@ -22,11 +24,13 @@ function readEntity(entityName) {
   return initial
 }
 
+// Gestiona la operacion writeEntity.
 function writeEntity(entityName, data) {
   const filePath = getEntityFilePath(entityName)
   writeJsonFile(filePath, data)
 }
 
+// Actualiza los datos correspondientes.
 function updateEntity(entityName, updater) {
   const current = readEntity(entityName)
   const next = updater(current)

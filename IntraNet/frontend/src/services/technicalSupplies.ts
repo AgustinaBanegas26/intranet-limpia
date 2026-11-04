@@ -29,6 +29,7 @@ export type TechnicalSupplyRequestDTO = {
 }
 
 export const technicalSuppliesService = {
+  // Obtiene los datos necesarios.
   getRequests: (filters?: { estado?: string }) => {
     const params = new URLSearchParams()
     if (filters?.estado && filters.estado !== 'todos') params.set('estado', filters.estado)
@@ -36,18 +37,23 @@ export const technicalSuppliesService = {
     return apiClient.get<{ data: TechnicalSupplyRequestDTO[] }>(`/insumos-tecnicos/solicitudes${qs ? `?${qs}` : ''}`)
   },
 
+  // Crea el registro o elemento correspondiente.
   createRequest: (payload: { comment: string; amount: number }) =>
     apiClient.post<{ data: TechnicalSupplyRequestDTO }>('/insumos-tecnicos/solicitudes', payload),
 
+  // Actualiza los datos correspondientes.
   updateRequest: (id: number | string, payload: { comment: string; amount: number; email?: string }) =>
     apiClient.put<{ data: TechnicalSupplyRequestDTO }>(`/insumos-tecnicos/solicitudes/${id}`, payload),
 
+  // Gestiona la operacion upsertFicha.
   upsertFicha: (empleadoId: number | string, payload: { email: string; comment: string; amount: number }) =>
     apiClient.put<{ data: TechnicalSupplyRequestDTO }>(`/insumos-tecnicos/fichas/${empleadoId}`, payload),
 
+  // Gestiona la operacion approveRequest.
   approveRequest: (id: number | string, comentario?: string) =>
     apiClient.put<{ data: TechnicalSupplyRequestDTO }>(`/insumos-tecnicos/solicitudes/${id}/approve`, { comentario: comentario || '' }),
 
+  // Gestiona la operacion rejectRequest.
   rejectRequest: (id: number | string, comentario?: string) =>
     apiClient.put<{ data: TechnicalSupplyRequestDTO }>(`/insumos-tecnicos/solicitudes/${id}/reject`, { comentario: comentario || '' }),
 }

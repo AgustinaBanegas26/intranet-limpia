@@ -3,10 +3,12 @@ const { createAusencia, listAusencias, assertValidDateRange } = require('./ausen
 
 const DEFAULT_DIAS_ASIGNADOS = 14
 
+// Gestiona la operacion currentYear.
 function currentYear() {
   return new Date().getFullYear()
 }
 
+// Gestiona la operacion diffDays.
 function diffDays(desde, hasta) {
   if (!desde || !hasta) return 1
   const a = new Date(`${desde}T00:00:00`)
@@ -14,6 +16,7 @@ function diffDays(desde, hasta) {
   return Math.max(1, Math.round((b - a) / 86400000) + 1)
 }
 
+// Obtiene los datos necesarios.
 async function getSaldo(empleadoId, anio = currentYear()) {
   const { data, error } = await supabase
     .from('vacaciones_saldo')
@@ -45,10 +48,12 @@ async function getSaldo(empleadoId, anio = currentYear()) {
   }
 }
 
+// Obtiene los datos necesarios.
 async function listVacacionesSolicitudes(empleadoId) {
   return listAusencias({ empleadoId, tipo: 'vacacion' })
 }
 
+// Crea el registro o elemento correspondiente.
 async function createVacacionSolicitud(empleadoId, body) {
   const { fechaDesde, fechaHasta } = assertValidDateRange(
     body.fecha_desde || body.startDate,
@@ -65,10 +70,12 @@ async function createVacacionSolicitud(empleadoId, body) {
   })
 }
 
+// Actualiza los datos correspondientes.
 async function updateVacacionSolicitud(empleadoId, id, body) {
   return require('./ausencias.service').updateAusencia(id, empleadoId, body)
 }
 
+// Elimina el elemento indicado.
 async function removeVacacionSolicitud(empleadoId, id) {
   return require('./ausencias.service').removeAusencia(id, { empleadoId, isAdmin: false })
 }

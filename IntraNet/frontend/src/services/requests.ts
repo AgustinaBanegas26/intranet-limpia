@@ -61,6 +61,7 @@ export type CreateSolicitudPayload = {
 export type CreateSolicitudesBody = CreateSolicitudPayload | { items: CreateSolicitudPayload[] }
 
 export const requestsService = {
+  // Obtiene los datos necesarios.
   getAll: async (estado?: string) => {
     const qs = estado && estado !== 'todos' ? `?estado=${encodeURIComponent(estado)}` : ''
     const [solicitudesRes, adelantosRes] = await Promise.all([
@@ -101,12 +102,15 @@ export const requestsService = {
     return { data: [...(solicitudesRes.data || []), ...normalizedAdelantos] }
   },
 
+  // Crea el registro o elemento correspondiente.
   create: (payload: CreateSolicitudesBody) =>
     apiClient.post<{ data: SolicitudDTO[] }>('/solicitudes', payload),
 
+  // Crea el registro o elemento correspondiente.
   createViaticos: (payload: CreateSolicitudPayload) =>
     apiClient.post<{ data: SolicitudDTO[] }>('/viaticos', payload),
 
+  // Gestiona la operacion approve.
   approve: async (id: number | string, comentario?: string) => {
     const idText = String(id)
     if (idText.startsWith('adelanto:')) {
@@ -115,6 +119,7 @@ export const requestsService = {
     return apiClient.put<{ data: SolicitudDTO }>(`/solicitudes/${id}/approve`, { comentario: comentario || '' })
   },
 
+  // Gestiona la operacion reject.
   reject: async (id: number | string, comentario?: string) => {
     const idText = String(id)
     if (idText.startsWith('adelanto:')) {
@@ -123,6 +128,7 @@ export const requestsService = {
     return apiClient.put<{ data: SolicitudDTO }>(`/solicitudes/${id}/reject`, { comentario: comentario || '' })
   },
 
+  // Elimina el elemento indicado.
   remove: async (id: number | string) => {
     const idText = String(id)
     if (idText.startsWith('adelanto:')) {

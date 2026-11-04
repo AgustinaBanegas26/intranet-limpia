@@ -23,6 +23,7 @@ const emptyForm = {
   mostrar_titulo: false,
 };
 
+// Gestiona la operacion SliderAdminPanel.
 export function SliderAdminPanel() {
   const [slides, setSlides] = useState<SliderSlideDTO[]>([]);
   const [loading, setLoading] = useState(true);
@@ -52,6 +53,7 @@ export function SliderAdminPanel() {
     load();
   }, [load]);
 
+  // Limpia el estado o los datos correspondientes.
   const resetForm = () => {
     setForm({ ...emptyForm });
     setEditingId(null);
@@ -59,6 +61,7 @@ export function SliderAdminPanel() {
     setError("");
   };
 
+  // Gestiona la accion correspondiente.
   const handleEdit = (slide: SliderSlideDTO) => {
     setEditingId(slide.id);
     setForm({
@@ -73,6 +76,7 @@ export function SliderAdminPanel() {
     setShowForm(true);
   };
 
+  // Gestiona la accion correspondiente.
   const handleGalleryImage = async (file: File | null) => {
     if (!file) return;
     setUploadingImage(true);
@@ -94,6 +98,7 @@ export function SliderAdminPanel() {
     }
   };
 
+  // Gestiona la accion correspondiente.
   const handleSave = async () => {
     if (!form.imagen_url.trim()) {
       setError("La imagen es obligatoria.");
@@ -131,6 +136,7 @@ export function SliderAdminPanel() {
     }
   };
 
+  // Gestiona la accion correspondiente.
   const handleDelete = async (id: string) => {
     setSubmitting(true);
     setError("");

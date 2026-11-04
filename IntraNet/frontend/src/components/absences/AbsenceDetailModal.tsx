@@ -5,6 +5,7 @@ import type { AusenciaDTO } from '../../services/absences'
 
 type AusenciaEstado = AusenciaDTO['estado']
 
+// Gestiona la operacion fmtDate.
 function fmtDate(d?: string | null) {
   if (!d) return '—'
   return new Date(d.includes('T') ? d : `${d}T00:00:00`).toLocaleDateString('es-AR', {
@@ -14,6 +15,7 @@ function fmtDate(d?: string | null) {
   })
 }
 
+// Gestiona la operacion fmtDateTime.
 function fmtDateTime(d?: string | null) {
   if (!d) return '—'
   return new Date(d).toLocaleString('es-AR', {
@@ -25,17 +27,20 @@ function fmtDateTime(d?: string | null) {
   })
 }
 
+// Gestiona la operacion extractAdminComment.
 function extractAdminComment(motivo?: string | null): string | null {
   if (!motivo) return null
   const matches = [...motivo.matchAll(/\[Admin\]:\s*([^\n]+)/g)]
   return matches.length ? matches[matches.length - 1][1].trim() : null
 }
 
+// Gestiona la operacion stripAdminComments.
 function stripAdminComments(motivo?: string | null): string {
   if (!motivo) return ''
   return motivo.replace(/\n\n\[Admin\]:[^\n]*/g, '').trim()
 }
 
+// Gestiona la operacion DetailItem.
 function DetailItem({ label, value }: { label: string; value?: string | null }) {
   const filled = value != null && value.trim() !== '' && value !== '—'
   return (
@@ -46,6 +51,7 @@ function DetailItem({ label, value }: { label: string; value?: string | null }) 
   )
 }
 
+// Gestiona la operacion DetailSection.
 function DetailSection({ title, icon: Icon, children }: { title: string; icon: typeof FileText; children: ReactNode }) {
   return (
     <section className="request-detail-section">
@@ -67,9 +73,11 @@ interface AbsenceDetailModalProps {
   actionBusy?: boolean
 }
 
+// Gestiona la operacion AbsenceDetailModal.
 export function AbsenceDetailModal({ absence, onClose, statusConfig, onApprove, onReject, actionBusy }: AbsenceDetailModalProps) {
   useEffect(() => {
     if (!absence) return
+    // Gestiona la accion correspondiente.
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
     }

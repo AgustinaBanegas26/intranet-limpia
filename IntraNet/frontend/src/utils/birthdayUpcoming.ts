@@ -8,22 +8,26 @@ export type BirthdayUpcomingDisplay = {
   isToday: boolean
 }
 
+// Gestiona la operacion startOfDay.
 function startOfDay(date: Date): Date {
   const d = new Date(date)
   d.setHours(0, 0, 0, 0)
   return d
 }
 
+// Gestiona la operacion daysUntilEndOfMonth.
 export function daysUntilEndOfMonth(from = new Date()): number {
   const today = startOfDay(from)
   const end = new Date(today.getFullYear(), today.getMonth() + 1, 0)
   return Math.round((end.getTime() - today.getTime()) / 86_400_000)
 }
 
+// Comprueba los datos o la condicion indicada.
 export function isBirthdayToday(person: CelebracionPersona): boolean {
   return person.esHoy === true || person.diasRestantes === 0
 }
 
+// Comprueba los datos o la condicion indicada.
 export function isBirthdayPast(person: CelebracionPersona): boolean {
   const days = person.diasRestantes
   return days != null && days < 0
@@ -41,6 +45,7 @@ export function filterMonthlyUpcoming(persons: CelebracionPersona[]): Celebracio
   })
 }
 
+// Procesa los elementos de la coleccion.
 export function sortByUpcomingDate(persons: CelebracionPersona[]): CelebracionPersona[] {
   return [...persons].sort((a, b) => {
     const da = a.diasRestantes ?? Number.MAX_SAFE_INTEGER
@@ -49,6 +54,7 @@ export function sortByUpcomingDate(persons: CelebracionPersona[]): CelebracionPe
   })
 }
 
+// Gestiona la operacion resolveBirthdayDate.
 function resolveBirthdayDate(person: CelebracionPersona): Date | null {
   const days = person.diasRestantes
   if (days != null && days >= 0) {
@@ -63,6 +69,7 @@ function resolveBirthdayDate(person: CelebracionPersona): Date | null {
   return null
 }
 
+// Prepara el valor para su uso.
 function formatFechaLabel(date: Date): string {
   const day = date.getDate()
   const month = date.toLocaleDateString('es-AR', { month: 'long' })
@@ -70,11 +77,13 @@ function formatFechaLabel(date: Date): string {
   return `${day} de ${capitalized}`
 }
 
+// Prepara el valor para su uso.
 function formatDiaSemana(date: Date): string {
   const raw = date.toLocaleDateString('es-AR', { weekday: 'long' })
   return raw.charAt(0).toUpperCase() + raw.slice(1)
 }
 
+// Obtiene los datos necesarios.
 export function getDiasRestantesLabel(person: CelebracionPersona): string {
   if (isBirthdayToday(person)) return 'Hoy'
   const days = person.diasRestantes
@@ -83,6 +92,7 @@ export function getDiasRestantesLabel(person: CelebracionPersona): string {
   return person.fecha || ''
 }
 
+// Construye el valor o recurso necesario.
 export function buildUpcomingDisplay(person: CelebracionPersona): BirthdayUpcomingDisplay {
   const today = isBirthdayToday(person)
   const date = resolveBirthdayDate(person)
@@ -96,16 +106,19 @@ export function buildUpcomingDisplay(person: CelebracionPersona): BirthdayUpcomi
   }
 }
 
+// Gestiona la operacion prepareMonthlyUpcomingBirthdays.
 export function prepareMonthlyUpcomingBirthdays(
   persons: CelebracionPersona[],
 ): BirthdayUpcomingDisplay[] {
   return sortByUpcomingDate(filterMonthlyUpcoming(persons)).map(buildUpcomingDisplay)
 }
 
+// Construye el valor o recurso necesario.
 export function buildUpcomingOnlyPersons(persons: CelebracionPersona[]): CelebracionPersona[] {
   return sortByUpcomingDate(filterMonthlyUpcoming(persons))
 }
 
+// Comprueba los datos o la condicion indicada.
 export function isBirthdayUpcomingSoon(person: CelebracionPersona): boolean {
   return !isBirthdayToday(person) && (person.diasRestantes ?? 99) < 7
 }
@@ -120,6 +133,7 @@ export type SelfBirthdayProfile = {
   foto?: string | null
 }
 
+// Comprueba los datos o la condicion indicada.
 function isProfileBirthdayToday(fechaNac?: string | null): boolean {
   if (!fechaNac) return false
   const bday = new Date(fechaNac)
@@ -168,6 +182,7 @@ export function mergeCelebracionLists(
 ): CelebracionPersona[] {
   const seen = new Set<string>()
   const result: CelebracionPersona[] = []
+  // Recorre los elementos de la coleccion.
   for (const p of [...today, ...upcoming]) {
     const key = String(p.id)
     if (seen.has(key)) continue

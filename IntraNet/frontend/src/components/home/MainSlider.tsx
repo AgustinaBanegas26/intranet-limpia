@@ -5,6 +5,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import type { EmblaCarouselType } from "embla-carousel";
 import { sliderService, type SliderSlideDTO } from "../../services/slider";
 
+// Gestiona la operacion SlideContent.
 function SlideContent({ slide }: { slide: SliderSlideDTO }) {
   const hasCopy = !!(slide.titulo?.trim() || slide.subtitulo?.trim());
   const showTitle = slide.mostrar_titulo !== false && hasCopy;
@@ -59,6 +60,7 @@ function SlideContent({ slide }: { slide: SliderSlideDTO }) {
   );
 }
 
+// Gestiona la operacion MainSlider.
 export function MainSlider() {
   const [slides, setSlides] = useState<SliderSlideDTO[]>([]);
   const [loading, setLoading] = useState(true);
@@ -71,6 +73,7 @@ export function MainSlider() {
   useEffect(() => {
     let active = true;
 
+    // Obtiene los datos necesarios.
     const fetchSlides = () => {
       setLoading(true);
       sliderService
@@ -89,6 +92,7 @@ export function MainSlider() {
 
     fetchSlides();
 
+    // Gestiona la accion correspondiente.
     const onSliderChanged = () => {
       fetchSlides();
     };

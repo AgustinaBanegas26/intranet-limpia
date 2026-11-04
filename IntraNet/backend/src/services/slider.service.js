@@ -6,6 +6,7 @@ const { readJsonFile, writeJsonFile } = require('../fakeDb/jsonStore')
 const LEGACY_JSON = path.join(__dirname, '..', 'data', 'home_slider.json')
 const META_JSON = path.join(__dirname, '..', 'data', 'home_slider_meta.json')
 
+// Procesa los elementos de la coleccion.
 function mapSlide(row) {
   let titulo = String(row.titulo || '').trim()
   if (row.mostrar_titulo === false && titulo === 'Slide') titulo = ''
@@ -27,6 +28,7 @@ function mapSlide(row) {
   }
 }
 
+// Procesa los elementos de la coleccion.
 function sortSlides(items) {
   return [...items].sort((a, b) => {
     const order = (a.orden ?? 0) - (b.orden ?? 0)
@@ -35,6 +37,7 @@ function sortSlides(items) {
   })
 }
 
+// Gestiona la operacion importLegacySlidesIfEmpty.
 async function importLegacySlidesIfEmpty() {
   if (!supabase || typeof supabase.from !== 'function') return
 
@@ -80,6 +83,7 @@ async function importLegacySlidesIfEmpty() {
   }
 }
 
+// Obtiene los datos necesarios.
 async function listSlides({ includeInactive = false } = {}) {
   if (!supabase || typeof supabase.from !== 'function') {
     throw new Error('Supabase client not initialized')
@@ -96,6 +100,7 @@ async function listSlides({ includeInactive = false } = {}) {
   return sortSlides(data || []).map(mapSlide)
 }
 
+// Crea el registro o elemento correspondiente.
 async function createSlide(body) {
   const imagenUrl = String(body.imagen_url || body.imagenUrl || '').trim()
   const titulo = String(body.titulo || '').trim()
@@ -133,6 +138,7 @@ async function createSlide(body) {
   return mapSlide(data)
 }
 
+// Actualiza los datos correspondientes.
 async function updateSlide(id, body) {
   const patch = { updated_at: new Date().toISOString() }
   if (body.titulo != null) patch.titulo = String(body.titulo).trim()
@@ -192,6 +198,7 @@ async function updateSlide(id, body) {
   return mapSlide(data)
 }
 
+// Elimina el elemento indicado.
 async function removeSlide(id) {
   const { data, error } = await supabase.from('home_slider').delete().eq('id', id).select('id').maybeSingle()
   if (error) throw error

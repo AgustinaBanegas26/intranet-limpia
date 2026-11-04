@@ -910,6 +910,7 @@ app.get('/rendiciones', authenticateToken, requirePasswordChanged, async (req, r
   }
 })
 
+// Gestiona la accion correspondiente.
 async function handleRendicionesSync(_req, res) {
   try {
     const data = await syncEligibleRendiciones()

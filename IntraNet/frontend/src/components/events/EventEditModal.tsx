@@ -18,14 +18,17 @@ type FormState = {
   activo: boolean
 }
 
+// Gestiona la operacion toDatetimeLocal.
 function toDatetimeLocal(value?: string | null) {
   if (!value) return ''
   const d = new Date(value.includes('T') ? value : `${value}T00:00:00`)
   if (Number.isNaN(d.getTime())) return ''
+  // Gestiona la operacion pad.
   const pad = (n: number) => String(n).padStart(2, '0')
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
 }
 
+// Gestiona la operacion emptyForm.
 function emptyForm(): FormState {
   return {
     titulo: '',
@@ -41,6 +44,7 @@ function emptyForm(): FormState {
   }
 }
 
+// Gestiona la operacion formFromEvent.
 function formFromEvent(event: EventoDTO): FormState {
   const destinos = event.sucursalesDestino || []
   return {
@@ -63,6 +67,7 @@ type Props = {
   onSaved: (event: EventoDTO) => void
 }
 
+// Gestiona la operacion EventEditModal.
 export function EventEditModal({ event, onClose, onSaved }: Props) {
   const [form, setForm] = useState<FormState>(emptyForm())
   const [submitting, setSubmitting] = useState(false)
@@ -78,6 +83,7 @@ export function EventEditModal({ event, onClose, onSaved }: Props) {
 
   useEffect(() => {
     if (!event) return
+    // Gestiona la accion correspondiente.
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
     }
@@ -87,6 +93,7 @@ export function EventEditModal({ event, onClose, onSaved }: Props) {
 
   if (!event) return null
 
+  // Gestiona la accion correspondiente.
   const handleImageUpload = async (file: File | null) => {
     if (!file) return
     setUploadingImage(true)
@@ -101,6 +108,7 @@ export function EventEditModal({ event, onClose, onSaved }: Props) {
     }
   }
 
+  // Gestiona la accion correspondiente.
   const handlePdfUpload = async (file: File | null) => {
     if (!file) return
     setUploadingPdf(true)
@@ -116,6 +124,7 @@ export function EventEditModal({ event, onClose, onSaved }: Props) {
     }
   }
 
+  // Gestiona la accion correspondiente.
   const handleSave = async () => {
     if (!form.titulo.trim() || !form.fecha_inicio) {
       setError('Título y fecha de inicio son obligatorios.')

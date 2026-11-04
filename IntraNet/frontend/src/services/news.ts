@@ -64,24 +64,31 @@ export type UpdateNovedadPayload = {
 }
 
 export const newsService = {
+  // Obtiene los datos necesarios.
   getAll: (token?: string | null) =>
     apiClient.get<{ data: NovedadDTO[] }>('/novedades', token),
 
+  // Obtiene los datos necesarios.
   getMine: (token?: string | null) =>
     apiClient.get<{ data: NovedadDTO[] }>('/novedades/mias', token),
 
+  // Crea el registro o elemento correspondiente.
   create: (payload: CreateNovedadPayload, token?: string | null) =>
     apiClient.post<{ data: NovedadDTO }>('/novedades', payload, token),
 
+  // Actualiza los datos correspondientes.
   update: (id: string | number, payload: UpdateNovedadPayload, token?: string | null) =>
     apiClient.put<NovedadDTO>(`/novedades/${id}`, payload, token),
 
+  // Elimina el elemento indicado.
   remove: (id: string | number, token?: string | null) =>
     apiClient.delete<{ success: boolean }>(`/novedades/${id}`, token),
 
+  // Gestiona la operacion like.
   like: (id: string | number, token?: string | null) =>
     apiClient.post<{ likes: number; liked: boolean }>(`/novedades/${id}/like`, {}, token),
 
+  // Gestiona la operacion votePoll.
   votePoll: (id: string | number, opcionId: string, token?: string | null) =>
     apiClient.post<{ encuesta: EncuestaDTO }>(`/novedades/${id}/encuesta/vote`, { opcionId }, token),
 }

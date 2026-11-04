@@ -1,6 +1,7 @@
 import { Download, Share, Smartphone, X } from 'lucide-react'
 import { usePwaInstall } from '../../context/PwaInstallContext'
 
+// Gestiona la operacion platformLabel.
 function platformLabel(isAndroid: boolean, isChrome: boolean, isEdge: boolean) {
   if (isAndroid && (isChrome || isEdge)) {
     return isEdge ? 'Microsoft Edge' : 'Google Chrome'
@@ -11,6 +12,7 @@ function platformLabel(isAndroid: boolean, isChrome: boolean, isEdge: boolean) {
   return 'tu navegador'
 }
 
+// Gestiona la operacion PwaInstallBanner.
 export function PwaInstallBanner() {
   const {
     showInstallBanner,

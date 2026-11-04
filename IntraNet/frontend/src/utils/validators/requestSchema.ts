@@ -34,10 +34,12 @@ export const requestSchema = z.object({
 
 export type RequestFormValues = z.infer<typeof requestSchema>
 
+// Prepara el valor para su uso.
 export function normalizeEmail(email: string) {
   return email.trim().toLowerCase()
 }
 
+// Prepara el valor para su uso.
 export function normalizeText(text: string) {
   return text.trim()
 }

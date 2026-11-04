@@ -5,6 +5,7 @@ const { sendSolicitudNotification } = require('./emailService')
 const VALID_REQUEST_STATUSES = ['pendiente', 'aprobada', 'rechazada']
 const EMPLEADO_SELECT = 'id, nombre, apellido, email_corporativo, area, sucursal, cargo, legajo'
 
+// Prepara el valor para su uso.
 function normalizeId(id) {
   const n = Number(id)
   if (!Number.isFinite(n) || n <= 0) {
@@ -15,6 +16,7 @@ function normalizeId(id) {
   return n
 }
 
+// Procesa los elementos de la coleccion.
 function mapEmployee(emp) {
   if (!emp) return null
   return {
@@ -28,6 +30,7 @@ function mapEmployee(emp) {
   }
 }
 
+// Procesa los elementos de la coleccion.
 function mapRequest(row) {
   const status = row.status || 'pendiente'
   return {
@@ -47,15 +50,18 @@ function mapRequest(row) {
   }
 }
 
+// Obtiene los datos necesarios.
 async function fetchEmployeesMap(ids) {
   if (!ids.length) return new Map()
   const { data, error } = await supabase.from('empleados').select(EMPLEADO_SELECT).in('id', ids)
   if (error) throw error
   const map = new Map()
+  // Recorre los elementos de la coleccion.
   for (const emp of data || []) map.set(emp.id, emp)
   return map
 }
 
+// Obtiene los datos necesarios.
 async function getEmployeeById(id) {
   const empleadoId = normalizeId(id)
   const { data, error } = await supabase
@@ -72,12 +78,14 @@ async function getEmployeeById(id) {
   return data
 }
 
+// Prepara el valor para su uso.
 function parseAmount(value) {
   const n = Number(value)
   if (!Number.isFinite(n) || n <= 0) return null
   return Math.round(n * 100) / 100
 }
 
+// Obtiene los datos necesarios.
 async function listTechnicalSupplyRequests({ empleadoId = null, status = null } = {}) {
   let query = supabase.from('technical_supply_requests').select('*').order('created_at', { ascending: false })
   if (empleadoId) query = query.eq('empleado_id', empleadoId)
@@ -91,6 +99,7 @@ async function listTechnicalSupplyRequests({ empleadoId = null, status = null } 
   return rows.map((row) => mapRequest({ ...row, empleados: employees.get(row.empleado_id) || null }))
 }
 
+// Crea el registro o elemento correspondiente.
 async function createTechnicalSupplyRequest(empleadoId, payload) {
   const employee = await getEmployeeById(empleadoId)
   const comment = String(payload?.comment || payload?.comentario || '').trim()
@@ -146,6 +155,7 @@ async function createTechnicalSupplyRequest(empleadoId, payload) {
   return mapped
 }
 
+// Actualiza los datos correspondientes.
 async function updateTechnicalSupplyRequest(id, payload) {
   const requestId = normalizeId(id)
   const comment = String(payload?.comment || payload?.comentario || '').trim()
@@ -183,6 +193,7 @@ async function updateTechnicalSupplyRequest(id, payload) {
   return mapRequest({ ...data, empleados: employees.get(data.empleado_id) || null })
 }
 
+// Gestiona la operacion upsertTechnicalSupplyFichaForEmployee.
 async function upsertTechnicalSupplyFichaForEmployee(empleadoId, payload) {
   const employee = await getEmployeeById(empleadoId)
   const comment = String(payload?.comment || payload?.comentario || '').trim()
@@ -228,6 +239,7 @@ async function upsertTechnicalSupplyFichaForEmployee(empleadoId, payload) {
   return mapRequest({ ...data, empleados: employee })
 }
 
+// Gestiona la operacion resolveTechnicalSupplyRequest.
 async function resolveTechnicalSupplyRequest(id, { status, adminComment, resolvedBy }) {
   const requestId = normalizeId(id)
   if (!VALID_REQUEST_STATUSES.includes(status) || status === 'pendiente') {

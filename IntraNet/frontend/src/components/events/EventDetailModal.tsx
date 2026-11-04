@@ -3,11 +3,13 @@ import { CalendarDays, Clock, FileText, Image as ImageIcon, MapPin, Users, X } f
 import { ModalBackdrop } from '../ui/ModalBackdrop'
 import type { EventoDTO } from '../../services/events'
 
+// Gestiona la operacion fmtDate.
 function fmtDate(dateStr: string) {
   const d = new Date(dateStr.includes('T') ? dateStr : `${dateStr}T00:00:00`)
   return d.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
 }
 
+// Gestiona la operacion fmtTime.
 function fmtTime(dateStr: string) {
   if (!dateStr.includes('T')) return ''
   const d = new Date(dateStr)
@@ -19,9 +21,11 @@ type Props = {
   onClose: () => void
 }
 
+// Gestiona la operacion EventDetailModal.
 export function EventDetailModal({ event, onClose }: Props) {
   useEffect(() => {
     if (!event) return
+    // Gestiona la accion correspondiente.
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
     }

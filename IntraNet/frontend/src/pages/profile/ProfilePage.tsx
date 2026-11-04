@@ -58,11 +58,13 @@ const requiredFields: Array<keyof typeof EMPTY_FORM> = [
   "emailEmpresa",
 ];
 
+// Prepara el valor para su uso.
 function normalizeDateInput(value?: string | null) {
   if (!value) return "";
   return value.includes("T") ? value.slice(0, 10) : value;
 }
 
+// Comprueba los datos o la condicion indicada.
 function validate(form: typeof EMPTY_FORM) {
   const errors: Partial<Record<keyof typeof EMPTY_FORM, string>> = {};
   if (!String(form.nombreCompleto || "").trim())
@@ -92,6 +94,7 @@ function validate(form: typeof EMPTY_FORM) {
   return errors;
 }
 
+// Gestiona la operacion FieldValue.
 function FieldValue({
   label,
   value,
@@ -120,6 +123,7 @@ function FieldValue({
   );
 }
 
+// Actualiza los datos correspondientes.
 function EditInput({
   label,
   value,
@@ -147,6 +151,7 @@ function EditInput({
   );
 }
 
+// Gestiona la operacion ProfilePage.
 export function ProfilePage() {
   const { user, token } = useAuth();
   const [form, setForm] = useState({ ...EMPTY_FORM });
@@ -253,10 +258,12 @@ export function ProfilePage() {
   );
   const initials = getInitials(form.nombreCompleto || user.name);
 
+  // Actualiza los datos correspondientes.
   const setDraftValue = (key: keyof typeof EMPTY_FORM) => (value: string) => {
     setDraft((prev) => ({ ...prev, [key]: value }));
   };
 
+  // Gestiona la operacion syncUserProfile.
   const syncUserProfile = (data: typeof EMPTY_FORM) => {
     const session = getSession();
     if (!session) return;
@@ -272,10 +279,12 @@ export function ProfilePage() {
     );
   };
 
+  // Gestiona la operacion syncUserPhoto.
   const syncUserPhoto = (foto: string | null) => {
     syncUserProfile({ ...form, foto });
   };
 
+  // Gestiona la accion correspondiente.
   const handlePhotoChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
@@ -314,6 +323,7 @@ export function ProfilePage() {
     }
   };
 
+  // Gestiona la accion correspondiente.
   const handlePhotoRemove = async () => {
     if (!token) return;
     setSaving(true);
@@ -332,6 +342,7 @@ export function ProfilePage() {
     }
   };
 
+  // Actualiza los datos correspondientes.
   const save = async () => {
     if (!token || Object.keys(errors).length > 0) return;
     setSaving(true);

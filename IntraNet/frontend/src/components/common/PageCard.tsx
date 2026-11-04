@@ -7,6 +7,7 @@ type PageCardProps = {
   children: ReactNode
 }
 
+// Gestiona la operacion PageCard.
 export function PageCard({ title, description, action, children }: PageCardProps) {
   return (
     <div className="bg-card rounded-[2rem] p-6 md:p-8 shadow-card border border-border">

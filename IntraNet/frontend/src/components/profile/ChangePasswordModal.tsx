@@ -18,6 +18,7 @@ type Props = {
   onClose: () => void
 }
 
+// Actualiza los datos correspondientes.
 export function ChangePasswordModal({ open, onClose }: Props) {
   const { onPasswordChanged } = useAuth()
   const [currentPassword, setCurrentPassword] = useState('')
@@ -32,6 +33,7 @@ export function ChangePasswordModal({ open, onClose }: Props) {
 
   if (!open) return null
 
+  // Limpia el estado o los datos correspondientes.
   const reset = () => {
     setCurrentPassword('')
     setPassword('')
@@ -40,11 +42,13 @@ export function ChangePasswordModal({ open, onClose }: Props) {
     setSuccess('')
   }
 
+  // Gestiona la accion correspondiente.
   const handleClose = () => {
     reset()
     onClose()
   }
 
+  // Gestiona la accion correspondiente.
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')

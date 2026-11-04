@@ -7,6 +7,7 @@ type PendingConfirm = ConfirmOptions & {
   resolve: (confirmed: boolean) => void
 }
 
+// Prepara el estado o comportamiento del componente.
 export function useConfirmDialog() {
   const [pending, setPending] = useState<PendingConfirm | null>(null)
 
@@ -18,6 +19,7 @@ export function useConfirmDialog() {
     [],
   )
 
+  // Gestiona la operacion close.
   const close = (result: boolean) => {
     pending?.resolve(result)
     setPending(null)

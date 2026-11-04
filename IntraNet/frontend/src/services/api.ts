@@ -40,6 +40,7 @@ export type Profile = {
   updatedAt?: string | null
 }
 
+// envia la solicitud correspondiente.
 async function request<T>(path: string, token: string | null): Promise<T> {
   if (!token) {
     throw new Error('not_authenticated')
@@ -65,10 +66,12 @@ async function request<T>(path: string, token: string | null): Promise<T> {
   return res.json() as Promise<T>
 }
 
+// Obtiene los datos necesarios.
 export async function getProfile(token: string | null) {
   return request<Profile>('/profile', token)
 }
 
+// Obtiene los datos necesarios.
 export async function getEmployees(token: string | null) {
   const payload = await request<{ data: Employee[] }>('/empleados', token)
   return payload.data || []

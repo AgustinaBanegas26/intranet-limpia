@@ -12,6 +12,7 @@ const ERROR_MESSAGES: Record<string, string> = {
   password_too_weak: 'La contraseña debe tener al menos 8 caracteres.',
 }
 
+// Actualiza los datos correspondientes.
 export function ChangePasswordPage() {
   const { user, onPasswordChanged } = useAuth()
   const [password, setPassword] = useState('')
@@ -22,6 +23,7 @@ export function ChangePasswordPage() {
   const [showPass, setShowPass] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
 
+  // Gestiona la accion correspondiente.
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (password.length < 8) {

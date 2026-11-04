@@ -146,6 +146,7 @@ export const FILTROS_AGENDA: FiltroAgenda[] = [
   { id: 'buenos-aires', label: 'Buenos Aires' },
 ]
 
+// Gestiona la operacion filtrarEventos.
 export function filtrarEventos(eventos: EventoAgenda[], filtroId: string): EventoAgenda[] {
   switch (filtroId) {
     case 'importantes':

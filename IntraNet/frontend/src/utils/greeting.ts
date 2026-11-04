@@ -1,3 +1,4 @@
+// Obtiene los datos necesarios.
 export function getGreeting(date = new Date()) {
   const hour = date.getHours()
   if (hour < 12) return 'Buenos dias'
@@ -5,6 +6,7 @@ export function getGreeting(date = new Date()) {
   return 'Buenas noches'
 }
 
+// Obtiene los datos necesarios.
 export function getFirstName(fullName: string) {
   const trimmed = fullName.trim()
   if (!trimmed) return 'Usuario'

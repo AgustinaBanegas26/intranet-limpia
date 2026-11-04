@@ -14,6 +14,7 @@ interface Props {
   onLogin: (session: Session) => void;
 }
 
+// Prepara el valor para su uso.
 function formatError(code: string) {
   if (code === "invalid_credentials") return "Correo o contraseña incorrectos.";
   if (code === "auth_locked") return "Cuenta bloqueada. Probá más tarde.";
@@ -24,10 +25,12 @@ function formatError(code: string) {
   return "No se pudo iniciar sesión.";
 }
 
+// Gestiona la operacion Login.
 const Login = ({ onLogin }: Props) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Gestiona la accion correspondiente.
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const form = event.target as HTMLFormElement;

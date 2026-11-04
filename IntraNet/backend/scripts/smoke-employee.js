@@ -28,6 +28,7 @@ const employeeRoutes = [
   { name: 'Celebraciones', method: 'GET', path: '/birthdays?days=14' },
 ]
 
+// envia la solicitud correspondiente.
 async function request(method, path, { token, body } = {}) {
   const headers = { Accept: 'application/json' }
   if (token) headers.Authorization = `Bearer ${token}`
@@ -49,11 +50,13 @@ async function request(method, path, { token, body } = {}) {
   return { status: res.status, ok: res.ok, payload }
 }
 
+// Gestiona la operacion printResult.
 function printResult(label, passed, detail = '') {
   const icon = passed ? 'OK' : 'FAIL'
   console.log(`  [${icon}] ${label}${detail ? ` — ${detail}` : ''}`)
 }
 
+// Gestiona la operacion main.
 async function main() {
   console.log(`\n[smoke] Base URL: ${baseUrl}\n`)
   let failed = 0
@@ -108,6 +111,7 @@ async function main() {
 
   console.log('\n[smoke] Employee routes:\n')
 
+  // Recorre los elementos de la coleccion.
   for (const route of employeeRoutes) {
     try {
       const res = await request(route.method, route.path, { token })

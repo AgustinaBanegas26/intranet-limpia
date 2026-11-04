@@ -28,10 +28,12 @@ const FALLBACK_SECTORES = [
 //holaa
 let useJsonStore = null
 
+// Comprueba los datos o la condicion indicada.
 function hasSupabaseClient() {
   return Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY)
 }
 
+// Comprueba los datos o la condicion indicada.
 function isSectoresTableMissing(error) {
   if (!error) return false
   const msg = String(error.message || '').toLowerCase()
@@ -44,6 +46,7 @@ function isSectoresTableMissing(error) {
   )
 }
 
+// Procesa los elementos de la coleccion.
 function mapSector(row) {
   return {
     id: row.id,
@@ -53,6 +56,7 @@ function mapSector(row) {
   }
 }
 
+// Gestiona la operacion seedJsonStoreIfEmpty.
 function seedJsonStoreIfEmpty() {
   const store = readEntity('sectores')
   if (store.items.length > 0) return store
@@ -70,6 +74,7 @@ function seedJsonStoreIfEmpty() {
   return seeded
 }
 
+// Obtiene los datos necesarios.
 function listSectoresJson({ includeInactive = false } = {}) {
   const store = seedJsonStoreIfEmpty()
   let items = store.items.map(mapSector)
@@ -77,6 +82,7 @@ function listSectoresJson({ includeInactive = false } = {}) {
   return items.sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'))
 }
 
+// Crea el registro o elemento correspondiente.
 function createSectorJson(body) {
   const nombre = String(body.nombre || '').trim()
   if (!nombre) {
@@ -108,6 +114,7 @@ function createSectorJson(body) {
   return created
 }
 
+// Actualiza los datos correspondientes.
 function updateSectorJson(id, body) {
   const sectorId = Number(id)
   let updated = null
@@ -130,6 +137,7 @@ function updateSectorJson(id, body) {
   return updated
 }
 
+// Elimina el elemento indicado.
 function removeSectorJson(id) {
   const sectorId = Number(id)
   updateEntity('sectores', (store) => {
@@ -146,6 +154,7 @@ function removeSectorJson(id) {
   return { success: true }
 }
 
+// Gestiona la operacion resolveStorageMode.
 async function resolveStorageMode() {
   if (useJsonStore != null) return useJsonStore
   if (!hasSupabaseClient()) {
@@ -162,6 +171,7 @@ async function resolveStorageMode() {
   return useJsonStore
 }
 
+// Obtiene los datos necesarios.
 async function listSectores({ includeInactive = false } = {}) {
   if (await resolveStorageMode()) {
     return listSectoresJson({ includeInactive })
@@ -175,6 +185,7 @@ async function listSectores({ includeInactive = false } = {}) {
   return (data || []).map(mapSector)
 }
 
+// Crea el registro o elemento correspondiente.
 async function createSector(body) {
   const nombre = String(body.nombre || '').trim()
   if (!nombre) {
@@ -204,6 +215,7 @@ async function createSector(body) {
   return mapSector(data)
 }
 
+// Actualiza los datos correspondientes.
 async function updateSector(id, body) {
   if (await resolveStorageMode()) {
     return updateSectorJson(id, body)
@@ -229,6 +241,7 @@ async function updateSector(id, body) {
   return mapSector(data)
 }
 
+// Elimina el elemento indicado.
 async function removeSector(id) {
   if (await resolveStorageMode()) {
     removeSectorJson(id)

@@ -26,6 +26,7 @@ type NewsPostModalProps = {
   onPollUpdate?: (id: string | number, encuesta: EncuestaDTO) => void;
 };
 
+// Gestiona la operacion NewsPostModal.
 export function NewsPostModal({
   post,
   open,
@@ -46,6 +47,7 @@ export function NewsPostModal({
   useEffect(() => {
     if (!open) return;
     setImageIndex(0);
+    // Gestiona la accion correspondiente.
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };

@@ -4,10 +4,12 @@ import { AnimatePresence, motion } from 'framer-motion'
 
 const SCROLL_THRESHOLD = 320
 
+// Gestiona la operacion ScrollToTopButton.
 export function ScrollToTopButton() {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
+    // Gestiona la accion correspondiente.
     const onScroll = () => {
       setVisible(window.scrollY > SCROLL_THRESHOLD)
     }

@@ -19,6 +19,7 @@ const STORAGE_KEY = 'intranet:theme'
 
 const ThemeContext = createContext<ThemeContextValue | null>(null)
 
+// Obtiene los datos necesarios.
 function getInitialTheme(): Theme {
   try {
     const stored = localStorage.getItem(STORAGE_KEY) as Theme | null
@@ -32,6 +33,7 @@ function getInitialTheme(): Theme {
   return 'light'
 }
 
+// Gestiona la operacion applyTheme.
 function applyTheme(theme: Theme) {
   const root = document.documentElement
   root.classList.remove('light', 'dark')
@@ -41,6 +43,7 @@ function applyTheme(theme: Theme) {
 
 applyTheme(getInitialTheme())
 
+// Comprueba los datos o la condicion indicada.
 function hasStoredTheme(): boolean {
   try {
     const stored = localStorage.getItem(STORAGE_KEY)
@@ -50,6 +53,7 @@ function hasStoredTheme(): boolean {
   }
 }
 
+// Gestiona la operacion ThemeProvider.
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<Theme>(getInitialTheme)
 
@@ -59,11 +63,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-color-scheme: dark)')
+    // Gestiona la operacion syncWithSystem.
     const syncWithSystem = (matches: boolean) => {
       if (hasStoredTheme()) return
       setThemeState(matches ? 'dark' : 'light')
     }
 
+    // Gestiona la accion correspondiente.
     const handler = (event: MediaQueryListEvent) => syncWithSystem(event.matches)
     mq.addEventListener('change', handler)
     return () => mq.removeEventListener('change', handler)
@@ -97,6 +103,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   )
 }
 
+// Prepara el estado o comportamiento del componente.
 export function useTheme() {
   const ctx = useContext(ThemeContext)
   if (!ctx) {

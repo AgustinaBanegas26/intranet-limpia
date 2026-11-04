@@ -1,37 +1,53 @@
-# Sincronización Backend ↔ Supabase ↔ Frontend
+# Integración entre frontend, backend y Supabase
 
-## Conectado
+Este documento resume las conexiones presentes en el código. Los endpoints se
+declaran en `src/index.js`, las consultas viven en `src/services/` y las
+pantallas/servicios del navegador están en `../frontend/src/`. La presencia de
+un servicio en el repositorio no confirma que la tabla o migración ya exista
+en el proyecto Supabase desplegado.
 
-| Módulo | Tabla(s) | Endpoints | Frontend !s
-|--------|----------|-----------|----------
-| Empleados / perfil | `empleados` | `GET/PUT /profile`, `GET/POST /empleados` | Perfil, admin empleados |
-| Novedades | `novedades`, `novedades_likes`, `novedades_encuesta_votos`* | Ver `SCHEMA.md` | `/novedades`, home feed |
-| Notificaciones | `notificaciones` | `GET /notificaciones`, `PUT /notificaciones/:id/leer` | Pendiente UI badge |
-| Cumpleaños | `empleados` | `GET /birthdays` | Home, `/cumpleanos` |
-| Auth | `empleados` | `POST /auth/login`, `PUT /auth/change-password` | Login |
-| Solicitudes | `viaticos`, `reservas_hotel`, `reservas_vehiculos` | `GET/POST /solicitudes`, approve/reject | `/solicitar` empleado, `/solicitudes` admin |
+## Módulos conectados
 
-\* Tabla `novedades_encuesta_votos` y columnas extra requieren `migrations/002_novedades_extend.sql`.
+| Dominio | API | Frontend | Persistencia principal |
+| --- | --- | --- | --- |
+| Autenticación | `/auth/login`, `/auth/change-password`, `/auth/password-recovery/*` | `services/auth.ts`, `services/passwordRecovery.ts` | `empleados`; tabla de recuperación creada por migración |
+| Empleados y perfil | `/empleados`, `/empleados/:id/*`, `/profile`, `/sectores` | `services/employees.ts`, `services/profile.ts`, `services/sectores.ts` | Empleados y sectores |
+| Novedades | `/novedades/*` | `services/news.ts`, pantallas de novedades e inicio | Novedades, likes y votos |
+| Notificaciones | `/notificaciones/*` | `services/notifications.ts`, bandeja | Notificaciones |
+| Solicitudes y reservas | `/solicitudes/*`, `/viaticos` | `services/requests.ts`, `services/calendar.ts` | Solicitudes, viáticos y reservas |
+| Rendiciones | `/rendiciones/*` | `services/rendiciones.ts` | Rendiciones y gastos |
+| Adelantos | `/adelantos/*` | `services/adelantos.ts` | Adelantos |
+| Ausencias y vacaciones | `/ausencias/*`, `/vacaciones/*` | `services/absences.ts`, `services/vacations.ts` | Ausencias y saldos/solicitudes |
+| Insumos técnicos | `/insumos-tecnicos/*` | `services/technicalSupplies.ts` | Solicitudes y fichas de insumos |
+| Catálogos y contenido | `/beneficios/*`, `/eventos/*`, `/politicas/*`, `/manuales/*`, `/sugerencias/*`, `/slider/*` | Servicios y páginas del mismo dominio | Tablas de cada catálogo; el slider también importa JSON histórico |
+| Mensajes y celebraciones | `/mensajes/*`, `/birthdays` | `services/messages.ts`, `services/celebraciones.ts` | Mensajes y datos de empleados |
 
-## Migraciones en Supabase
+Las rutas `GET /health` sirven para comprobar la API y su acceso a Supabase.
+El estado de cada operación y sus permisos se valida en el backend, aunque el
+frontend también aplique restricciones de navegación.
 
-| Archivo | Estado | Qué hace |
-|---------|--------|----------|
-| `002_novedades_extend.sql` | ✅ Ya aplicado en tu schema | archivo, encuesta, destacado_admin |
-| `003_empleados_role.sql` | ✅ Aplicado | Columna `role` + Gisela = `admin` |
-| Solicitudes Fase 1 | ✅ | Usa tablas `viaticos`, `reservas_hotel`, `reservas_vehiculos` |
+## Esquema y migraciones
 
-Sin `003`: Gisela sigue como `director` (por `es_director`) y ve menú empleado.
+- `../../supabase/estructura.sql` contiene el esquema base de referencia.
+- `../../supabase/migrations/20261104_password_recovery.sql` implementa la
+  recuperación de contraseña y la versión de credenciales para revocar JWT.
+- `SCHEMA.md` contiene contexto adicional, incluidas diferencias históricas.
 
-Ver detalle completo en `SCHEMA.md`.
+Antes de desplegar, comparar estos archivos con el esquema remoto, respaldar la
+base y aplicar únicamente las migraciones pendientes en el proyecto correcto.
+No asumir que un archivo del repositorio ya fue aplicado en Supabase.
 
-## Pendiente de endpoints
+## Persistencia auxiliar
 
-Ver listado completo en `SCHEMA.md` (eventos, beneficios, políticas, etc.).
+El backend conserva algunos datos operativos en archivos JSON dentro de
+`src/data/`: registros de actividad, bloqueos de acceso y metadatos de
+importación del slider. En producción, confirmar que esos archivos tengan un
+volumen persistente y permisos adecuados. No usar ese almacenamiento como
+sustituto de las tablas de negocio.
 
-## Reglas — novedades
+## Roles
 
-- Publican admin y director (`canPublishNovedades`).
-- Al publicar → notificación en `notificaciones` para cada empleado activo.
-- Empleados: leer, like, votar encuesta.
-- Strip admin: filtra por `destacado_admin_hasta` o últimos 7 días.
+Los roles válidos son `empleado`, `rrhh`, `director` y `admin`. Las reglas de
+autorización del servidor están en `src/utils/roles.js`; el frontend replica
+algunas comprobaciones para ocultar o redirigir rutas, pero el backend sigue
+siendo la autoridad para cada operación.

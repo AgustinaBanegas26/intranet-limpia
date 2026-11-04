@@ -1,4 +1,155 @@
-# Documentación técnica: recuperación de contraseña
+# Documentación técnica integral
+
+## 0. Vista general
+
+El repositorio implementa una intranet para empleados y administración. La
+solución tiene tres piezas: una SPA React/TypeScript, una API REST Node.js y
+Express, y una base PostgreSQL gestionada por Supabase. El frontend y el
+backend se instalan y ejecutan por separado; no hay un comando de desarrollo
+raíz que inicie ambos procesos.
+
+### Arquitectura y flujo de datos
+
+```text
+Navegador (React + Vite + PWA)
+  ├─ rutas, formularios, estado de sesión y vistas por rol
+  └─ servicios frontend → API REST (VITE_BACKEND_URL)
+                              ├─ autenticación y permisos
+                              ├─ servicios de dominio
+                              └─ Supabase PostgreSQL (clave privada sólo aquí)
+```
+
+La API Express es el punto principal para autenticar y acceder a las funciones
+de negocio. Los servicios backend agrupan las consultas Supabase por dominio.
+El frontend crea además un cliente Supabase con variables públicas
+`VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY`; no se debe incluir una clave
+privilegiada en esas variables.
+
+Algunos datos auxiliares se guardan en JSON en el servidor: bloqueos de acceso,
+registros de actividad y metadatos de importación del slider. El slider usa
+Supabase para sus registros y conserva compatibilidad con los archivos JSON
+históricos. Estos archivos locales no sustituyen a la base principal y deben
+considerarse al configurar persistencia del servidor.
+
+### Organización del repositorio
+
+| Ruta | Responsabilidad |
+| --- | --- |
+| `IntraNet/frontend/src/App.tsx` | Restaura la sesión y compone el flujo público o autenticado. |
+| `IntraNet/frontend/src/routes/` | Rutas y restricciones de acceso del cliente. |
+| `IntraNet/frontend/src/pages/` | Pantallas de los módulos del portal. |
+| `IntraNet/frontend/src/components/` | Componentes compartidos, formularios y paneles. |
+| `IntraNet/frontend/src/context/` | Estado de autenticación, tema e instalación PWA. |
+| `IntraNet/frontend/src/services/` | Clientes HTTP y operaciones de cada dominio. |
+| `IntraNet/frontend/src/utils/` | Validaciones, formato y funciones auxiliares. |
+| `IntraNet/backend/src/index.js` | Inicialización Express, middleware y endpoints REST. |
+| `IntraNet/backend/src/services/` | Acceso a datos y reglas de los módulos de negocio. |
+| `IntraNet/backend/src/middleware/` | Autenticación JWT y configuración CORS. |
+| `IntraNet/backend/src/config/` | Cliente Supabase y validación de variables de entorno. |
+| `IntraNet/backend/src/fakeDb/` | Adaptadores históricos y almacenamiento JSON local. |
+| `IntraNet/backend/src/data/` | Datos y metadatos JSON usados por el backend. |
+| `IntraNet/backend/scripts/` | Verificación, inicialización de usuarios y pruebas smoke. |
+| `IntraNet/backend/test/` | Pruebas automatizadas del backend. |
+| `supabase/estructura.sql` | Esquema SQL de referencia. |
+| `supabase/migrations/` | Cambios SQL incrementales; deben aplicarse al proyecto correcto. |
+
+### Módulos funcionales
+
+El frontend agrupa pantallas para inicio, empleados, perfil, novedades,
+notificaciones, eventos, beneficios, ausencias, vacaciones, viáticos,
+adelantos, rendiciones, reservas/solicitudes, insumos técnicos, calendario,
+políticas, sugerencias, manuales y mensajería. `src/routes/index.tsx`
+determina qué pantallas se muestran según el rol.
+
+El backend expone los dominios equivalentes en `src/index.js` y delega las
+operaciones en servicios como `empleados.service.js`, `novedades.service.js`,
+`solicitudes.service.js`, `ausencias.service.js`, `vacaciones.service.js`,
+`rendiciones.service.js`, `technicalSupplies.service.js` y los demás archivos
+de `src/services/`. Los métodos HTTP y las rutas concretas se encuentran en
+ese archivo; `IntraNet/backend/SYNC.md` mantiene el resumen de sincronización.
+
+### Roles y límites de autorización
+
+Los roles admitidos son `empleado`, `rrhh`, `director` y `admin`. El backend
+resuelve el rol del empleado, autentica el JWT y valida permisos en cada
+endpoint protegido. El frontend también oculta o restringe rutas para guiar la
+navegación, pero esas restricciones no reemplazan la autorización del servidor.
+Los permisos efectivos están centralizados principalmente en
+`IntraNet/backend/src/utils/roles.js` y `IntraNet/frontend/src/context/AuthContext.tsx`.
+
+### Autenticación y sesión
+
+El login compara el hash de contraseña del empleado y emite un JWT propio con
+vigencia de 24 horas. Las solicitudes protegidas envían el token como bearer.
+El middleware valida firma y versión de credenciales; cuando corresponde,
+también impide continuar hasta cambiar una contraseña temporal. La recuperación
+por correo se detalla en las secciones 1–14 de esta documentación.
+
+### PWA y recursos web
+
+Vite configura React, Tailwind y `vite-plugin-pwa`. El build genera iconos,
+comprueba TypeScript y crea los recursos de producción. La PWA usa actualización
+automática y estrategias de caché para recursos estáticos, imágenes y algunas
+solicitudes Supabase; las rutas de autenticación y API están excluidas de caché
+persistente mediante `NetworkOnly` para rutas cuyo path contiene `/auth/` o
+empieza con `/api/`; verificar `vite.config.ts` antes de cambiar la estrategia
+de caché de cualquier endpoint.
+
+### Variables de entorno
+
+| Aplicación | Variables principales | Uso |
+| --- | --- | --- |
+| Backend | `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`, `JWT_SECRET` | Base de datos, firma y validación de sesiones. |
+| Backend | `CORS_ORIGINS`, `PORT`, `NODE_ENV` | Acceso entre orígenes y ejecución del servidor. |
+| Backend | `FRONTEND_URL`, `SMTP_USER`/`EMAIL_USER`, `SMTP_APP_PASSWORD`/`EMAIL_PASS` | Enlaces y envío de correo de recuperación. |
+| Frontend | `VITE_BACKEND_URL` | Origen de la API REST. |
+| Frontend | `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` | Cliente Supabase público; nunca colocar aquí una clave `service_role`. |
+
+Los ejemplos están en `IntraNet/backend/.env.example` y
+`IntraNet/frontend/.env.example`. Los archivos `.env`, `.env.local` y las
+credenciales reales no deben versionarse ni copiarse a la documentación.
+
+### Instalación, desarrollo y comprobaciones
+
+Desde `IntraNet/backend`, instalar dependencias, copiar `.env.example` a `.env`
+y ejecutar `npm run dev`. Desde `IntraNet/frontend`, instalar dependencias,
+definir `VITE_BACKEND_URL` en `.env.local` y ejecutar `npm run dev`. Son dos
+procesos independientes. En producción, el frontend se construye con
+`npm run build`; el backend se inicia con `npm start`.
+
+Comandos de validación:
+
+| Directorio | Comando | Resultado |
+| --- | --- | --- |
+| Backend | `npm test` | Ejecuta pruebas con el test runner nativo de Node.js. |
+| Backend | `npm run check:env` | Valida variables requeridas para el entorno. |
+| Backend | `npm run smoke` | Comprueba una ruta de servicio contra el backend configurado. |
+| Frontend | `npm run lint` | Analiza TypeScript y TSX con ESLint. |
+| Frontend | `npm run build` | Genera iconos PWA, comprueba tipos y compila el sitio. |
+
+`npm run smoke` puede requerir que la API esté activa y que el entorno de
+prueba tenga acceso a Supabase; no es una prueba unitaria aislada.
+
+### Esquema y estado de integración
+
+`supabase/estructura.sql` es el esquema de referencia versionado y la carpeta
+`supabase/migrations/` contiene los cambios incluidos en el repositorio. Antes
+de desplegar, se debe comparar ese contenido con el proyecto Supabase objetivo
+y aplicar las migraciones pendientes. Las descripciones
+`IntraNet/backend/SCHEMA.md` y `IntraNet/backend/SYNC.md` acompañan el esquema y
+la integración; ante diferencias, revisar el código de servicios y la base de
+datos activa, ya que el estado remoto no se puede inferir sólo del repositorio.
+
+### Mantenimiento de la documentación del código
+
+Las funciones con nombre y los bucles tienen comentarios breves inmediatamente
+antes de su definición. Los callbacks anónimos se mantienen sin comentarios
+individuales para evitar repetir texto en handlers y expresiones inline; sus
+responsabilidades se explican en la documentación de cada módulo.
+
+---
+
+## Recuperación de contraseña
 
 ## 1. Arquitectura general
 

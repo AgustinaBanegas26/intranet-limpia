@@ -34,6 +34,7 @@ const initialForm: FormData = {
   monto_total: '',
 }
 
+// Comprueba los datos o la condicion indicada.
 function validate(form: FormData) {
   const errors: Partial<Record<keyof FormData, string>> = {}
 
@@ -46,6 +47,7 @@ function validate(form: FormData) {
   return errors
 }
 
+// Construye el valor o recurso necesario.
 function buildPayload(form: FormData): CreateSolicitudPayload {
   const monto = Number(form.monto_total) || 0
   return {
@@ -66,6 +68,7 @@ function buildPayload(form: FormData): CreateSolicitudPayload {
   }
 }
 
+// Gestiona la operacion FormInput.
 function FormInput({
   label,
   value,
@@ -96,6 +99,7 @@ function FormInput({
   )
 }
 
+// Gestiona la operacion ViaticosPage.
 export function ViaticosPage() {
   const { token, user } = useAuth()
   const [activeTab, setActiveTab] = useState<'solicitudes' | 'rendiciones'>(() => {
@@ -151,16 +155,19 @@ export function ViaticosPage() {
   const visibleErrors = showValidation ? errors : {}
   const canSubmit = Object.keys(errors).length === 0
   const isSolicitudesTab = activeTab === 'solicitudes'
+  // Actualiza los datos correspondientes.
   const setValue = (key: keyof FormData) => (value: string) => {
     setForm((prev) => ({ ...prev, [key]: value }))
   }
 
+  // Limpia el estado o los datos correspondientes.
   const resetForm = () => {
     setForm({ ...initialForm, nombre: user.name, email: user.email || '' })
     setError('')
     setShowValidation(false)
   }
 
+  // Gestiona la accion correspondiente.
   const handleSubmit = async () => {
     setShowValidation(true)
     if (!canSubmit) return

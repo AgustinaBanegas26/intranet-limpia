@@ -1,3 +1,4 @@
+// Prepara el valor para su uso.
 export function formatRelativeTime(isoOrLabel?: string | null): string {
   if (!isoOrLabel) return ''
 

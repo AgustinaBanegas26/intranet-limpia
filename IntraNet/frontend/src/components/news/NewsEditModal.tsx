@@ -16,15 +16,19 @@ type FormState = {
   imagenUrl: string | null;
 };
 
+// Obtiene los datos necesarios.
 function readFileAsDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
+    // Gestiona la accion correspondiente.
     reader.onload = () => resolve(String(reader.result));
+    // Gestiona la accion correspondiente.
     reader.onerror = () => reject(new Error("read_failed"));
     reader.readAsDataURL(file);
   });
 }
 
+// Gestiona la operacion formFromPost.
 function formFromPost(post: NovedadDTO): FormState {
   const destinos = post.sucursalesDestino || [];
   return {
@@ -44,6 +48,7 @@ type Props = {
   onSaved: (post: NovedadDTO) => void;
 };
 
+// Gestiona la operacion NewsEditModal.
 export function NewsEditModal({ post, token, onClose, onSaved }: Props) {
   const [form, setForm] = useState<FormState>({
     titulo: "",
@@ -65,6 +70,7 @@ export function NewsEditModal({ post, token, onClose, onSaved }: Props) {
 
   useEffect(() => {
     if (!post) return;
+    // Gestiona la accion correspondiente.
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
@@ -74,6 +80,7 @@ export function NewsEditModal({ post, token, onClose, onSaved }: Props) {
 
   if (!post || post.id == null) return null;
 
+  // Gestiona la accion correspondiente.
   const handleImageUpload = async (file: File | null) => {
     if (!file) return;
     if (!file.type.startsWith("image/")) {
@@ -96,6 +103,7 @@ export function NewsEditModal({ post, token, onClose, onSaved }: Props) {
     }
   };
 
+  // Gestiona la accion correspondiente.
   const handleSave = async () => {
     const tituloTrim = form.titulo.trim();
     const contenidoTrim = form.contenido.trim();

@@ -12,6 +12,7 @@ const notifications = [
   { id: 5, title: 'Cambio de horario', description: 'RRHH publicó un nuevo horario de verano.' },
 ]
 
+// Gestiona la operacion NotificationsModal.
 function NotificationsModal({
   isOpen,
   onClose,
@@ -73,6 +74,7 @@ function NotificationsModal({
   )
 }
 
+// Gestiona la operacion Header.
 export function Header() {
   const { user } = useAuth()
   const [showNotifications, setShowNotifications] = useState(false)

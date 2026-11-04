@@ -5,6 +5,7 @@ import type { EmblaCarouselType } from "embla-carousel";
 import type { AniversarioPersona } from "../../services/celebraciones";
 import { BirthdayAvatar } from "./BirthdayAvatar";
 
+// Prepara el valor para su uso.
 function formatDay(date?: string) {
   if (!date) return "Sin fecha";
   const parsed = new Date(date);
@@ -12,6 +13,7 @@ function formatDay(date?: string) {
   return parsed.toLocaleDateString("es-AR", { day: "2-digit", month: "short" });
 }
 
+// Gestiona la operacion AnniversaryCard.
 export function AnniversaryCard({ person }: { person: AniversarioPersona }) {
   return (
     <article className="anniversary-card">
@@ -45,6 +47,7 @@ interface AnniversaryCarouselProps {
   people: AniversarioPersona[];
 }
 
+// Gestiona la operacion AnniversaryCarousel.
 export function AnniversaryCarousel({ people }: AnniversaryCarouselProps) {
   const autoplayPaused = useRef(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -166,6 +169,7 @@ export function AnniversaryCarousel({ people }: AnniversaryCarouselProps) {
   );
 }
 
+// Prepara el estado o comportamiento del componente.
 function useMediaQuery(query: string) {
   const [matches, setMatches] = useState(() => {
     if (typeof window === "undefined") return false;
@@ -174,6 +178,7 @@ function useMediaQuery(query: string) {
 
   useEffect(() => {
     const mq = window.matchMedia(query);
+    // Gestiona la accion correspondiente.
     const onChange = () => setMatches(mq.matches);
     onChange();
     mq.addEventListener("change", onChange);
@@ -187,6 +192,7 @@ interface AnniversariesHomeSectionProps {
   people: AniversarioPersona[];
 }
 
+// Gestiona la operacion AnniversariesHomeSection.
 export function AnniversariesHomeSection({
   people,
 }: AnniversariesHomeSectionProps) {

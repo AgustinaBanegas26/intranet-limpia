@@ -2,6 +2,7 @@ const SUCURSAL_MDP = 'Mar del Plata'
 const SUCURSAL_CABA = 'Buenos Aires'
 const ALL_SUCURSALES = [SUCURSAL_MDP, SUCURSAL_CABA]
 
+// Prepara el valor para su uso.
 function normalizeEmpleadoSucursal(raw) {
   const v = String(raw || '').trim().toLowerCase()
   if (!v) return null
@@ -10,6 +11,7 @@ function normalizeEmpleadoSucursal(raw) {
   return null
 }
 
+// Prepara el valor para su uso.
 function parseSucursalesDestino(body) {
   const raw = body?.sucursales_destino ?? body?.sucursalesDestino
   if (!raw) return [...ALL_SUCURSALES]
@@ -17,6 +19,7 @@ function parseSucursalesDestino(body) {
   if (!Array.isArray(raw)) return [...ALL_SUCURSALES]
 
   const result = []
+  // Recorre los elementos de la coleccion.
   for (const item of raw) {
     const normalized = normalizeEmpleadoSucursal(item)
     if (normalized) result.push(normalized)
@@ -25,6 +28,7 @@ function parseSucursalesDestino(body) {
   return [...new Set(result)]
 }
 
+// Prepara el valor para su uso.
 function parseDestinosArray(raw) {
   if (!raw) return null
 
@@ -42,10 +46,12 @@ function parseDestinosArray(raw) {
   return normalized.length > 0 ? normalized : null
 }
 
+// Prepara el valor para su uso.
 function parseDestinosFromRow(row) {
   return parseDestinosArray(row?.sucursales_destino)
 }
 
+// Comprueba los datos o la condicion indicada.
 function isVisibleForEmpleado(sucursalesDestino, empleadoSucursal, bypassFilter = false) {
   if (bypassFilter) return true
   if (!sucursalesDestino || sucursalesDestino.length === 0) return true
@@ -57,6 +63,7 @@ function isVisibleForEmpleado(sucursalesDestino, empleadoSucursal, bypassFilter 
   return sucursalesDestino.includes(empleadoSucursal)
 }
 
+// Obtiene los datos necesarios.
 async function getEmpleadoSucursal(supabase, empleadoId) {
   if (!supabase || empleadoId == null) return null
   const { data, error } = await supabase

@@ -15,18 +15,22 @@ export class ErrorBoundary extends Component<Props, State> {
     error: null,
   };
 
+  // Obtiene los datos necesarios.
   public static getDerivedStateFromError(error: Error): State {
     return { hasError: true, error };
   }
 
+  // Gestiona la operacion componentDidCatch.
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Uncaught error:', error, errorInfo);
   }
 
+  // Gestiona la accion correspondiente.
   private handleReset = async () => {
     try {
       if ('serviceWorker' in navigator) {
         const registrations = await navigator.serviceWorker.getRegistrations();
+        // Recorre los elementos de la coleccion.
         for (const registration of registrations) {
           await registration.unregister();
         }
@@ -34,6 +38,7 @@ export class ErrorBoundary extends Component<Props, State> {
       // Limpiar caches
       if ('caches' in window) {
         const keys = await caches.keys();
+        // Recorre los elementos de la coleccion.
         for (const key of keys) {
           await caches.delete(key);
         }
@@ -44,6 +49,7 @@ export class ErrorBoundary extends Component<Props, State> {
     window.location.reload();
   };
 
+  // Genera la vista del componente.
   public render() {
     if (this.state.hasError) {
       return (

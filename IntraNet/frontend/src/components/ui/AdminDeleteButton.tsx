@@ -8,6 +8,7 @@ type Props = {
   label?: string
 }
 
+// Elimina el elemento indicado.
 function deleteErrorMessage(code: string) {
   if (code === 'forbidden') return 'No tenés permisos para eliminar este ítem.'
   if (code === 'not_found') return 'El ítem ya no existe o fue eliminado.'
@@ -20,11 +21,13 @@ function deleteErrorMessage(code: string) {
   return 'No se pudo completar la eliminación. Intentá de nuevo.'
 }
 
+// Gestiona la operacion AdminDeleteButton.
 export function AdminDeleteButton({ onConfirm, disabled, label = 'Eliminar' }: Props) {
   const [open, setOpen] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  // Gestiona la accion correspondiente.
   const handleConfirm = async () => {
     setBusy(true)
     setError(null)

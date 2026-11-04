@@ -11,6 +11,7 @@ export function isJwtExpired(token: string): boolean {
   }
 }
 
+// Comprueba los datos o la condicion indicada.
 export function isSessionAuthError(code: string): boolean {
   return (
     code === 'invalid_token' ||
@@ -19,6 +20,7 @@ export function isSessionAuthError(code: string): boolean {
   )
 }
 
+// Gestiona la operacion authErrorMessage.
 export function authErrorMessage(code: string): string {
   switch (code) {
     case 'invalid_token':

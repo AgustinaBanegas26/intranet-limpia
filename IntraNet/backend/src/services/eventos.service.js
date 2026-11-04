@@ -6,6 +6,7 @@ const {
   getEmpleadoSucursal,
 } = require('../utils/sucursalTargeting')
 
+// Comprueba los datos o la condicion indicada.
 function isEventoActivo(row) {
   if (row.activo === false) return false
   const today = new Date().toISOString().slice(0, 10)
@@ -13,6 +14,7 @@ function isEventoActivo(row) {
   return fin >= today
 }
 
+// Procesa los elementos de la coleccion.
 function mapEvento(row, extra = {}) {
   return {
     id: row.id,
@@ -32,10 +34,12 @@ function mapEvento(row, extra = {}) {
   }
 }
 
+// Obtiene los datos necesarios.
 async function getEmpleadoSucursalNorm(empleadoId) {
   return getEmpleadoSucursal(supabase, empleadoId)
 }
 
+// Obtiene los datos necesarios.
 async function loadAsistenciaMeta(eventoIds, empleadoId) {
   if (!eventoIds.length) return { counts: new Map(), confirmados: new Set() }
 
@@ -53,6 +57,7 @@ async function loadAsistenciaMeta(eventoIds, empleadoId) {
 
   const counts = new Map()
   const confirmados = new Set()
+  // Recorre los elementos de la coleccion.
   for (const row of data || []) {
     counts.set(row.evento_id, (counts.get(row.evento_id) || 0) + 1)
     if (empleadoId && Number(row.empleado_id) === Number(empleadoId)) {
@@ -62,6 +67,7 @@ async function loadAsistenciaMeta(eventoIds, empleadoId) {
   return { counts, confirmados }
 }
 
+// Obtiene los datos necesarios.
 async function listEventos(empleadoId = null, options = {}) {
   const { data, error } = await supabase
     .from('eventos')
@@ -87,6 +93,7 @@ async function listEventos(empleadoId = null, options = {}) {
   )
 }
 
+// Crea el registro o elemento correspondiente.
 async function createEvento(body, creadoPor) {
   const titulo = String(body.titulo || body.title || '').trim()
   const fechaInicio = body.fecha_inicio || body.fecha || body.date
@@ -131,6 +138,7 @@ async function createEvento(body, creadoPor) {
   return mapEvento(data, { asistentes: 0, confirmado: false })
 }
 
+// Actualiza los datos correspondientes.
 async function updateEvento(id, body) {
   const patch = {}
   if (body.titulo != null || body.title != null) patch.titulo = String(body.titulo || body.title).trim()
@@ -159,6 +167,7 @@ async function updateEvento(id, body) {
   return mapEvento(data)
 }
 
+// Elimina el elemento indicado.
 async function removeEvento(id) {
   await supabase.from('eventos_asistentes').delete().eq('evento_id', id)
 
@@ -172,6 +181,7 @@ async function removeEvento(id) {
   return { success: true }
 }
 
+// Alterna el estado correspondiente.
 async function toggleEventoRsvp(eventoId, empleadoId) {
   const { data: existing, error: findErr } = await supabase
     .from('eventos_asistentes')

@@ -16,6 +16,7 @@ const TABLE_BY_TIPO = {
   auto: 'reservas_vehiculos',
 }
 
+// Procesa los elementos de la coleccion.
 function mapEmpleado(emp) {
   if (!emp) return null
   return {
@@ -29,6 +30,7 @@ function mapEmpleado(emp) {
   }
 }
 
+// Gestiona la operacion extractDatosExtra.
 function extractDatosExtra(motivo, rowExtra) {
   if (rowExtra && typeof rowExtra === 'object' && Object.keys(rowExtra).length) {
     return rowExtra
@@ -42,40 +44,48 @@ function extractDatosExtra(motivo, rowExtra) {
   }
 }
 
+// Gestiona la operacion stripDatosExtra.
 function stripDatosExtra(motivo) {
   return String(motivo || '').replace(/\n?\[datos_extra\][\s\S]*?\[\/datos_extra\]/g, '').trim()
 }
 
+// Crea el registro o elemento correspondiente.
 function appendDatosExtra(motivo, datosExtra) {
   const base = stripDatosExtra(motivo)
   if (!datosExtra || !Object.keys(datosExtra).length) return base
   return `${base}\n\n[datos_extra]${JSON.stringify(datosExtra)}[/datos_extra]`.trim()
 }
 
+// Gestiona la operacion extractGrupoId.
 function extractGrupoId(motivo) {
   const match = String(motivo || '').match(/\[grupo:([^\]]+)\]/)
   return match ? match[1] : null
 }
 
+// Gestiona la operacion stripGrupoPrefix.
 function stripGrupoPrefix(motivo) {
   return String(motivo || '').replace(/^\[grupo:[^\]]+\]\s*/, '').trim()
 }
 
+// Gestiona la operacion extractAdminComment.
 function extractAdminComment(motivo) {
   const matches = [...String(motivo || '').matchAll(/\[Admin\]:\s*([^\n]+)/g)]
   return matches.length ? matches[matches.length - 1][1].trim() : null
 }
 
+// Gestiona la operacion stripAdminComments.
 function stripAdminComments(motivo) {
   return String(motivo || '')
     .replace(/\n\n\[Admin\]:[^\n]*/g, '')
     .trim()
 }
 
+// Gestiona la operacion detectAnticipo.
 function detectAnticipo(motivo) {
   return String(motivo || '').startsWith('[anticipo]')
 }
 
+// Procesa los elementos de la coleccion.
 function mapViatico(row) {
   // Nuevo esquema Viaticos directo a columnas
   return {
@@ -120,6 +130,7 @@ function mapViatico(row) {
   }
 }
 
+// Procesa los elementos de la coleccion.
 function mapHotel(row) {
   return {
     id: `hotel:${row.id}`,
@@ -140,6 +151,7 @@ function mapHotel(row) {
   }
 }
 
+// Procesa los elementos de la coleccion.
 function mapAuto(row) {
   const datosExtra = extractDatosExtra(row.motivo, row.datos_extra)
   return {
@@ -161,6 +173,7 @@ function mapAuto(row) {
   }
 }
 
+// Prepara el valor para su uso.
 function parseCompositeId(raw) {
   const s = String(raw || '')
   const idx = s.indexOf(':')
@@ -177,6 +190,7 @@ function parseCompositeId(raw) {
   return { tipo, id, table: TABLE_BY_TIPO[tipo] }
 }
 
+// Prepara el valor para su uso.
 function normalizeTipo(raw) {
   const tipo = String(raw || '').trim().toLowerCase()
   if (!VALID_TIPOS.includes(tipo)) {
@@ -187,6 +201,7 @@ function normalizeTipo(raw) {
   return tipo
 }
 
+// Construye el valor o recurso necesario.
 function buildMotivo(tipo, descripcion, justificacion, grupoId) {
   const parts = []
   if (grupoId) parts.push(`[grupo:${grupoId}]`)
@@ -196,6 +211,7 @@ function buildMotivo(tipo, descripcion, justificacion, grupoId) {
   return parts.join(' ').trim()
 }
 
+// Construye el valor o recurso necesario.
 function buildInsertRow(empleadoId, payload, grupoId = null) {
   const tipo = normalizeTipo(payload.tipo)
 
@@ -307,6 +323,7 @@ function buildInsertRow(empleadoId, payload, grupoId = null) {
   }
 }
 
+// Obtiene los datos necesarios.
 async function fetchEmpleadosMap(ids) {
   if (!ids.length) return new Map()
 
@@ -318,12 +335,14 @@ async function fetchEmpleadosMap(ids) {
   if (error) throw error
 
   const map = new Map()
+  // Recorre los elementos de la coleccion.
   for (const emp of data || []) {
     map.set(emp.id, emp)
   }
   return map
 }
 
+// Obtiene los datos necesarios.
 async function listFromTable(table, tipo, empleadoId, estado) {
   let query = supabase.from(table).select('*').order('created_at', { ascending: false })
 
@@ -354,6 +373,7 @@ async function listFromTable(table, tipo, empleadoId, estado) {
   })
 }
 
+// Obtiene los datos necesarios.
 async function listSolicitudes({ empleadoId = null, estado = null, isAdmin = false } = {}) {
   if (!supabase || typeof supabase.from !== 'function') {
     throw new Error('Supabase client not initialized')
@@ -374,6 +394,7 @@ async function listSolicitudes({ empleadoId = null, estado = null, isAdmin = fal
   )
 }
 
+// Obtiene los datos necesarios.
 async function getSolicitudById(compositeId, { empleadoId = null, isAdmin = false } = {}) {
   const parsed = parseCompositeId(compositeId)
   if (!parsed) {
@@ -414,6 +435,7 @@ async function getSolicitudById(compositeId, { empleadoId = null, isAdmin = fals
   return mapAuto(withEmp)
 }
 
+// Gestiona la operacion notifySolicitudCreada.
 async function notifySolicitudCreada(solicitud) {
   try {
     await sendSolicitudNotification({
@@ -429,6 +451,7 @@ async function notifySolicitudCreada(solicitud) {
   }
 }
 
+// Crea el registro o elemento correspondiente.
 async function createSolicitudes(empleadoId, body) {
   console.log('[solicitudes.service] createSolicitudes payload recibido:', JSON.stringify(body, null, 2))
 
@@ -446,6 +469,7 @@ async function createSolicitudes(empleadoId, body) {
   const grupoId = items.length > 1 ? randomUUID() : null
   const created = []
 
+  // Recorre los elementos de la coleccion.
   for (const item of items) {
     const built = buildInsertRow(empleadoId, item, grupoId)
     const { data, error } = await supabase
@@ -508,6 +532,7 @@ async function createSolicitudes(empleadoId, body) {
   return created
 }
 
+// Gestiona la operacion resolveSolicitud.
 async function resolveSolicitud(compositeId, { estado, comentario_admin, resueltoPor }) {
   if (!VALID_ESTADOS.includes(estado) || estado === 'pendiente') {
     const err = new Error('invalid_estado')
@@ -627,6 +652,7 @@ async function resolveSolicitud(compositeId, { estado, comentario_admin, resuelt
   return mapped
 }
 
+// Elimina el elemento indicado.
 async function removeSolicitud(compositeId, { empleadoId = null, isAdmin = false } = {}) {
   const parsed = parseCompositeId(compositeId)
   if (!parsed) {

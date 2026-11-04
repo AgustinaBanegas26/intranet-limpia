@@ -47,6 +47,7 @@ const statusConfig: Record<
   Rechazado: { label: 'Rechazado', icon: XCircle, color: 'var(--danger)', bg: 'var(--danger-bg)' },
 }
 
+// Gestiona la operacion fmtDate.
 function fmtDate(d?: string | null) {
   if (!d) return '—'
   return new Date(d.includes('T') ? d : `${d}T00:00:00`).toLocaleDateString('es-AR', {
@@ -56,6 +57,7 @@ function fmtDate(d?: string | null) {
   })
 }
 
+// Gestiona la operacion fmtMoney.
 function fmtMoney(n?: number | null) {
   if (n == null) return '—'
   return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(n)
@@ -67,6 +69,7 @@ interface RequestsManagementPageProps {
   pageDescription?: string
 }
 
+// envia la solicitud correspondiente.
 export function RequestsManagementPage({ showOnlyType, pageTitle, pageDescription }: RequestsManagementPageProps) {
   const [filter, setFilter] = useState<FilterEstado>('todos')
   const [searchTerm, setSearchTerm] = useState('')
@@ -149,6 +152,7 @@ export function RequestsManagementPage({ showOnlyType, pageTitle, pageDescriptio
     rechazadas: baseRequests.filter((r) => r.estado === 'rechazada' || r.estado === 'Rechazado').length,
   }
 
+  // Gestiona la accion correspondiente.
   const handleApprove = async () => {
     if (approveId == null) return
     setActionId(approveId)
@@ -164,6 +168,7 @@ export function RequestsManagementPage({ showOnlyType, pageTitle, pageDescriptio
     }
   }
 
+  // Gestiona la accion correspondiente.
   const handleReject = async () => {
     if (rejectId == null) return
     setActionId(rejectId)
@@ -179,6 +184,7 @@ export function RequestsManagementPage({ showOnlyType, pageTitle, pageDescriptio
     }
   }
 
+  // Gestiona la accion correspondiente.
   const handleDelete = async () => {
     if (deleteId == null) return
     setActionId(deleteId)

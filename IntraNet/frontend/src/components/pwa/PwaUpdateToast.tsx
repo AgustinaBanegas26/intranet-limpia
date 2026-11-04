@@ -5,11 +5,13 @@ type PwaNeedRefreshDetail = {
   updateSW: (reloadPage?: boolean) => Promise<void>
 }
 
+// Gestiona la operacion PwaUpdateToast.
 export function PwaUpdateToast() {
   const [visible, setVisible] = useState(false)
   const [updateSW, setUpdateSW] = useState<((reloadPage?: boolean) => Promise<void>) | null>(null)
 
   useEffect(() => {
+    // Gestiona la accion correspondiente.
     const onNeedRefresh = (event: Event) => {
       const detail = (event as CustomEvent<PwaNeedRefreshDetail>).detail
       if (!detail?.updateSW) return

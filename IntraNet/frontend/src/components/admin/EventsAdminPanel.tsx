@@ -5,11 +5,13 @@ import { PremiumCard } from '../ui/ProductUI'
 import { ConfirmDialog } from '../ui/ConfirmDialog'
 import { eventsService, type EventoDTO } from '../../services/events'
 
+// Gestiona la operacion fmtDate.
 function fmtDate(dateStr: string) {
   const d = new Date(dateStr.includes('T') ? dateStr : `${dateStr}T00:00:00`)
   return d.toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' })
 }
 
+// Gestiona la operacion EventsAdminPanel.
 export function EventsAdminPanel() {
   const [items, setItems] = useState<EventoDTO[]>([])
   const [loading, setLoading] = useState(true)
@@ -35,6 +37,7 @@ export function EventsAdminPanel() {
     load()
   }, [load])
 
+  // Gestiona la accion correspondiente.
   const handleDelete = async (id: number) => {
     setSubmitting(true)
     setError('')

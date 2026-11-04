@@ -16,6 +16,7 @@ import { resizeImageForSlider } from "../../utils/fileUpload";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
+  // Gestiona la operacion visible.
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
@@ -32,6 +33,7 @@ const COLORS = [
   "#EC4899",
 ];
 
+// Gestiona la operacion BenefitsPage.
 export function BenefitsPage() {
   const { isAdmin } = useAuth();
   const [items, setItems] = useState<BeneficioDTO[]>([]);
@@ -65,6 +67,7 @@ export function BenefitsPage() {
     load();
   }, [load]);
 
+  // Limpia el estado o los datos correspondientes.
   const resetForm = () => {
     setForm({ nombre: "", descripcion: "", imagen_url: "", enlace_url: "" });
     setEditingId(null);
@@ -72,6 +75,7 @@ export function BenefitsPage() {
     setUploadError("");
   };
 
+  // Gestiona la accion correspondiente.
   const handleImageUpload = async (file: File | null) => {
     if (!file) return;
     setUploadingImage(true);
@@ -86,6 +90,7 @@ export function BenefitsPage() {
     }
   };
 
+  // Gestiona la accion correspondiente.
   const handleCreate = async () => {
     if (!form.nombre.trim()) return;
     setSubmitting(true);
@@ -108,6 +113,7 @@ export function BenefitsPage() {
     }
   };
 
+  // Gestiona la accion correspondiente.
   const handleEdit = (benefit: BeneficioDTO) => {
     setEditingId(benefit.id);
     setForm({
@@ -119,6 +125,7 @@ export function BenefitsPage() {
     setShowForm(true);
   };
 
+  // Gestiona la accion correspondiente.
   const handleDelete = async (id: number) => {
     setDeleteError("");
     try {

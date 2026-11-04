@@ -20,6 +20,7 @@ const ESTADO_UI = {
   rechazada: 'rejected',
 }
 
+// Procesa los elementos de la coleccion.
 function mapSugerencia(row, { votos = 0, votado = false, autor = null } = {}) {
   return {
     id: row.id,
@@ -35,6 +36,7 @@ function mapSugerencia(row, { votos = 0, votado = false, autor = null } = {}) {
   }
 }
 
+// Obtiene los datos necesarios.
 async function listSugerencias(empleadoId, { isAdmin = false } = {}) {
   let query = supabase.from('sugerencias').select('*').order('created_at', { ascending: false })
 
@@ -69,6 +71,7 @@ async function listSugerencias(empleadoId, { isAdmin = false } = {}) {
 
     if (votosErr) throw votosErr
 
+    // Recorre los elementos de la coleccion.
     for (const v of votos || []) {
       votosBySug.set(v.sugerencia_id, (votosBySug.get(v.sugerencia_id) || 0) + 1)
       if (empleadoId && Number(v.empleado_id) === Number(empleadoId)) {
@@ -88,6 +91,7 @@ async function listSugerencias(empleadoId, { isAdmin = false } = {}) {
   })
 }
 
+// Crea el registro o elemento correspondiente.
 async function createSugerencia(empleadoId, body) {
   const descripcion = String(body.descripcion || body.text || '').trim()
   const tituloRaw = String(body.titulo || '').trim()
@@ -114,6 +118,7 @@ async function createSugerencia(empleadoId, body) {
   return mapSugerencia(data, { votos: 0, votado: false, autor: 'Vos' })
 }
 
+// Gestiona la operacion voteSugerencia.
 async function voteSugerencia(sugerenciaId, empleadoId) {
   const { data: sugerencia, error: sugErr } = await supabase
     .from('sugerencias')
@@ -166,6 +171,7 @@ async function voteSugerencia(sugerenciaId, empleadoId) {
   return { votos: count || 0, votado: !existing }
 }
 
+// Elimina el elemento indicado.
 async function removeSugerencia(id) {
   const { data: existing, error: findErr } = await supabase
     .from('sugerencias')
@@ -192,6 +198,7 @@ async function removeSugerencia(id) {
   return { success: true }
 }
 
+// Actualiza los datos correspondientes.
 async function updateSugerenciaEstado(id, estadoInput) {
   const estado = ESTADO_MAP[estadoInput] || estadoInput
   const valid = ['pendiente', 'en_revision', 'aprobada', 'implementada', 'rechazada']

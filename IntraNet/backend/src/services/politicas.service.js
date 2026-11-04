@@ -1,5 +1,6 @@
 const supabase = require('../config/supabase')
 
+// Procesa los elementos de la coleccion.
 function mapPolitica(row, leida = false) {
   return {
     id: row.id,
@@ -15,6 +16,7 @@ function mapPolitica(row, leida = false) {
   }
 }
 
+// Obtiene los datos necesarios.
 async function listPoliticas({ empleadoId = null, includeInactive = false } = {}) {
   let query = supabase.from('politicas').select('*').order('created_at', { ascending: false })
   if (!includeInactive) query = query.eq('activo', true)
@@ -34,6 +36,7 @@ async function listPoliticas({ empleadoId = null, includeInactive = false } = {}
   return (data || []).map((row) => mapPolitica(row, leidasSet.has(row.id)))
 }
 
+// Crea el registro o elemento correspondiente.
 async function createPolitica(body) {
   const titulo = String(body.titulo || body.title || '').trim()
   if (!titulo) {
@@ -59,6 +62,7 @@ async function createPolitica(body) {
   return mapPolitica(data)
 }
 
+// Actualiza los datos correspondientes.
 async function updatePolitica(id, body) {
   const patch = {}
   if (body.titulo != null || body.title != null) patch.titulo = String(body.titulo || body.title).trim()
@@ -78,6 +82,7 @@ async function updatePolitica(id, body) {
   return mapPolitica(data)
 }
 
+// Elimina el elemento indicado.
 async function removePolitica(id) {
   const { data: existing, error: findErr } = await supabase
     .from('politicas')
@@ -105,6 +110,7 @@ async function removePolitica(id) {
   return { success: true }
 }
 
+// Gestiona la operacion markPoliticaLeida.
 async function markPoliticaLeida(politicaId, empleadoId) {
   const { error } = await supabase.from('politicas_lecturas').upsert(
     { politica_id: politicaId, empleado_id: empleadoId },

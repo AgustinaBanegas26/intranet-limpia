@@ -80,6 +80,7 @@ export const FEATURED_BENEFITS: Benefit[] = [
   },
 ]
 
+// Procesa los elementos de la coleccion.
 export function filterBenefits(benefits: Benefit[], categoryId: string): Benefit[] {
   if (!categoryId || categoryId === 'all') return benefits
   const cat = BENEFIT_CATEGORIES.find((c) => c.id === categoryId)

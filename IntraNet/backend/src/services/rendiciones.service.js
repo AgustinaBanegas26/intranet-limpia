@@ -10,6 +10,7 @@ const VALID_ESTADOS = ['pendiente', 'enviada', 'devuelta', 'aprobada']
 const VALID_MEDIOS_PAGO = ['efectivo', 'tarjeta', 'comprobante']
 const EMPLEADO_SELECT = 'id, nombre, apellido, email_corporativo, area, sucursal, cargo, legajo'
 
+// Gestiona la operacion resolveTodayArg.
 function resolveTodayArg() {
   return new Intl.DateTimeFormat('en-CA', {
     timeZone: 'America/Argentina/Buenos_Aires',
@@ -19,6 +20,7 @@ function resolveTodayArg() {
   }).format(new Date())
 }
 
+// Prepara el valor para su uso.
 function normalizeDateInput(value) {
   if (value == null || value === '') return null
   const raw = String(value).trim().slice(0, 10)
@@ -28,6 +30,7 @@ function normalizeDateInput(value) {
   return parsed.toISOString().slice(0, 10) === raw ? raw : null
 }
 
+// Prepara el valor para su uso.
 function parseAmount(value) {
   if (value == null || value === '') return null
   const amount = Number(value)
@@ -35,6 +38,7 @@ function parseAmount(value) {
   return Math.round(amount * 100) / 100
 }
 
+// Procesa los elementos de la coleccion.
 function mapEmpleado(emp) {
   if (!emp) return null
   return {
@@ -48,6 +52,7 @@ function mapEmpleado(emp) {
   }
 }
 
+// Procesa los elementos de la coleccion.
 function mapViatico(row) {
   const solicitante = mapEmpleado(row.empleados)
   return {
@@ -67,6 +72,7 @@ function mapViatico(row) {
   }
 }
 
+// Procesa los elementos de la coleccion.
 function mapGasto(row) {
   return {
     id: row.id,
@@ -83,6 +89,7 @@ function mapGasto(row) {
   }
 }
 
+// Procesa los elementos de la coleccion.
 function mapRendicion(row, gastos = [], viatico = null) {
   const totalGastos = Number(row.total_gastos ?? gastos.reduce((sum, gasto) => sum + Number(gasto.importe || 0), 0) ?? 0)
   const totalEfectivo = Number(row.total_efectivo ?? gastos.filter((gasto) => gasto.medio_pago === 'efectivo').reduce((sum, gasto) => sum + Number(gasto.importe || 0), 0) ?? 0)
@@ -119,6 +126,7 @@ function mapRendicion(row, gastos = [], viatico = null) {
   }
 }
 
+// Obtiene los datos necesarios.
 async function fetchEmpleadosMap(ids) {
   if (!ids.length) return new Map()
 
@@ -130,12 +138,14 @@ async function fetchEmpleadosMap(ids) {
   if (error) throw error
 
   const map = new Map()
+  // Recorre los elementos de la coleccion.
   for (const emp of data || []) {
     map.set(emp.id, emp)
   }
   return map
 }
 
+// Obtiene los datos necesarios.
 async function fetchViaticoById(viaticoId) {
   const { data, error } = await supabase
     .from('viaticos')
@@ -150,21 +160,25 @@ async function fetchViaticoById(viaticoId) {
   return mapViatico({ ...data, empleados: empMap.get(data.empleado_id) || null })
 }
 
+// Comprueba los datos o la condicion indicada.
 function isViaticoAprobado(viatico) {
   const estado = String(viatico?.estado || '').trim().toLowerCase()
   return estado === 'aprobada' || estado === 'aprobado' || estado === 'approved'
 }
 
+// Gestiona la operacion resolveMontoAprobado.
 function resolveMontoAprobado(viatico) {
   return Number(viatico?.monto_total ?? viatico?.monto_solicitar ?? viatico?.monto ?? 0)
 }
 
+// Comprueba los datos o la condicion indicada.
 function isViaticoFinalizado(viatico, todayIso = resolveTodayArg()) {
   const fechaFin = normalizeDateInput(viatico?.fecha_finalizacion || viatico?.fecha_hasta || viatico?.fecha_inicio || viatico?.fecha_necesaria)
   if (!fechaFin) return false
   return fechaFin <= todayIso
 }
 
+// Procesa los elementos de la coleccion.
 function mapRendicionToSolicitud(rendicion, viatico = null, gastos = []) {
   const v = viatico || rendicion?.viatico || null
   const g = gastos.length ? gastos : (rendicion?.gastos || [])
@@ -225,6 +239,7 @@ function mapRendicionToSolicitud(rendicion, viatico = null, gastos = []) {
   }
 }
 
+// Obtiene los datos necesarios.
 async function listRendicionSolicitudes({ estado = null } = {}) {
   let query = supabase
     .from('viaticos_rendiciones')
@@ -256,6 +271,7 @@ async function listRendicionSolicitudes({ estado = null } = {}) {
   })
 }
 
+// Obtiene los datos necesarios.
 async function fetchExistingRendicionByViaticoId(viaticoId) {
   const { data, error } = await supabase
     .from('viaticos_rendiciones')
@@ -267,6 +283,7 @@ async function fetchExistingRendicionByViaticoId(viaticoId) {
   return data || null
 }
 
+// Obtiene los datos necesarios.
 async function fetchGastosByRendicionIds(ids) {
   if (!ids.length) return new Map()
 
@@ -280,6 +297,7 @@ async function fetchGastosByRendicionIds(ids) {
   if (error) throw error
 
   const map = new Map()
+  // Recorre los elementos de la coleccion.
   for (const gasto of data || []) {
     const current = map.get(gasto.rendicion_id) || []
     current.push(mapGasto(gasto))
@@ -288,6 +306,7 @@ async function fetchGastosByRendicionIds(ids) {
   return map
 }
 
+// Gestiona la operacion refreshRendicionTotals.
 async function refreshRendicionTotals(rendicionId) {
   const { data: rendicion, error: rendicionError } = await supabase
     .from('viaticos_rendiciones')
@@ -330,6 +349,7 @@ async function refreshRendicionTotals(rendicionId) {
   return data || rendicion
 }
 
+// Gestiona la operacion ensureRendicionForViatico.
 async function ensureRendicionForViatico(viatico, { todayIso = resolveTodayArg(), notify = true } = {}) {
   if (!viatico) return null
 
@@ -415,6 +435,7 @@ async function ensureRendicionForViatico(viatico, { todayIso = resolveTodayArg()
   return mapRendicion(data, gastos, viatico)
 }
 
+// Gestiona la operacion syncEligibleRendiciones.
 async function syncEligibleRendiciones({ viaticoId = null, empleadoId = null } = {}) {
   let query = supabase
     .from('viaticos')
@@ -436,6 +457,7 @@ async function syncEligibleRendiciones({ viaticoId = null, empleadoId = null } =
   const todayIso = resolveTodayArg()
   const eligible = []
 
+  // Recorre los elementos de la coleccion.
   for (const row of rows) {
     const viatico = mapViatico({ ...row, empleados: employees.get(row.empleado_id) || null })
     if (isViaticoAprobado(viatico) && isViaticoFinalizado(viatico, todayIso)) {
@@ -444,6 +466,7 @@ async function syncEligibleRendiciones({ viaticoId = null, empleadoId = null } =
   }
 
   const created = []
+  // Recorre los elementos de la coleccion.
   for (const viatico of eligible) {
     const rendicion = await ensureRendicionForViatico(viatico, { todayIso, notify: true })
     if (rendicion) created.push(rendicion)
@@ -452,6 +475,7 @@ async function syncEligibleRendiciones({ viaticoId = null, empleadoId = null } =
   return created
 }
 
+// Obtiene los datos necesarios.
 async function listRendiciones({ empleadoId = null, estado = null, viaticoId = null, isAdmin = false } = {}) {
   await syncEligibleRendiciones({ viaticoId, empleadoId: isAdmin ? null : empleadoId })
 
@@ -476,6 +500,7 @@ async function listRendiciones({ empleadoId = null, estado = null, viaticoId = n
   })
 }
 
+// Obtiene los datos necesarios.
 async function getRendicionById(id, { empleadoId = null, isAdmin = false } = {}) {
   await syncEligibleRendiciones()
 
@@ -504,6 +529,7 @@ async function getRendicionById(id, { empleadoId = null, isAdmin = false } = {})
   return mapRendicion(rendicion, gastos, viatico)
 }
 
+// Obtiene los datos necesarios.
 async function getRendicionByViaticoId(viaticoId, { empleadoId = null, isAdmin = false } = {}) {
   await syncEligibleRendiciones({ viaticoId })
 
@@ -527,6 +553,7 @@ async function getRendicionByViaticoId(viaticoId, { empleadoId = null, isAdmin =
   return mapRendicion(existing, gastosMap.get(existing.id) || [], viatico)
 }
 
+// Gestiona la operacion assertEditableState.
 function assertEditableState(rendicion) {
   const estado = String(rendicion?.estado || '').toLowerCase()
   if (!['pendiente', 'devuelta'].includes(estado)) {
@@ -536,6 +563,7 @@ function assertEditableState(rendicion) {
   }
 }
 
+// Actualiza los datos correspondientes.
 async function updateRendicion(id, empleadoId, body, { isAdmin = false } = {}) {
   const rendicion = await getRendicionById(id, { empleadoId, isAdmin })
   assertEditableState(rendicion)
@@ -562,6 +590,7 @@ async function updateRendicion(id, empleadoId, body, { isAdmin = false } = {}) {
   return getRendicionById(id, { empleadoId, isAdmin })
 }
 
+// Obtiene los datos necesarios.
 async function listGastosByRendicion(id) {
   const { data, error } = await supabase
     .from('viaticos_rendiciones_gastos')
@@ -574,6 +603,7 @@ async function listGastosByRendicion(id) {
   return (data || []).map(mapGasto)
 }
 
+// Comprueba los datos o la condicion indicada.
 function validateGastoFechaEnPeriodo(viatico, fecha) {
   const inicio = normalizeDateInput(viatico?.fecha_inicio || viatico?.fecha_necesaria)
   const fin = normalizeDateInput(viatico?.fecha_finalizacion || viatico?.fecha_hasta)
@@ -581,6 +611,7 @@ function validateGastoFechaEnPeriodo(viatico, fecha) {
   return fecha >= inicio && fecha <= fin
 }
 
+// Gestiona la operacion upsertGasto.
 async function upsertGasto(rendicionId, gastoId, body, { empleadoId = null, isAdmin = false } = {}) {
   const rendicion = await getRendicionById(rendicionId, { empleadoId, isAdmin })
   assertEditableState(rendicion)
@@ -657,6 +688,7 @@ async function upsertGasto(rendicionId, gastoId, body, { empleadoId = null, isAd
   return getRendicionById(rendicionId, { empleadoId, isAdmin })
 }
 
+// Elimina el elemento indicado.
 async function removeGasto(rendicionId, gastoId, { empleadoId = null, isAdmin = false } = {}) {
   const rendicion = await getRendicionById(rendicionId, { empleadoId, isAdmin })
   assertEditableState(rendicion)
@@ -673,6 +705,7 @@ async function removeGasto(rendicionId, gastoId, { empleadoId = null, isAdmin = 
   return { success: true }
 }
 
+// envia la solicitud correspondiente.
 async function sendRendicion(id, empleadoId, body = {}, { isAdmin = false } = {}) {
   const rendicion = await getRendicionById(id, { empleadoId, isAdmin })
   assertEditableState(rendicion)
@@ -737,6 +770,7 @@ async function sendRendicion(id, empleadoId, body = {}, { isAdmin = false } = {}
   return refreshed || mapRendicion(data, gastosList, viatico)
 }
 
+// Gestiona la operacion resolveRendicion.
 async function resolveRendicion(id, { estado, comentario, resueltoPor }) {
   const normalized = String(estado || '').trim().toLowerCase()
   if (!['aprobada', 'devuelta'].includes(normalized)) {

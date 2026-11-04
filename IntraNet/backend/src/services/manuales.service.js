@@ -1,5 +1,6 @@
 const supabase = require('../config/supabase')
 
+// Procesa los elementos de la coleccion.
 function mapManual(row) {
   return {
     id: row.id,
@@ -15,6 +16,7 @@ function mapManual(row) {
   }
 }
 
+// Obtiene los datos necesarios.
 async function listManuales({ includeInactive = false } = {}) {
   let query = supabase.from('manuales').select('*').order('titulo', { ascending: true })
   if (!includeInactive) query = query.eq('activo', true)
@@ -24,6 +26,7 @@ async function listManuales({ includeInactive = false } = {}) {
   return (data || []).map(mapManual)
 }
 
+// Crea el registro o elemento correspondiente.
 async function createManual(body) {
   const titulo = String(body.titulo || body.title || '').trim()
   if (!titulo) {
@@ -50,6 +53,7 @@ async function createManual(body) {
   return mapManual(data)
 }
 
+// Actualiza los datos correspondientes.
 async function updateManual(id, body) {
   const patch = { updated_at: new Date().toISOString() }
   if (body.titulo != null || body.title != null) patch.titulo = String(body.titulo || body.title).trim()
@@ -72,6 +76,7 @@ async function updateManual(id, body) {
   return mapManual(data)
 }
 
+// Elimina el elemento indicado.
 async function removeManual(id) {
   const { data, error } = await supabase.from('manuales').delete().eq('id', id).select('id').maybeSingle()
 

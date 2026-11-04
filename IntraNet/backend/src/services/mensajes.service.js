@@ -1,10 +1,12 @@
 const supabase = require('../config/supabase')
 
+// Procesa los elementos de la coleccion.
 function mapEmpleadoNombre(row) {
   if (!row) return '—'
   return `${row.nombre || ''} ${row.apellido || ''}`.trim() || '—'
 }
 
+// Procesa los elementos de la coleccion.
 function mapMensaje(row, empleadosMap, carpeta) {
   const remitente = empleadosMap.get(row.remitente_id)
   const destinatario = empleadosMap.get(row.destinatario_id)
@@ -22,6 +24,7 @@ function mapMensaje(row, empleadosMap, carpeta) {
   }
 }
 
+// Obtiene los datos necesarios.
 async function listContactos(empleadoId) {
   const { data, error } = await supabase
     .from('empleados')
@@ -41,6 +44,7 @@ async function listContactos(empleadoId) {
   }))
 }
 
+// Obtiene los datos necesarios.
 async function listMensajes(empleadoId, carpeta = 'inbox') {
   const isInbox = carpeta !== 'sent'
   const column = isInbox ? 'destinatario_id' : 'remitente_id'
@@ -70,6 +74,7 @@ async function listMensajes(empleadoId, carpeta = 'inbox') {
   return rows.map((row) => mapMensaje(row, empleadosMap, isInbox ? 'inbox' : 'sent'))
 }
 
+// Crea el registro o elemento correspondiente.
 async function createMensaje(remitenteId, body) {
   const cuerpo = String(body.cuerpo || body.body || '').trim()
   const asunto = String(body.asunto || body.subject || '(Sin asunto)').trim()
@@ -119,6 +124,7 @@ async function createMensaje(remitenteId, body) {
   return mapMensaje(data, empleadosMap, 'sent')
 }
 
+// Gestiona la operacion markMensajeLeido.
 async function markMensajeLeido(id, empleadoId) {
   const { data, error } = await supabase
     .from('mensajes')
@@ -137,6 +143,7 @@ async function markMensajeLeido(id, empleadoId) {
   return { success: true }
 }
 
+// Elimina el elemento indicado.
 async function removeMensaje(id, empleadoId) {
   const { data: row, error: findErr } = await supabase
     .from('mensajes')

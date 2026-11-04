@@ -3,6 +3,7 @@ const { readEntity, updateEntity } = require('./entityStore')
 const ACTIVITY_LOGS_ENTITY = 'activity_logs'
 const isVercel = process.env.VERCEL === '1'
 
+// Crea el registro o elemento correspondiente.
 function appendActivityLog(log) {
   if (isVercel) {
     return null
@@ -22,6 +23,7 @@ function appendActivityLog(log) {
   })
 }
 
+// Obtiene los datos necesarios.
 function listActivityLogs() {
   const current = readEntity(ACTIVITY_LOGS_ENTITY)
   return current.items

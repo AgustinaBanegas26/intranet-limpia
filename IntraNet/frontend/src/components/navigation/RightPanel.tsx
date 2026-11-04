@@ -8,6 +8,7 @@ const quickTopics = [
   { label: 'Políticas', path: '/politicas', emoji: '📋' },
 ]
 
+// Gestiona la operacion RightPanel.
 export function RightPanel() {
   return (
     <aside className="w-[280px] shrink-0 space-y-4 hidden xl:block">

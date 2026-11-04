@@ -6,6 +6,7 @@ import { useAuth } from "../../context/AuthContext";
 import { getProfile, type Profile } from "../../services/api";
 import { EmptyState, PageHero, PremiumCard } from "./ProductUI";
 
+// Gestiona la operacion PendingModulePage.
 export function PendingModulePage({
   eyebrow,
   title,
@@ -112,6 +113,7 @@ export function PendingModulePage({
   );
 }
 
+// Gestiona la operacion ProfileModulePage.
 export function ProfileModulePage() {
   const { token, user } = useAuth();
   const [profile, setProfile] = useState<Profile | null>(null);

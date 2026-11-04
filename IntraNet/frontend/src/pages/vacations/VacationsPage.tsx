@@ -14,10 +14,12 @@ const statusConfig: Record<VacStatus, { label: string; icon: typeof CheckCircle;
   rechazada: { label: 'Rechazada', icon: XCircle, color: 'var(--danger)', bg: 'var(--danger-bg)' },
 }
 
+// Gestiona la operacion fmtDate.
 function fmtDate(d: string) {
   return new Date(d.includes('T') ? d : `${d}T00:00:00`).toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' })
 }
 
+// Gestiona la operacion VacationsPage.
 export function VacationsPage() {
   const [showForm, setShowForm] = useState(false)
   const [editId, setEditId] = useState<number | null>(null)
@@ -53,12 +55,14 @@ export function VacationsPage() {
   const diasTotal = saldo?.dias_asignados ?? 14
   const pct = diasTotal > 0 ? Math.round((diasUsados / diasTotal) * 100) : 0
 
+  // Limpia el estado o los datos correspondientes.
   const resetForm = () => {
     setForm({ startDate: '', endDate: '', comment: '' })
     setEditId(null)
     setShowForm(false)
   }
 
+  // Comprueba los datos o la condicion indicada.
   const validateForm = () => {
     if (!form.startDate) {
       setError('Debe seleccionar una fecha de inicio.')
@@ -76,6 +80,7 @@ export function VacationsPage() {
     return true
   }
 
+  // Gestiona la accion correspondiente.
   const handleSubmit = async () => {
     if (!validateForm()) return
     setSubmitting(true)
@@ -106,6 +111,7 @@ export function VacationsPage() {
     }
   }
 
+  // Gestiona la accion correspondiente.
   const handleEdit = (vac: AusenciaDTO) => {
     if (vac.estado !== 'pendiente') return
     setEditId(Number(vac.id))
@@ -118,6 +124,7 @@ export function VacationsPage() {
     setError('')
   }
 
+  // Gestiona la accion correspondiente.
   const handleDelete = async (id: number) => {
     setSubmitting(true)
     setError('')

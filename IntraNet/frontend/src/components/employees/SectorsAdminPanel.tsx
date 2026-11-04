@@ -4,6 +4,7 @@ import { Accordion } from '../ui/Accordion'
 import { ConfirmDialog } from '../ui/ConfirmDialog'
 import { sectoresService, type SectorDTO } from '../../services/sectores'
 
+// Gestiona la operacion SectorsAdminPanel.
 export function SectorsAdminPanel({ onChange }: { onChange?: () => void }) {
   const [items, setItems] = useState<SectorDTO[]>([])
   const [loading, setLoading] = useState(true)
@@ -35,6 +36,7 @@ export function SectorsAdminPanel({ onChange }: { onChange?: () => void }) {
     load()
   }, [load])
 
+  // Gestiona la operacion sectorErrorMessage.
   const sectorErrorMessage = (err: unknown, fallback: string) => {
     const code = err instanceof Error ? err.message : ''
     if (code === 'duplicate_name') return 'Ya existe un sector con ese nombre.'
@@ -42,6 +44,7 @@ export function SectorsAdminPanel({ onChange }: { onChange?: () => void }) {
     return fallback
   }
 
+  // Gestiona la accion correspondiente.
   const handleCreate = async () => {
     const nombre = newName.trim()
     if (!nombre) return
@@ -61,6 +64,7 @@ export function SectorsAdminPanel({ onChange }: { onChange?: () => void }) {
     }
   }
 
+  // Gestiona la accion correspondiente.
   const handleSaveEdit = async () => {
     if (editId == null || !editName.trim()) return
     setSubmitting(true)
@@ -80,6 +84,7 @@ export function SectorsAdminPanel({ onChange }: { onChange?: () => void }) {
     }
   }
 
+  // Gestiona la accion correspondiente.
   const handleDelete = async (id: number) => {
     setSubmitting(true)
     setError('')

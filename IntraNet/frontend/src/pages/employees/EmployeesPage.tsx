@@ -50,6 +50,7 @@ const emptyEmpleado = {
   fecha_ingreso: '',
 }
 
+// Gestiona la operacion EmployeesPage.
 export function EmployeesPage() {
   const auth = useAuth()
   const isAdmin = auth.isAdmin
@@ -82,6 +83,7 @@ export function EmployeesPage() {
   }, [])
 
   useEffect(() => {
+    // Obtiene los datos necesarios.
     async function loadData() {
       if (!auth.token) { setError('No autorizado'); setLoading(false); return }
       setLoading(true)
@@ -140,18 +142,21 @@ export function EmployeesPage() {
     }
   })
 
+  // Gestiona la operacion openDetail.
   const openDetail = (emp: Empleado, mode: 'view' | 'edit' | 'delete' = 'view') => {
     if (!isAdmin) return
     setModalMode(mode)
     setSelectedEmployee(emp)
   }
 
+  // Gestiona la accion correspondiente.
   const handleEmployeeUpdated = (updated: Empleado) => {
     setEmpleados((prev) => prev.map((e) => (e.id === updated.id ? { ...e, ...updated } : e)))
     setSelectedEmployee((prev) => (prev?.id === updated.id ? { ...prev, ...updated } : prev))
     setFormSuccess('Empleado actualizado correctamente.')
   }
 
+  // Gestiona la accion correspondiente.
   const handleEmployeeDeleted = async (id: string | number) => {
     setSelectedEmployee(null)
     setFormSuccess('Empleado eliminado correctamente.')
@@ -164,6 +169,7 @@ export function EmployeesPage() {
     }
   }
 
+  // Gestiona la accion correspondiente.
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setFormError(null)

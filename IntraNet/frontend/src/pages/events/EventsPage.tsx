@@ -23,6 +23,7 @@ import { SUCURSALES } from "../../data/profileData";
 import { eventsService, type EventoDTO } from "../../services/events";
 import { readPdfAsDataUrl, resizeImageForSlider } from "../../utils/fileUpload";
 
+// Prepara el valor para su uso.
 function formatDate(dateStr: string) {
   const d = new Date(dateStr.includes("T") ? dateStr : `${dateStr}T00:00:00`);
   return d.toLocaleDateString("es-AR", {
@@ -32,12 +33,14 @@ function formatDate(dateStr: string) {
   });
 }
 
+// Prepara el valor para su uso.
 function formatTime(dateStr: string) {
   if (!dateStr.includes("T")) return "";
   const d = new Date(dateStr);
   return d.toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" });
 }
 
+// Gestiona la operacion fmtShort.
 function fmtShort(dateStr: string) {
   const d = new Date(dateStr.includes("T") ? dateStr : `${dateStr}T00:00:00`);
   return d.toLocaleDateString("es-AR", {
@@ -47,6 +50,7 @@ function fmtShort(dateStr: string) {
   });
 }
 
+// Gestiona la operacion DateBadge.
 function DateBadge({ date }: { date: string }) {
   const d = new Date(date.includes("T") ? date : `${date}T00:00:00`);
   const day = d.getDate();
@@ -59,6 +63,7 @@ function DateBadge({ date }: { date: string }) {
   );
 }
 
+// Gestiona la operacion EventsPage.
 export function EventsPage() {
   const { isAdmin } = useAuth();
   const [items, setItems] = useState<EventoDTO[]>([]);
@@ -101,6 +106,7 @@ export function EventsPage() {
     load();
   }, [load]);
 
+  // Gestiona la accion correspondiente.
   const handleImageUpload = async (file: File | null) => {
     if (!file) return;
     setUploadingImage(true);
@@ -115,6 +121,7 @@ export function EventsPage() {
     }
   };
 
+  // Gestiona la accion correspondiente.
   const handlePdfUpload = async (file: File | null) => {
     if (!file) return;
     setUploadingPdf(true);
@@ -134,6 +141,7 @@ export function EventsPage() {
     }
   };
 
+  // Gestiona la accion correspondiente.
   const handleCreate = async () => {
     if (!form.titulo.trim() || !form.fecha_inicio) return;
     const sucursalesDestino: string[] = [];
@@ -174,6 +182,7 @@ export function EventsPage() {
     }
   };
 
+  // Gestiona la accion correspondiente.
   const handleDelete = async (id: number) => {
     setSubmitting(true);
     setUploadError("");
@@ -189,6 +198,7 @@ export function EventsPage() {
     }
   };
 
+  // Gestiona la accion correspondiente.
   const handleRsvp = async (id: number) => {
     setRsvpId(id);
     try {
@@ -204,6 +214,7 @@ export function EventsPage() {
     }
   };
 
+  // Gestiona la accion correspondiente.
   const handleEventSaved = (updated: EventoDTO) => {
     setItems((prev) =>
       prev.map((e) => (e.id === updated.id ? { ...e, ...updated } : e)),

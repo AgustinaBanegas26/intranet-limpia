@@ -1,3 +1,4 @@
+// Prepara el valor para su uso.
 export function formatPublishDate(iso?: string | null): string {
   if (!iso) return ''
   const parsed = Date.parse(iso)
@@ -13,6 +14,7 @@ export function formatPublishDate(iso?: string | null): string {
   }).format(new Date(parsed))
 }
 
+// Prepara el valor para su uso.
 export function formatPublishDateShort(iso?: string | null): string {
   if (!iso) return ''
   const parsed = Date.parse(iso)

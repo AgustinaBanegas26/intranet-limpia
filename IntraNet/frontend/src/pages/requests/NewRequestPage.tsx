@@ -114,10 +114,12 @@ const PAGE_HERO_BY_PATH: Record<string, { eyebrow: string; title: string; descri
   },
 }
 
+// Comprueba los datos o la condicion indicada.
 function isEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
 }
 
+// Comprueba los datos o la condicion indicada.
 function validate(form: FormData) {
   const errors: Partial<Record<keyof FormData, string>> = {}
   const needsAuto = form.tipoReserva === 'auto' || form.tipoReserva === 'ambos'
@@ -165,6 +167,7 @@ function validate(form: FormData) {
   return errors
 }
 
+// Construye el valor o recurso necesario.
 function buildPayload(form: FormData): CreateSolicitudPayload[] {
   const needsAuto = form.tipoReserva === 'auto' || form.tipoReserva === 'ambos'
   const needsHotel = form.tipoReserva === 'hotel' || form.tipoReserva === 'ambos'
@@ -247,6 +250,7 @@ function buildPayload(form: FormData): CreateSolicitudPayload[] {
   return items
 }
 
+// Gestiona la operacion FormInput.
 function FormInput({
   label,
   value,
@@ -277,6 +281,7 @@ function FormInput({
   )
 }
 
+// Calcula el resultado correspondiente.
 function SummaryItem({ label, value }: { label: string; value?: string | number | boolean }) {
   return (
     <div>
@@ -286,6 +291,7 @@ function SummaryItem({ label, value }: { label: string; value?: string | number 
   )
 }
 
+// Gestiona la operacion NewRequestPage.
 export function NewRequestPage({ defaultTipoReserva }: { defaultTipoReserva?: FormData['tipoReserva'] }) {
   const { token, user } = useAuth()
   const { pathname } = useLocation()
@@ -343,16 +349,19 @@ export function NewRequestPage({ defaultTipoReserva }: { defaultTipoReserva?: Fo
   const errors = useMemo(() => validate(form), [form])
   const visibleErrors = showValidation ? errors : {}
   const canContinue = Object.keys(errors).length === 0
+  // Actualiza los datos correspondientes.
   const setValue = (key: keyof FormData) => (value: string | boolean) => {
     setForm((prev) => ({ ...prev, [key]: value }))
   }
 
+  // Limpia el estado o los datos correspondientes.
   const resetForm = () => {
     setForm({ ...initialForm, nombreCompleto: user.name, emailCorporativo: user.email || '' })
     setStep('detalles')
     setError('')
   }
 
+  // Gestiona la accion correspondiente.
   const handleSubmit = async () => {
     setShowValidation(true)
     if (!canContinue) return
@@ -370,6 +379,7 @@ export function NewRequestPage({ defaultTipoReserva }: { defaultTipoReserva?: Fo
     }
   }
 
+  // Gestiona la accion correspondiente.
   const handleDelete = async () => {
     if (!deleteId) return
     setDeleting(true)

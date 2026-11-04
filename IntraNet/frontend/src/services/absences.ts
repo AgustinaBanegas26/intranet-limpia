@@ -35,6 +35,7 @@ export type AusenciaFilters = {
   vigente?: boolean
 }
 
+// Construye el valor o recurso necesario.
 function buildQuery(filters?: AusenciaFilters) {
   if (!filters) return ''
   const params = new URLSearchParams()
@@ -49,6 +50,7 @@ function buildQuery(filters?: AusenciaFilters) {
 }
 
 export const absencesService = {
+  // Obtiene los datos necesarios.
   getAll: (filters?: AusenciaFilters | string) => {
     const resolved =
       typeof filters === 'string'
@@ -57,21 +59,27 @@ export const absencesService = {
     return apiClient.get<{ data: AusenciaDTO[] }>(`/ausencias${buildQuery(resolved)}`)
   },
 
+  // Obtiene los datos necesarios.
   getVigentes: () =>
     apiClient.get<{ data: AusenciaDTO[] }>('/ausencias?estado=aprobada&vigente=true'),
 
+  // Crea el registro o elemento correspondiente.
   create: (payload: { tipo: string; fecha_desde?: string; fecha_hasta?: string; hora_desde?: string; hora_hasta?: string; motivo: string }) =>
     apiClient.post<{ data: AusenciaDTO }>('/ausencias', payload),
 
+  // Gestiona la operacion approve.
   approve: (id: number | string, comentario?: string) =>
     apiClient.put<{ data: AusenciaDTO }>(`/ausencias/${id}/approve`, { comentario: comentario || '' }),
 
+  // Gestiona la operacion reject.
   reject: (id: number | string, comentario?: string) =>
     apiClient.put<{ data: AusenciaDTO }>(`/ausencias/${id}/reject`, { comentario: comentario || '' }),
 
+  // Elimina el elemento indicado.
   remove: (id: number | string) =>
     apiClient.delete<{ success: boolean }>(`/ausencias/${id}`),
 
+  // Actualiza los datos correspondientes.
   update: (id: number | string, payload: { tipo?: string; fecha_desde?: string; fecha_hasta?: string; motivo?: string }) =>
     apiClient.put<{ data: AusenciaDTO }>(`/ausencias/${id}`, payload),
 }

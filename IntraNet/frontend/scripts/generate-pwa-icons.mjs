@@ -15,6 +15,7 @@ const SPLASH_SIZES = [
   { name: "splash-1242x2208.png", width: 1242, height: 2208 },
   { name: "splash-1284x2778.png", width: 1284, height: 2778 },
 ];
+// Construye el valor o recurso necesario.
 async function generateFavicon(size, target) {
   await sharp({
     create: {
@@ -28,6 +29,7 @@ async function generateFavicon(size, target) {
     .toFile(target);
 }
 
+// Construye el valor o recurso necesario.
 async function generateSquareIcon(size, target) {
   await sharp({
     create: {
@@ -41,6 +43,7 @@ async function generateSquareIcon(size, target) {
     .toFile(target);
 }
 
+// Construye el valor o recurso necesario.
 async function generateSplash(width, height, target) {
   await sharp({
     create: {
@@ -59,6 +62,7 @@ await mkdir(publicPwaDir, { recursive: true });
 
 console.log("Generating neutral transparent PWA assets.");
 
+// Recorre los elementos de la coleccion.
 for (const size of MANIFEST_ICON_SIZES) {
   const name = `icon-${size}x${size}.png`;
   const target = path.join(iconsDir, name);
@@ -74,6 +78,7 @@ const logoTarget = path.join(publicDir, "logo.png");
 await generateSquareIcon(192, logoTarget);
 console.log(`Generated ${logoTarget}`);
 
+// Recorre los elementos de la coleccion.
 for (const { name, width, height } of SPLASH_SIZES) {
   const target = path.join(publicPwaDir, name);
   await generateSplash(width, height, target);

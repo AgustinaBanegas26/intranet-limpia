@@ -3,6 +3,7 @@ import { Clock3, Loader2 } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { absencesService } from '../../services/absences'
 
+// Gestiona la operacion argentinaToday.
 function argentinaToday() {
   const parts = new Intl.DateTimeFormat('en-US', {
     timeZone: 'America/Argentina/Buenos_Aires',
@@ -14,6 +15,7 @@ function argentinaToday() {
   return `${values.year}-${values.month}-${values.day}`
 }
 
+// Gestiona la operacion displayDate.
 function displayDate(date: string) {
   return new Date(`${date}T00:00:00`).toLocaleDateString('es-AR', {
     day: '2-digit', month: '2-digit', year: 'numeric',
@@ -22,6 +24,7 @@ function displayDate(date: string) {
 
 type Props = { onSuccess?: () => void }
 
+// Gestiona la operacion LateArrivalForm.
 export function LateArrivalForm({ onSuccess }: Props) {
   const { user } = useAuth()
   const date = useMemo(argentinaToday, [])
@@ -36,6 +39,7 @@ export function LateArrivalForm({ onSuccess }: Props) {
   const nombre = nameParts[0] || 'Sin informar'
   const apellido = nameParts.slice(1).join(' ') || 'Sin informar'
 
+  // Gestiona la accion correspondiente.
   const handleSubmit = async () => {
     if (!horaDesde || !horaHasta) {
       setError('Completá el horario desde y hasta.')

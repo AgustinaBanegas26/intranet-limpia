@@ -1,5 +1,6 @@
 const MIN_JWT_SECRET_LENGTH = 32
 
+// Prepara el valor para su uso.
 function parseCorsOrigins() {
   return String(process.env.CORS_ORIGINS || '')
     .split(',')
@@ -7,6 +8,7 @@ function parseCorsOrigins() {
     .filter(Boolean)
 }
 
+// Comprueba los datos o la condicion indicada.
 function validateEnv({ exitOnError = false } = {}) {
   const isProduction = process.env.NODE_ENV === 'production'
   const errors = []
@@ -31,6 +33,7 @@ function validateEnv({ exitOnError = false } = {}) {
     if (corsOrigins.length === 0) {
       errors.push('CORS_ORIGINS is required when NODE_ENV=production (comma-separated frontend URLs)')
     } else {
+      // Recorre los elementos de la coleccion.
       for (const origin of corsOrigins) {
         if (!/^https:\/\//i.test(origin)) {
           warnings.push(`CORS_ORIGINS entry should use HTTPS in production: ${origin}`)
@@ -42,11 +45,13 @@ function validateEnv({ exitOnError = false } = {}) {
     }
   }
 
+  // Recorre los elementos de la coleccion.
   for (const warning of warnings) {
     console.warn(`[backend] WARN: ${warning}`)
   }
 
   if (errors.length > 0) {
+    // Recorre los elementos de la coleccion.
     for (const error of errors) {
       console.error(`[backend] FATAL: ${error}`)
     }

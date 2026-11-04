@@ -16,6 +16,7 @@ type TechnicalSupplyFichaRow = {
   ficha: TechnicalSupplyRequestDTO | null
 }
 
+// Gestiona la operacion EmployeeView.
 function EmployeeView() {
   const { user } = useAuth()
   const [comment, setComment] = useState('')
@@ -40,6 +41,7 @@ function EmployeeView() {
 
   useEffect(() => { load() }, [load])
 
+  // envia la solicitud correspondiente.
   const submit = async () => {
     const parsedAmount = Number(amount)
     if (!comment.trim() || !Number.isFinite(parsedAmount) || parsedAmount <= 0) {
@@ -136,11 +138,13 @@ function EmployeeView() {
   )
 }
 
+// Gestiona la operacion money.
 function money(value?: number | null) {
   if (value == null) return '-'
   return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(value)
 }
 
+// Prepara el valor para su uso.
 function formatDateTime(value?: string | null) {
   if (!value) return '-'
   const date = new Date(value)
@@ -154,15 +158,18 @@ function formatDateTime(value?: string | null) {
   })
 }
 
+// Obtiene los datos necesarios.
 function getInitials(name?: string | null) {
   const parts = String(name || 'Empleado').trim().split(/\s+/).filter(Boolean)
   return parts.slice(0, 2).map((part) => part[0]).join('').toUpperCase() || 'E'
 }
 
+// Obtiene los datos necesarios.
 function getEmployeeName(employee?: EmpleadoDTO | null) {
   return `${employee?.nombre || ''} ${employee?.apellido || ''}`.trim() || 'Empleado'
 }
 
+// Gestiona la operacion TechnicalSupplyDetailModal.
 function TechnicalSupplyDetailModal({
   row,
   onClose,
@@ -180,6 +187,7 @@ function TechnicalSupplyDetailModal({
 }) {
   useEffect(() => {
     if (!row) return
+    // Gestiona la accion correspondiente.
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onClose()
     }
@@ -266,6 +274,7 @@ function TechnicalSupplyDetailModal({
   )
 }
 
+// Actualiza los datos correspondientes.
 function EditRequestModal({
   row,
   saving,
@@ -291,6 +300,7 @@ function EditRequestModal({
 
   if (!row || !empleado) return null
 
+  // Actualiza los datos correspondientes.
   const save = async () => {
     const parsedAmount = Number(amount)
     if (!comment.trim() || !Number.isFinite(parsedAmount) || parsedAmount <= 0) {
@@ -350,6 +360,7 @@ function EditRequestModal({
   )
 }
 
+// Gestiona la operacion AdminView.
 function AdminView() {
   const { token } = useAuth()
   const [filter, setFilter] = useState<RequestFilter>('pendiente')
@@ -387,6 +398,7 @@ function AdminView() {
 
   const filteredRequests = useMemo(() => {
     const latestByEmployee = new Map<number, TechnicalSupplyRequestDTO>()
+    // Recorre los elementos de la coleccion.
     for (const request of requests) {
       const current = latestByEmployee.get(request.empleado_id)
       const requestTime = new Date(request.updated_at || request.created_at || '').getTime() || 0
@@ -419,6 +431,7 @@ function AdminView() {
     return rows
   }, [employees, filter, requests, searchTerm])
 
+  // Gestiona la operacion approveRequest.
   const approveRequest = async (id: number) => {
     setApproving(true)
     setError('')
@@ -434,6 +447,7 @@ function AdminView() {
     }
   }
 
+  // Gestiona la operacion rejectRequest.
   const rejectRequest = async (id: number) => {
     setRejecting(true)
     setError('')
@@ -449,6 +463,7 @@ function AdminView() {
     }
   }
 
+  // Actualiza los datos correspondientes.
   const saveEdit = async (payload: { email: string; comment: string; amount: number }) => {
     if (!editRow?.empleado?.id) return
     setSavingEdit(true)
@@ -577,6 +592,7 @@ function AdminView() {
   )
 }
 
+// Gestiona la operacion TechnicalSuppliesPage.
 export function TechnicalSuppliesPage() {
   const { isAdmin } = useAuth()
   return isAdmin ? <AdminView /> : <EmployeeView />

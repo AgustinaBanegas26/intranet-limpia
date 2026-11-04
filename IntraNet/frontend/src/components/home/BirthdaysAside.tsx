@@ -7,6 +7,7 @@ import { BirthdayCard } from './BirthdayCard'
 import { BirthdayCarousel } from './BirthdayCarousel'
 import { BirthdayUpcomingAccordion } from './BirthdayUpcomingAccordion'
 
+// Gestiona la operacion BirthdaysAside.
 export function BirthdaysAside() {
   const { token } = useAuth()
   const [data, setData] = useState<CelebracionesDTO | null>(null)

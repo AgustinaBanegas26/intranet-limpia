@@ -37,6 +37,7 @@ export type PwaInstallContextValue = {
 
 const PwaInstallContext = createContext<PwaInstallContextValue | null>(null)
 
+// Comprueba los datos o la condicion indicada.
 function isStandaloneMode() {
   if (typeof window === 'undefined') return false
 
@@ -47,6 +48,7 @@ function isStandaloneMode() {
   return mediaStandalone || mediaMinimalUi || iosStandalone
 }
 
+// Gestiona la operacion detectPlatform.
 function detectPlatform(): PwaPlatform {
   if (typeof window === 'undefined') return 'other'
 
@@ -62,6 +64,7 @@ function detectPlatform(): PwaPlatform {
   return 'other'
 }
 
+// Obtiene los datos necesarios.
 function readDismissedRecently() {
   try {
     const raw = localStorage.getItem(DISMISS_STORAGE_KEY)
@@ -76,6 +79,7 @@ function readDismissedRecently() {
   }
 }
 
+// Gestiona la operacion persistDismissLater.
 function persistDismissLater() {
   try {
     localStorage.setItem(DISMISS_STORAGE_KEY, String(Date.now()))
@@ -84,6 +88,7 @@ function persistDismissLater() {
   }
 }
 
+// Gestiona la operacion PwaInstallProvider.
 export function PwaInstallProvider({ children }: { children: ReactNode }) {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
   const [isInstalled, setIsInstalled] = useState(() => isStandaloneMode())
@@ -103,12 +108,14 @@ export function PwaInstallProvider({ children }: { children: ReactNode }) {
     setIsInstalled(isStandaloneMode())
     setPlatform(detectPlatform())
 
+    // Gestiona la accion correspondiente.
     const onBeforeInstallPrompt = (event: Event) => {
       event.preventDefault()
       setDeferredPrompt(event as BeforeInstallPromptEvent)
       console.info('[PWA] beforeinstallprompt capturado')
     }
 
+    // Gestiona la accion correspondiente.
     const onAppInstalled = () => {
       setDeferredPrompt(null)
       setIsInstalled(true)
@@ -120,6 +127,7 @@ export function PwaInstallProvider({ children }: { children: ReactNode }) {
     const standaloneQuery = window.matchMedia('(display-mode: standalone)')
     const minimalUiQuery = window.matchMedia('(display-mode: minimal-ui)')
 
+    // Gestiona la accion correspondiente.
     const onDisplayModeChange = () => {
       setIsInstalled(isStandaloneMode())
     }
@@ -230,6 +238,7 @@ export function PwaInstallProvider({ children }: { children: ReactNode }) {
   return <PwaInstallContext.Provider value={value}>{children}</PwaInstallContext.Provider>
 }
 
+// Prepara el estado o comportamiento del componente.
 export function usePwaInstall() {
   const context = useContext(PwaInstallContext)
   if (!context) {

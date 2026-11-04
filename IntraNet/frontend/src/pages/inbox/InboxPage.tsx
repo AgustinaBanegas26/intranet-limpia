@@ -19,6 +19,7 @@ import {
   type MensajeDTO,
 } from "../../services/messages";
 
+// Gestiona la operacion timeLabel.
 function timeLabel(d: string) {
   const date = new Date(d.includes("T") ? d : `${d}T12:00:00`);
   const diff = Date.now() - date.getTime();
@@ -29,6 +30,7 @@ function timeLabel(d: string) {
   return date.toLocaleDateString("es-AR", { day: "numeric", month: "short" });
 }
 
+// Gestiona la operacion InboxPage.
 export function InboxPage() {
   const [messages, setMessages] = useState<MensajeDTO[]>([]);
   const [contactos, setContactos] = useState<ContactoDTO[]>([]);
@@ -76,6 +78,7 @@ export function InboxPage() {
     (m) => m.folder === "inbox" && !m.read,
   ).length;
 
+  // Gestiona la accion correspondiente.
   const handleSelect = async (msg: MensajeDTO) => {
     setSelected(msg);
     setComposing(false);
@@ -91,6 +94,7 @@ export function InboxPage() {
     }
   };
 
+  // Gestiona la accion correspondiente.
   const handleDelete = async (id: number) => {
     setDeleting(true);
     try {
@@ -105,6 +109,7 @@ export function InboxPage() {
     }
   };
 
+  // Gestiona la accion correspondiente.
   const handleSend = async () => {
     if (!draft.destinatario_id || !draft.body.trim()) return;
     setSending(true);

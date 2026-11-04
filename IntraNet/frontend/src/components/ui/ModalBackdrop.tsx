@@ -6,6 +6,7 @@ type ModalBackdropProps = HTMLAttributes<HTMLDivElement> & {
   lockScroll?: boolean
 }
 
+// Prepara el estado o comportamiento del componente.
 function useBodyScrollLock(locked: boolean) {
   useEffect(() => {
     if (!locked) return

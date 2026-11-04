@@ -40,6 +40,7 @@ export default defineConfig({
         navigateFallbackDenylist: [/^\/api\//],
         runtimeCaching: [
           {
+            // Gestiona la operacion urlPattern.
             urlPattern: ({ url }) =>
               url.pathname.startsWith('/auth/') ||
               url.pathname.startsWith('/api/') ||
@@ -50,6 +51,7 @@ export default defineConfig({
             },
           },
           {
+            // Gestiona la operacion urlPattern.
             urlPattern: ({ url }) => {
               const host = url.hostname
               return (
@@ -72,6 +74,7 @@ export default defineConfig({
             },
           },
           {
+            // Gestiona la operacion urlPattern.
             urlPattern: ({ request }) => request.destination === 'image',
             handler: 'StaleWhileRevalidate',
             options: {
@@ -83,6 +86,7 @@ export default defineConfig({
             },
           },
           {
+            // Gestiona la operacion urlPattern.
             urlPattern: ({ request }) =>
               request.destination === 'style' ||
               request.destination === 'script' ||

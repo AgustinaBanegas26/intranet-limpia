@@ -28,6 +28,7 @@ const STARS = [
   { left: '72%', top: '18%', delay: 0.4, sz: 5 },
 ]
 
+// Gestiona la operacion BalloonsDeco.
 function BalloonsDeco({ className }: { className?: string }) {
   return (
     <svg
@@ -48,6 +49,7 @@ function BalloonsDeco({ className }: { className?: string }) {
   )
 }
 
+// Gestiona la operacion CakeSVG.
 function CakeSVG() {
   return (
     <svg
@@ -80,6 +82,7 @@ function CakeSVG() {
   )
 }
 
+// Gestiona la operacion StarDeco.
 function StarDeco({ sz }: { sz: number }) {
   return (
     <svg width={sz} height={sz} viewBox="0 0 10 10" fill="none" aria-hidden="true">
@@ -92,12 +95,14 @@ function StarDeco({ sz }: { sz: number }) {
   )
 }
 
+// Obtiene los datos necesarios.
 function getKicker(isToday: boolean, isUpcoming: boolean): string {
   if (isToday) return '🎉 Cumpleaños del día'
   if (isUpcoming) return '🎂 Próximamente'
   return '🎂 Hoy festejamos'
 }
 
+// Obtiene los datos necesarios.
 function getTitle(person: CelebracionPersona, isToday: boolean, isUpcoming: boolean): string {
   const name = person.nombreCompleto
   if (isToday) return `¡Feliz cumple, ${name}!`
@@ -110,12 +115,14 @@ function getTitle(person: CelebracionPersona, isToday: boolean, isUpcoming: bool
   return `Hoy celebramos a ${name} 🎂`
 }
 
+// Obtiene los datos necesarios.
 function getPrimaryMessage(isToday: boolean, isUpcoming: boolean): string {
   if (isToday) return '🎉 ¡Que tengas un día increíble rodeado de buenas personas!'
   if (isUpcoming) return '🎈 ¡Ya falta poco para festejar!'
   return '🎉 ¡A celebrar con alegría!'
 }
 
+// Obtiene los datos necesarios.
 function getWarmMessage(isToday: boolean, isUpcoming: boolean): string {
   if (isToday) {
     return 'Todo el equipo te desea un excelente cumpleaños. Que este nuevo año venga lleno de éxitos, salud y grandes momentos.'
@@ -126,6 +133,7 @@ function getWarmMessage(isToday: boolean, isUpcoming: boolean): string {
   return 'Que este día esté lleno de alegría, buena compañía y momentos inolvidables.'
 }
 
+// Obtiene los datos necesarios.
 function getCelebrationLine(isToday: boolean, isUpcoming: boolean): string {
   if (isToday) return '🎉 ¡Feliz cumple! 🎂'
   if (isUpcoming) return '🎈 ¡Ya falta poco! ✨'
@@ -151,6 +159,7 @@ const RIGHT_DECO_STARS = [
   { top: '72%', right: '10%', sz: 6, delay: 1.2 },
 ]
 
+// Gestiona la operacion StreamersDeco.
 function StreamersDeco() {
   return (
     <svg
@@ -184,6 +193,7 @@ function StreamersDeco() {
   )
 }
 
+// Gestiona la operacion RightPanelDeco.
 function RightPanelDeco({ isToday }: { isToday: boolean }) {
   const heroEmoji = isToday ? '🎉' : '🎂'
 
@@ -233,6 +243,7 @@ function RightPanelDeco({ isToday }: { isToday: boolean }) {
   )
 }
 
+// Gestiona la operacion BirthdayCard.
 export function BirthdayCard({
   person,
   isToday = false,

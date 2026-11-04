@@ -38,6 +38,7 @@ export const SUCURSALES = ['Buenos Aires', 'Mar del Plata']
 
 export const CANTIDAD_PERSONAS = ['1', '2', '3', '4', '5', '6+']
 
+// Prepara el valor para su uso.
 export function parseSucursalesStored(value?: string | null): string[] {
   if (!value) return []
   return String(value)
@@ -46,6 +47,7 @@ export function parseSucursalesStored(value?: string | null): string[] {
     .filter(Boolean)
 }
 
+// Prepara el valor para su uso.
 export function formatSucursalesStored(values: string[]): string {
   return values.filter(Boolean).slice(0, 2).join(' · ')
 }

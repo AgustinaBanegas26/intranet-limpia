@@ -14,6 +14,7 @@ const TOKEN_KEY = "gn_token";
 const USER_KEY = "gn_user";
 const LEGACY_USER_KEY = "currentUser";
 
+// Obtiene los datos necesarios.
 export function getBackendUrl() {
   const envUrl = String(
     (import.meta as any).env?.VITE_BACKEND_URL || "",
@@ -34,6 +35,7 @@ export function getBackendUrl() {
   return "http://localhost:4000";
 }
 
+// Prepara el valor para su uso.
 function normalizeUser(user: AuthUserLike): User {
   const normalizedName = user.name || user.nombreCompleto || user.email || "";
   return {
@@ -42,6 +44,7 @@ function normalizeUser(user: AuthUserLike): User {
   };
 }
 
+// Obtiene los datos necesarios.
 export function getSession(): Session | null {
   try {
     const token = localStorage.getItem(TOKEN_KEY) || "";
@@ -54,6 +57,7 @@ export function getSession(): Session | null {
   return null;
 }
 
+// Actualiza los datos correspondientes.
 export function setSession(session: Session) {
   try {
     const normalized = { ...session, user: normalizeUser(session.user) };
@@ -63,6 +67,7 @@ export function setSession(session: Session) {
   } catch {}
 }
 
+// Limpia el estado o los datos correspondientes.
 export function clearSession() {
   try {
     localStorage.removeItem(TOKEN_KEY);
@@ -71,6 +76,7 @@ export function clearSession() {
   } catch {}
 }
 
+// Obtiene los datos necesarios.
 export function getLegacyUser(): User | null {
   try {
     const raw = localStorage.getItem(LEGACY_USER_KEY);
@@ -81,6 +87,7 @@ export function getLegacyUser(): User | null {
   }
 }
 
+// Gestiona la operacion login.
 export async function login(input: {
   email: string;
   password: string;
@@ -149,6 +156,7 @@ export type ChangePasswordResult = {
   mustChangePassword: false;
 };
 
+// Actualiza los datos correspondientes.
 export async function changePassword(input: {
   password: string;
   currentPassword?: string;

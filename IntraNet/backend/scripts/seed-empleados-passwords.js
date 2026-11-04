@@ -14,6 +14,7 @@ const ADMIN_EMAILS =
     .map((e) => e.trim().toLowerCase())
     .filter(Boolean);
 
+// Comprueba los datos o la condicion indicada.
 function isAdminEmail(email) {
   return ADMIN_EMAILS.includes(
     String(email || "")
@@ -22,6 +23,7 @@ function isAdminEmail(email) {
   );
 }
 
+// Actualiza los datos correspondientes.
 async function setPassword(email, plainPassword, mustChangePassword = true) {
   const password_hash = await bcrypt.hash(plainPassword, 10);
 
@@ -42,6 +44,7 @@ async function setPassword(email, plainPassword, mustChangePassword = true) {
   console.log("Updated", email);
 }
 
+// Gestiona la operacion main.
 async function main() {
   const { data: empleados, error } = await supabase
     .from("empleados")
@@ -50,6 +53,7 @@ async function main() {
 
   if (error) throw error;
 
+  // Recorre los elementos de la coleccion.
   for (const row of empleados || []) {
     if (!row.email_corporativo) continue;
     const password = isAdminEmail(row.email_corporativo)

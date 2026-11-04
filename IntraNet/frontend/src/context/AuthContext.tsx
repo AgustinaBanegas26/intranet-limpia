@@ -24,26 +24,32 @@ type AuthContextValue = {
 
 const AuthContext = createContext<AuthContextValue | null>(null)
 
+// Comprueba si el usuario tiene rol de administrador.
 export function isAdminUser(user: User) {
   return user.role === 'admin'
 }
 
+// Comprueba si el usuario tiene rol de Recursos Humanos.
 export function isRRHHUser(user: User) {
   return user.role === 'rrhh'
 }
 
+// Comprueba si el usuario tiene rol de director.
 export function isDirectorUser(user: User) {
   return user.role === 'director'
 }
 
+// Comprueba si el usuario puede consultar la lista de empleados.
 export function canListEmployees(user: User) {
   return isAdminUser(user)
 }
 
+// Comprueba si el usuario puede publicar novedades.
 export function canPublishNovedades(user: User) {
   return isAdminUser(user)
 }
 
+// Convierte cualquier valor de rol a uno de los roles admitidos.
 export function normalizeRole(role?: string): UserRole {
   const r = String(role || '').toLowerCase()
   if (r === 'admin') return 'admin'
@@ -53,6 +59,7 @@ export function normalizeRole(role?: string): UserRole {
   return 'empleado'
 }
 
+// Comparte los datos de sesión con los componentes autenticados.
 export function AuthProvider({
   user,
   token,
@@ -83,6 +90,7 @@ export function AuthProvider({
   )
 }
 
+// Devuelve la sesión actual o informa si falta el proveedor.
 export function useAuth() {
   const ctx = useContext(AuthContext)
   if (!ctx) {

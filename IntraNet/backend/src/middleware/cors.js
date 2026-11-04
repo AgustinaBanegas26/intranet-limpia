@@ -7,6 +7,7 @@ const DEFAULT_DEV_ORIGINS = [
   "http://127.0.0.1:3000",
 ];
 
+// Obtiene los datos necesarios.
 function getAllowedOrigins() {
   const envOrigins = String(process.env.CORS_ORIGINS || "")
     .split(",")
@@ -20,6 +21,7 @@ function getAllowedOrigins() {
   return DEFAULT_DEV_ORIGINS;
 }
 
+// Comprueba los datos o la condicion indicada.
 function isAllowedOrigin(origin) {
   const allowedOrigins = getAllowedOrigins();
 
@@ -41,8 +43,10 @@ function isAllowedOrigin(origin) {
   return false;
 }
 
+// Crea el registro o elemento correspondiente.
 function createCorsMiddleware() {
   return cors({
+    // Gestiona la operacion origin.
     origin(origin, callback) {
       if (isAllowedOrigin(origin)) {
         callback(null, true);

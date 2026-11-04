@@ -10,6 +10,7 @@ interface BirthdayUpcomingAccordionProps {
   alwaysShow?: boolean
 }
 
+// Gestiona la operacion BirthdayUpcomingAccordion.
 export function BirthdayUpcomingAccordion({
   persons,
   embedded = false,

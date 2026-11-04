@@ -17,6 +17,7 @@ const SIZE_CLASS = {
   lg: 'bc-avatar-wrap--lg',
 } as const
 
+// Gestiona la operacion BirthdayAvatar.
 export function BirthdayAvatar({
   foto,
   nombreCompleto,

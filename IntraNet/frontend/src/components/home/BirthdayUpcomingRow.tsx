@@ -5,6 +5,7 @@ interface BirthdayUpcomingRowProps {
   item: BirthdayUpcomingDisplay
 }
 
+// Gestiona la operacion BirthdayUpcomingRow.
 export function BirthdayUpcomingRow({ item }: BirthdayUpcomingRowProps) {
   const { person, fechaLabel, diaSemana, diasLabel } = item
   const location = [person.area, person.sucursal].filter(Boolean).join(' · ')

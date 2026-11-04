@@ -10,6 +10,7 @@ type Props = {
   onSelect?: (event: EventoDTO) => void
 }
 
+// Comprueba los datos o la condicion indicada.
 function isActiveEvent(event: EventoDTO) {
   if (event.activo === false) return false
   const today = new Date().toISOString().slice(0, 10)
@@ -17,6 +18,7 @@ function isActiveEvent(event: EventoDTO) {
   return fin >= today
 }
 
+// Gestiona la operacion EventsSlider.
 export function EventsSlider({ events, loading, onSelect }: Props) {
   const activeEvents = events.filter(isActiveEvent)
   const slides = activeEvents

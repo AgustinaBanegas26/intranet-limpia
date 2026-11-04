@@ -13,6 +13,7 @@ import { LoginPage } from "./pages/auth/LoginPage";
 import { ChangePasswordPage } from "./pages/auth/ChangePasswordPage";
 import { ResetPasswordPage } from "./pages/auth/ResetPasswordPage";
 
+// Gestiona la operacion App.
 function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -30,16 +31,19 @@ function App() {
   }, []);
 
   useEffect(() => {
+    // Gestiona la accion correspondiente.
     const onPasswordRequired = () => {
       setCurrentUser((prev) =>
         prev ? { ...prev, mustChangePassword: true } : prev,
       );
     };
+    // Gestiona la accion correspondiente.
     const onSessionInvalid = () => {
       clearSession();
       setCurrentUser(null);
       setToken(null);
     };
+    // Gestiona la accion correspondiente.
     const onUserUpdated = (event: Event) => {
       const detail = (event as CustomEvent<User>).detail;
       if (!detail) return;
@@ -61,6 +65,7 @@ function App() {
     };
   }, []);
 
+  // Gestiona la accion correspondiente.
   const handleLogin = (session: Session) => {
     const withDefaults: User = {
       ...session.user,
@@ -72,12 +77,14 @@ function App() {
     setToken(session.token);
   };
 
+  // Gestiona la accion correspondiente.
   const handleLogout = () => {
     clearSession();
     setCurrentUser(null);
     setToken(null);
   };
 
+  // Gestiona la accion correspondiente.
   const handlePasswordChanged = (newToken?: string) => {
     if (!currentUser) return;
     const nextUser = { ...currentUser, mustChangePassword: false };

@@ -3,6 +3,7 @@ import { ThemeToggle } from '../components/ThemeToggle'
 import { useAuth } from '../context/AuthContext'
 import { changePassword } from '../services/auth'
 
+// Actualiza los datos correspondientes.
 export default function ChangePassword() {
   const { user, onPasswordChanged } = useAuth()
   const [password, setPassword] = useState('')
@@ -11,6 +12,7 @@ export default function ChangePassword() {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState('')
 
+  // Gestiona la accion correspondiente.
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (password.length < 8) {

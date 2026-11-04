@@ -19,6 +19,7 @@ export type EmployeeExpandableData = {
   legajo?: string | number | null
 }
 
+// Gestiona la operacion DetailRow.
 function DetailRow({ label, value }: { label: string; value?: string | number | null }) {
   const display = value != null && String(value).trim() !== '' ? String(value) : '—'
   return (
@@ -29,6 +30,7 @@ function DetailRow({ label, value }: { label: string; value?: string | number | 
   )
 }
 
+// Gestiona la operacion EmployeeAvatar.
 function EmployeeAvatar({ name, foto }: { name: string; foto?: string | null }) {
   const initials = getInitials(name)
   return (
@@ -42,6 +44,7 @@ function EmployeeAvatar({ name, foto }: { name: string; foto?: string | null }) 
   )
 }
 
+// Gestiona la operacion EmployeeExpandableItem.
 export function EmployeeExpandableItem({
   employee,
   showContact = false,
@@ -146,6 +149,7 @@ export function EmployeeExpandableItem({
   )
 }
 
+// Gestiona la operacion EmployeeExpandableList.
 export function EmployeeExpandableList({ children }: { children: ReactNode }) {
   return <div className="employee-expandable-list">{children}</div>
 }

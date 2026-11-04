@@ -5,6 +5,7 @@ const supabase = require('../src/config/supabase')
 const ADMIN_EMAIL = String(process.env.ADMIN_EMAIL || '').trim().toLowerCase()
 const ADMIN_PASSWORD = process.env.DEFAULT_ADMIN_PASSWORD || 'Admin123!'
 
+// Gestiona la operacion main.
 async function main() {
   if (!ADMIN_EMAIL) throw new Error('Definí ADMIN_EMAIL antes de ejecutar este script.')
 

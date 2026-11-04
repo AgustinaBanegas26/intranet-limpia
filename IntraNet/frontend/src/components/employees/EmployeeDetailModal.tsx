@@ -26,6 +26,7 @@ type Empleado = {
   work_mode?: string | null
 }
 
+// Gestiona la operacion DetailField.
 function DetailField({ label, value }: { label: string; value?: string | number | null }) {
   const filled = value != null && String(value).trim() !== ''
   return (
@@ -38,10 +39,12 @@ function DetailField({ label, value }: { label: string; value?: string | number 
   )
 }
 
+// Prepara el valor para su uso.
 function normalizePersonName(value: string) {
   return value.trim().replace(/\s+/g, ' ').toLowerCase()
 }
 
+// Construye el valor o recurso necesario.
 function buildFullName(employee: Empleado) {
   return `${employee.nombre} ${employee.apellido}`.trim().replace(/\s+/g, ' ')
 }
@@ -56,6 +59,7 @@ type Props = {
   onDeleted: (id: string | number) => void
 }
 
+// Gestiona la operacion EmployeeDetailModal.
 export function EmployeeDetailModal({ employee, token, areaOptions = [], initialMode = 'view', onClose, onUpdated, onDeleted }: Props) {
   const [profile, setProfile] = useState<ProfileData | null>(null)
   const [profileLoading, setProfileLoading] = useState(false)
@@ -119,6 +123,7 @@ export function EmployeeDetailModal({ employee, token, areaOptions = [], initial
 
   useEffect(() => {
     if (!employee) return
+    // Gestiona la accion correspondiente.
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && !confirmDelete) onClose()
     }
@@ -130,6 +135,7 @@ export function EmployeeDetailModal({ employee, token, areaOptions = [], initial
 
   const foto = profile?.foto || employee.foto_url || null
 
+  // Gestiona la accion correspondiente.
   const handleSave = async (e: FormEvent) => {
     e.preventDefault()
     if (!token) return
@@ -166,6 +172,7 @@ export function EmployeeDetailModal({ employee, token, areaOptions = [], initial
     }
   }
 
+  // Gestiona la accion correspondiente.
   const handleDelete = async () => {
     if (!token || !deleteNameMatches) return
     setDeleting(true)

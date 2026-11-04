@@ -24,14 +24,18 @@ export type SliderSlidePayload = {
 }
 
 export const sliderService = {
+  // Obtiene los datos necesarios.
   getAll: () => apiClient.get<{ data: SliderSlideDTO[] }>('/slider'),
 
+  // Crea el registro o elemento correspondiente.
   create: (payload: SliderSlidePayload) =>
     apiClient.post<{ data: SliderSlideDTO }>('/slider', payload),
 
+  // Actualiza los datos correspondientes.
   update: (id: string, payload: Partial<SliderSlidePayload>) =>
     apiClient.put<{ data: SliderSlideDTO }>(`/slider/${id}`, payload),
 
+  // Elimina el elemento indicado.
   remove: (id: string) =>
     apiClient.delete<{ success: boolean }>(`/slider/${id}`),
 }

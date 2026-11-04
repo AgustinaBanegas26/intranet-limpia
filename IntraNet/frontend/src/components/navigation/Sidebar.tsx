@@ -56,6 +56,7 @@ const employeeMoreNav = [
   { icon: UserCircle, label: "Mi perfil", path: "/perfil" },
 ];
 
+// Gestiona la operacion NavItem.
 function NavItem({
   icon: Icon,
   label,
@@ -96,6 +97,7 @@ function NavItem({
   );
 }
 
+// Gestiona la operacion AdminSidebar.
 function AdminSidebar() {
   const location = useLocation();
   const { user, isAdmin, onLogout } = useAuth();
@@ -165,6 +167,7 @@ function AdminSidebar() {
   );
 }
 
+// Gestiona la operacion EmployeeSidebar.
 function EmployeeSidebar() {
   const { user, isRRHH, onLogout } = useAuth();
   const initials = getInitials(user.name);
@@ -240,6 +243,7 @@ function EmployeeSidebar() {
   );
 }
 
+// Gestiona la operacion Sidebar.
 export function Sidebar() {
   const { isAdmin } = useAuth();
   return isAdmin ? <AdminSidebar /> : <EmployeeSidebar />;

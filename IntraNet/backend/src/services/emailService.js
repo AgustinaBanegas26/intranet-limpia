@@ -9,6 +9,7 @@ function loadEnvFile() {
   if (!fs.existsSync(ENV_PATH)) return;
 
   const content = fs.readFileSync(ENV_PATH, "utf8");
+  // Recorre los elementos de la coleccion.
   for (const line of content.split(/\r?\n/)) {
     const trimmed = line.trim();
     if (!trimmed || trimmed.startsWith("#")) continue;
@@ -80,6 +81,7 @@ const TIPOS_PERMITIDOS = [
   ...TIPOS_INSUMOS_TECNICOS,
 ];
 
+// Prepara el valor para su uso.
 function normalizeTipo(value) {
   return String(value || "")
     .trim()
@@ -88,6 +90,7 @@ function normalizeTipo(value) {
     .replace(/[\u0300-\u036f]/g, "");
 }
 
+// Prepara el valor para su uso.
 function normalizeEmailPass(value) {
   return String(value ?? "")
     .trim()
@@ -95,6 +98,7 @@ function normalizeEmailPass(value) {
     .replace(/\s+/g, "");
 }
 
+// Obtiene los datos necesarios.
 function getCajaDestinatarioParaAdelanto(sucursal) {
   const normalizedSucursal = String(sucursal || "")
     .trim()
@@ -122,6 +126,7 @@ function getCajaDestinatarioParaAdelanto(sucursal) {
   return null;
 }
 
+// Obtiene los datos necesarios.
 function getSucursalSolicitante(solicitud) {
   return (
     solicitud?.solicitante?.sucursal ||
@@ -132,6 +137,7 @@ function getSucursalSolicitante(solicitud) {
   );
 }
 
+// Obtiene los datos necesarios.
 function getDestinatarios(tipo, solicitud = null) {
   const normalizedTipo = normalizeTipo(tipo);
   const destinatarios = [];
@@ -182,11 +188,13 @@ function getDestinatarios(tipo, solicitud = null) {
   return [...new Set(destinatarios.filter(Boolean))];
 }
 
+// Obtiene los datos necesarios.
 function getSolicitanteEmailNormalizado(solicitud) {
   const email = getSolicitanteEmail(solicitud);
   return email === "No informado" ? null : email.toLowerCase();
 }
 
+// Obtiene los datos necesarios.
 function getDestinatariosPorEtapa({
   destinatarios,
   emailSolicitante,
@@ -204,6 +212,7 @@ function getDestinatariosPorEtapa({
   });
 }
 
+// Obtiene los datos necesarios.
 async function getRolesPorEmail(destinatarios) {
   const emails = [
     ...new Set(
@@ -227,6 +236,7 @@ async function getRolesPorEmail(destinatarios) {
     .in("email_corporativo", emails);
 
   if (error) throw error;
+  // Recorre los elementos de la coleccion.
   for (const empleado of data || []) {
     rolesPorEmail.set(
       String(empleado.email_corporativo || "")
@@ -240,6 +250,7 @@ async function getRolesPorEmail(destinatarios) {
   return rolesPorEmail;
 }
 
+// Obtiene los datos necesarios.
 async function getDestinatariosParaEtapa(tipo, solicitud, etapa = "creada") {
   const normalizedTipo = normalizeTipo(tipo);
 
@@ -270,6 +281,7 @@ async function getDestinatariosParaEtapa(tipo, solicitud, etapa = "creada") {
   });
 }
 
+// Prepara el valor para su uso.
 function parseLocalDate(value) {
   if (!value && value !== 0) return null;
   const valueString = String(value).trim();
@@ -284,6 +296,7 @@ function parseLocalDate(value) {
   return Number.isNaN(date.getTime()) ? null : date;
 }
 
+// Prepara el valor para su uso.
 function formatDate(value) {
   if (!value) return "Sin fecha";
   const date = parseLocalDate(value);
@@ -294,6 +307,7 @@ function formatDate(value) {
   return `${day}/${month}/${year}`;
 }
 
+// Obtiene los datos necesarios.
 function getDiasSolicitados(solicitud) {
   const value =
     solicitud?.dias ?? solicitud?.total_dias ?? solicitud?.dias_solicitados;
@@ -322,6 +336,7 @@ function getDiasSolicitados(solicitud) {
   return Math.max(1, Math.round((b - a) / 86400000) + 1);
 }
 
+// Obtiene los datos necesarios.
 function getPeriodoSolicitado(solicitud) {
   const desde =
     solicitud?.fecha_desde ||
@@ -349,6 +364,7 @@ function getPeriodoSolicitado(solicitud) {
   return `${formatDate(solicitud?.fecha || solicitud?.created_at)} (${dias} día${dias === 1 ? "" : "s"} en total)`;
 }
 
+// Obtiene los datos necesarios.
 function getSolicitanteEmail(solicitud) {
   const emailCandidates = [
     solicitud?.email,
@@ -368,6 +384,7 @@ function getSolicitanteEmail(solicitud) {
   return email ? String(email).trim() : "No informado";
 }
 
+// Obtiene los datos necesarios.
 function getMontoSolicitado(solicitud) {
   const datosExtra = solicitud?.datos_extra || solicitud?.datosExtra || {};
   const candidates = [
@@ -381,6 +398,7 @@ function getMontoSolicitado(solicitud) {
     datosExtra?.monto,
   ];
 
+  // Recorre los elementos de la coleccion.
   for (const value of candidates) {
     if (value === undefined || value === null || String(value).trim() === "")
       continue;
@@ -395,6 +413,7 @@ function getMontoSolicitado(solicitud) {
   return null;
 }
 
+// Prepara el valor para su uso.
 function formatMontoSolicitado(monto) {
   return new Intl.NumberFormat("es-AR", {
     style: "currency",
@@ -403,6 +422,7 @@ function formatMontoSolicitado(monto) {
   }).format(monto);
 }
 
+// Construye el valor o recurso necesario.
 function buildEmailHtml(solicitud) {
   const tipo = normalizeTipo(solicitud?.tipo || "desconocido") || "desconocido";
   const empleado =
@@ -448,6 +468,7 @@ function buildEmailHtml(solicitud) {
   `;
 }
 
+// Crea el registro o elemento correspondiente.
 function createTransporter() {
   const user = String(process.env.EMAIL_USER || "").trim();
   const pass = normalizeEmailPass(process.env.EMAIL_PASS);
@@ -465,6 +486,7 @@ function createTransporter() {
   });
 }
 
+// envia la solicitud correspondiente.
 async function sendEmail(asunto, contenidoHtml, destinatarios) {
   try {
     const recipients = [...new Set((destinatarios || []).filter(Boolean))];
@@ -496,6 +518,7 @@ async function sendEmail(asunto, contenidoHtml, destinatarios) {
   }
 }
 
+// envia la solicitud correspondiente.
 async function sendSolicitudNotification(solicitud) {
   const tipo = normalizeTipo(
     solicitud?.tipo || solicitud?.tipo_solicitud || "desconocido",
@@ -534,6 +557,7 @@ async function sendSolicitudNotification(solicitud) {
   return sendEmail(asunto, contenidoHtml, destinatarios);
 }
 
+// envia la solicitud correspondiente.
 async function sendTestEmail() {
   const asunto = "Prueba de correo del portal interno";
   const contenidoHtml = `

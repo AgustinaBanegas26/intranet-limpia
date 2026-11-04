@@ -10,10 +10,12 @@ type NewsPollProps = {
   disabled?: boolean
 }
 
+// Gestiona la operacion NewsPoll.
 export function NewsPoll({ novedadId, encuesta, token, onVote, disabled }: NewsPollProps) {
   const [voting, setVoting] = useState(false)
   const total = encuesta.totalVotos ?? encuesta.opciones.reduce((s, o) => s + o.votos, 0)
 
+  // Gestiona la accion correspondiente.
   const handleVote = async (opcionId: string) => {
     if (!token || disabled || voting) return
     setVoting(true)

@@ -32,6 +32,7 @@ test("enruta adelantos de acuerdo con la sucursal real del solicitante", () => {
     ["  mAr DeL pLaTa · buenos aires  ", CAJA_MDP],
   ];
 
+  // Recorre los elementos de la coleccion.
   for (const [sucursal, expected] of cases) {
     assert.equal(getCajaDestinatarioParaAdelanto(sucursal), expected, sucursal);
   }
@@ -49,6 +50,7 @@ test("solo los adelantos agregan un destinatario de Caja por sucursal", () => {
 });
 
 test("ausencias, llegadas tarde y vacaciones se notifican sólo a RRHH", async () => {
+  // Recorre los elementos de la coleccion.
   for (const tipo of ["ausencias", "vacaciones", "llegada_tarde"]) {
     assert.deepEqual(getDestinatarios(tipo), [RRHH], tipo);
     assert.deepEqual(

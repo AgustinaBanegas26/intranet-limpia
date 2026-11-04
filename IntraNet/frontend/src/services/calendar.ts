@@ -16,5 +16,6 @@ export type CalendarEvent = {
 }
 
 export const calendarService = {
+  // Obtiene los datos necesarios.
   getEvents: () => apiClient.get<{ data: CalendarEvent[] }>('/calendario/solicitudes'),
 }
