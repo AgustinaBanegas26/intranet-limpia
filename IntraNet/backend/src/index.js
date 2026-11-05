@@ -451,13 +451,22 @@ app.post('/auth/password-recovery/request', recoveryRequestLimiter, async (req, 
   }
 
   try {
-    await requestRecovery(email, req.ip)
+    const result = await requestRecovery(email, req.ip)
+    if (result.rateLimited) {
+      return res.status(429).json({ error: 'recovery_rate_limited' })
+    }
     return res.status(202).json({ ok: true, message: RECOVERY_MESSAGE })
   } catch (error) {
     // No se imprime email, código, token, datos del empleado ni credenciales SMTP.
-    console.error('[auth-recovery] No se pudo procesar la solicitud:', error?.code || 'internal_error')
-    // Se conserva el mismo estado y texto para cuentas existentes y desconocidas.
-    return res.status(202).json({ ok: true, message: RECOVERY_MESSAGE })
+    console.error(
+      `[auth-recovery] request stage=${error?.recoveryStage || 'unknown'} status=error code=${error?.code || 'internal_error'}`,
+    )
+    // El texto no revela si existe la cuenta, pero el estado informa al cliente
+    // que hubo una falla real para que no avance al ingreso de un código no enviado.
+    return res.status(503).json({
+      error: 'recovery_temporarily_unavailable',
+      message: 'No se pudo procesar la solicitud ahora. Intentá nuevamente más tarde.',
+    })
   }
 })
 
@@ -476,7 +485,7 @@ app.post('/auth/password-recovery/verify', recoveryVerifyLimiter, async (req, re
     if (!valid) return res.status(400).json({ error: 'invalid_or_expired_recovery_code' })
     return res.json({ ok: true })
   } catch (error) {
-    console.error('[auth-recovery] No se pudo verificar el código:', error?.code || 'internal_error')
+    console.error(`[auth-recovery] verify stage=${error?.recoveryStage || 'unknown'} status=error code=${error?.code || 'internal_error'}`)
     return res.status(503).json({ error: 'recovery_temporarily_unavailable' })
   }
 })
@@ -500,7 +509,7 @@ app.post('/auth/password-recovery/reset', recoveryVerifyLimiter, async (req, res
     if (!updated) return res.status(400).json({ error: 'invalid_or_expired_recovery_code' })
     return res.json({ ok: true, message: 'La contraseña se actualizó. Iniciá sesión con la nueva contraseña.' })
   } catch (error) {
-    console.error('[auth-recovery] No se pudo actualizar la contraseña:', error?.code || 'internal_error')
+    console.error(`[auth-recovery] reset stage=${error?.recoveryStage || 'unknown'} status=error code=${error?.code || 'internal_error'}`)
     return res.status(503).json({ error: 'recovery_temporarily_unavailable' })
   }
 })

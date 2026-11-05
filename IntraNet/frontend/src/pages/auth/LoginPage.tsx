@@ -20,7 +20,10 @@ import {
 import { InstallAppButton } from "../../components/InstallAppButton";
 import { useTheme } from "../../context/ThemeContext";
 import { getBackendUrl, login, type Session } from "../../services/auth";
-import { requestPasswordRecovery } from "../../services/passwordRecovery";
+import {
+  getPasswordRecoveryErrorMessage,
+  requestPasswordRecovery,
+} from "../../services/passwordRecovery";
 
 interface Props {
   onLogin: (session: Session) => void;
@@ -90,6 +93,7 @@ export function LoginPage({ onLogin }: Props) {
   const [showRecovery, setShowRecovery] = useState(false);
   const [recoveryEmail, setRecoveryEmail] = useState("");
   const [recoveryMessage, setRecoveryMessage] = useState("");
+  const [recoveryFailed, setRecoveryFailed] = useState(false);
   const [recoveryLoading, setRecoveryLoading] = useState(false);
   const { theme, setTheme } = useTheme();
 
@@ -129,14 +133,17 @@ export function LoginPage({ onLogin }: Props) {
 
     setRecoveryLoading(true);
     setRecoveryMessage("");
+    setRecoveryFailed(false);
 
     try {
       setRecoveryMessage(await requestPasswordRecovery(recoveryEmail.trim()));
-    } catch {
+    } catch (error) {
       // No se revela si el email existe ni se exponen detalles del proveedor SMTP.
-      setRecoveryMessage(
+      setRecoveryFailed(true);
+      setRecoveryMessage(getPasswordRecoveryErrorMessage(
+        error,
         "No se pudo procesar la solicitud ahora. Intentá nuevamente más tarde.",
-      );
+      ));
     } finally {
       setRecoveryLoading(false);
     }
@@ -387,6 +394,7 @@ export function LoginPage({ onLogin }: Props) {
                   onClick={() => {
                     setShowRecovery(false);
                     setRecoveryMessage("");
+                    setRecoveryFailed(false);
                     setRecoveryEmail("");
                   }}
                   aria-label="Cerrar"
@@ -402,7 +410,7 @@ export function LoginPage({ onLogin }: Props) {
                 >
                   <p
                     style={{
-                      color: recoveryMessage.startsWith("No se pudo")
+                      color: recoveryFailed
                         ? "var(--danger)"
                         : "var(--success)",
                     }}
@@ -413,17 +421,17 @@ export function LoginPage({ onLogin }: Props) {
                     type="button"
                     className="login-recovery-btn"
                     onClick={() => {
-                      const failed = recoveryMessage.startsWith("No se pudo");
-                      const target = failed
+                      const target = recoveryFailed
                         ? "/reset-password"
                         : `/reset-password?email=${encodeURIComponent(recoveryEmail.trim())}`;
                       setShowRecovery(false);
                       setRecoveryMessage("");
+                      setRecoveryFailed(false);
                       navigate(target);
                     }}
                     style={{ marginTop: "16px" }}
                   >
-                    {recoveryMessage.startsWith("No se pudo")
+                    {recoveryFailed
                       ? "Intentar nuevamente"
                       : "Ingresar código"}
                   </button>

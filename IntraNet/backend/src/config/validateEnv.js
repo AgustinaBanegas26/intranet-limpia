@@ -28,6 +28,15 @@ function validateEnv({ exitOnError = false } = {}) {
     else warnings.push(msg)
   }
 
+  const smtpHost = String(process.env.SMTP_HOST || '').trim()
+  const smtpPort = Number(process.env.SMTP_PORT)
+  const smtpUser = String(process.env.SMTP_USER || '').trim()
+  const smtpPassword = String(process.env.SMTP_PASS || '').trim().replace(/\s+/g, '')
+  const smtpFrom = String(process.env.SMTP_FROM || '').trim()
+  if (!smtpHost || !Number.isInteger(smtpPort) || smtpPort < 1 || smtpPort > 65535 || !smtpUser || !smtpPassword || smtpPassword === 'CONTRASEÑA_DE_APLICACION' || !smtpFrom) {
+    warnings.push('El correo de recuperación no está configurado correctamente (revisá SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS y SMTP_FROM)')
+  }
+
   if (isProduction) {
     const corsOrigins = parseCorsOrigins()
     if (corsOrigins.length === 0) {

@@ -2,18 +2,18 @@
 
 ## Fuente y alcance
 
-[`../../supabase/estructura.sql`](../../supabase/estructura.sql) es el esquema
-base versionado. [`../../supabase/migrations/`](../../supabase/migrations/)
-contiene las migraciones incrementales disponibles en este repositorio. Estos
-archivos documentan la estructura esperada, pero no permiten confirmar qué
-migraciones ya se aplicaron en una instancia Supabase remota. Comprobar el
-proyecto y su esquema antes de desplegar.
+[`../../supabase/estructura.sql`](../../supabase/estructura.sql) contiene el
+esquema base y [`../../supabase/migrations/`](../../supabase/migrations/)
+contiene las migraciones incrementales. En esta continuación se recuperaron
+ambos archivos desde el historial de Git, comparando el hash del contenido
+restaurado con el blob de `HEAD`; su contenido coincide exactamente.
 
-La única migración incluida actualmente es
-`20261104_password_recovery.sql`. Añade el almacenamiento de solicitudes de
-recuperación, `empleados.credential_version` y funciones SQL para cambiar la
-contraseña, aplicar límites, verificar códigos y revocar credenciales
-anteriores.
+La migración esperada `20261104_password_recovery.sql` añade el almacenamiento
+de solicitudes de recuperación, `empleados.credential_version` y funciones SQL
+para cambiar la contraseña, aplicar límites, verificar códigos y revocar
+credenciales anteriores. Que el archivo esté en el repositorio no demuestra
+que ya se haya aplicado al proyecto Supabase remoto; verificarlo con las
+consultas documentadas en `RECUPERACION.md`.
 
 ## Tablas de referencia y migración
 

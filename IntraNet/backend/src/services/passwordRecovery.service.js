@@ -2,8 +2,8 @@
 // Consulta empleados mediante el cliente Supabase del backend, conserva únicamente
 // hashes de códigos en la tabla auxiliar y delega operaciones atómicas en RPC SQL.
 // Lo utilizan los endpoints públicos /auth/password-recovery de src/index.js.
-const nodemailer = require('nodemailer')
 const supabase = require('../config/supabase')
+const { createRecoveryTransporter } = require('./recoveryEmailTransport')
 const {
   generateRecoveryCode,
   hashRecoveryValue,
@@ -16,31 +16,21 @@ const RECOVERY_MESSAGE = 'Si la cuenta existe, recibirás un código de recupera
 // Busca exclusivamente cuentas activas con el correo corporativo exacto.
 // Devuelve datos mínimos para el envío y evita el fallback aproximado del login.
 async function findActiveEmployeeByEmail(email) {
+  // El login compara el correo sin distinguir mayúsculas; la recuperación debe
+  // reconocer el mismo registro, sin usar coincidencias parciales.
+  const exactEmailPattern = email.replace(/[\\%_]/g, '\\$&')
   const { data, error } = await supabase
     .from('empleados')
     .select('id, email_corporativo, nombre, apellido')
-    .eq('email_corporativo', email)
+    .ilike('email_corporativo', exactEmailPattern)
     .eq('activo', true)
     .maybeSingle()
 
-  if (error) throw error
-  return data || null
-}
-
-// Configura el transporte SMTP existente mediante Nodemailer. Si faltan credenciales,
-// falla explícitamente para no simular que el correo fue entregado.
-function createRecoveryTransporter() {
-  // Acepta los nombres actuales del despliegue y los nombres históricos del
-  // servicio de email; así no hace falta duplicar secretos en el panel.
-  const user = String(process.env.SMTP_USER || process.env.EMAIL_USER || '').trim()
-  const pass = String(process.env.SMTP_APP_PASSWORD || process.env.EMAIL_PASS || '').trim()
-  if (!user || !pass || pass === 'CONTRASEÑA_DE_APLICACION') {
-    const error = new Error('email_not_configured')
-    error.code = 'email_not_configured'
+  if (error) {
+    error.recoveryStage = 'lookup_employee'
     throw error
   }
-
-  return nodemailer.createTransport({ service: 'gmail', auth: { user, pass } })
+  return data || null
 }
 
 // Entrega el código al correo corporativo y no registra ni retorna el código.
@@ -54,7 +44,7 @@ async function sendRecoveryCode(employee, code) {
     : '<p>Abrí la pantalla de recuperación de contraseña de la intranet e ingresá el código.</p>'
 
   await transporter.sendMail({
-    from: process.env.SMTP_USER || process.env.EMAIL_USER,
+    from: process.env.SMTP_FROM,
     to: employee.email_corporativo,
     subject: 'Código para recuperar el acceso a la intranet',
     text: `Hola${name ? ` ${name}` : ''}. Tu código de recuperación es ${code}. Vence en ${TOKEN_TTL_MINUTES} minutos. Si no solicitaste este cambio, ignorá este correo.`,
@@ -65,12 +55,15 @@ async function sendRecoveryCode(employee, code) {
 // Registra cada solicitud, aplica topes por correo e IP, e invalida códigos
 // anteriores dentro de la función SQL; sólo después intenta enviar el nuevo.
 async function requestRecovery(email, ip) {
+  console.info('[auth-recovery] request stage=lookup_employee status=started')
   const employee = await findActiveEmployeeByEmail(email)
+  console.info(`[auth-recovery] request stage=lookup_employee status=ok found=${Boolean(employee)}`)
   const code = employee ? generateRecoveryCode() : null
   const emailHash = hashRateLimitValue(`email:${email}`)
   const ipHash = hashRateLimitValue(`ip:${ip || 'unknown'}`)
   const expiresAt = new Date(Date.now() + TOKEN_TTL_MINUTES * 60_000).toISOString()
 
+  console.info('[auth-recovery] request stage=store_request status=started')
   const { data, error } = await supabase.rpc('request_password_recovery', {
     p_employee_id: employee?.id || null,
     p_email_hash: emailHash,
@@ -78,33 +71,55 @@ async function requestRecovery(email, ip) {
     p_token_hash: code ? hashRecoveryValue(code) : null,
     p_expires_at: code ? expiresAt : null,
   })
-  if (error) throw error
+  if (error) {
+    error.recoveryStage = 'store_request'
+    throw error
+  }
 
   const allowed = data === true || data?.allowed === true
+  console.info(`[auth-recovery] request stage=store_request status=${allowed ? 'ok' : 'rate_limited'}`)
   if (allowed && employee && code) {
     try {
+      console.info('[auth-recovery] request stage=send_email status=started')
       await sendRecoveryCode(employee, code)
+      console.info('[auth-recovery] request stage=send_email status=ok')
     } catch (error) {
       // El token no se expone en logs; se invalida si el proveedor de correo falla.
-      await supabase.rpc('invalidate_password_recovery_by_hash', {
-        p_email_hash: emailHash,
-        p_token_hash: hashRecoveryValue(code),
-      }).catch(() => {})
+      error.recoveryStage = 'send_email'
+      try {
+        const { error: invalidateError } = await supabase.rpc('invalidate_password_recovery_by_hash', {
+          p_email_hash: emailHash,
+          p_token_hash: hashRecoveryValue(code),
+        })
+        if (invalidateError) {
+          console.error('[auth-recovery] request stage=invalidate_unsent_code status=error', invalidateError.code || 'database_error')
+        } else {
+          console.info('[auth-recovery] request stage=invalidate_unsent_code status=ok')
+        }
+      } catch (invalidateError) {
+        console.error('[auth-recovery] request stage=invalidate_unsent_code status=error', invalidateError?.code || 'database_error')
+      }
       throw error
     }
   }
 
-  return { message: RECOVERY_MESSAGE }
+  return { message: RECOVERY_MESSAGE, rateLimited: !allowed }
 }
 
 // Verifica el código en SQL y registra allí los intentos fallidos con bloqueo.
 async function verifyRecoveryCode(email, code) {
+  console.info('[auth-recovery] verify stage=validate_code status=started')
   const { data, error } = await supabase.rpc('verify_password_recovery', {
     p_email_hash: hashRateLimitValue(`email:${email}`),
     p_token_hash: hashRecoveryValue(code),
   })
-  if (error) throw error
-  return data === true || data?.valid === true
+  if (error) {
+    error.recoveryStage = 'validate_code'
+    throw error
+  }
+  const valid = data === true || data?.valid === true
+  console.info(`[auth-recovery] verify stage=validate_code status=${valid ? 'ok' : 'rejected'}`)
+  return valid
 }
 
 // Hashea la nueva contraseña con el mismo bcrypt que utiliza el login y consume
@@ -112,13 +127,19 @@ async function verifyRecoveryCode(email, code) {
 async function resetPassword(email, code, password) {
   const bcrypt = require('bcrypt')
   const passwordHash = await bcrypt.hash(password, 10)
+  console.info('[auth-recovery] reset stage=update_password status=started')
   const { data, error } = await supabase.rpc('reset_employee_password_with_recovery', {
     p_email_hash: hashRateLimitValue(`email:${email}`),
     p_token_hash: hashRecoveryValue(code),
     p_password_hash: passwordHash,
   })
-  if (error) throw error
-  return data === true || data?.updated === true
+  if (error) {
+    error.recoveryStage = 'update_password'
+    throw error
+  }
+  const updated = data === true || data?.updated === true
+  console.info(`[auth-recovery] reset stage=update_password status=${updated ? 'ok' : 'rejected'}`)
+  return updated
 }
 
 module.exports = {

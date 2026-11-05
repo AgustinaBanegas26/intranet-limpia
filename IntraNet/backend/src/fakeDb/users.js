@@ -19,45 +19,30 @@ function normalizeEmail(email) {
 // por /auth/login; devuelve null si no existe y lanza error ante fallas de datos.
 async function getUserByEmail(email) {
   const normalizedEmail = normalizeEmail(email);
+  const empleado = await buscarEmpleadoPorEmail(normalizedEmail);
 
-  try {
-    const empleado = await buscarEmpleadoPorEmail(normalizedEmail);
-
-    if (!empleado) {
-      return null;
-    }
-
-    const name = `${empleado.nombre || ""} ${empleado.apellido || ""}`.trim();
-    const role = resolveRole(empleado);
-
-    return {
-      id: empleado.id,
-      name: name || empleado.nombreCompleto || "",
-      email: empleado.email_corporativo,
-      role,
-      activo: empleado.activo !== false,
-      isPublisher: role === "admin",
-      workMode: empleado.workMode || empleado.work_mode || "office",
-      mustChangePassword: Boolean(
-        empleado.mustChangePassword || empleado.must_change_password || false,
-      ),
-      passwordHash: empleado.passwordHash || empleado.password_hash || "",
-      credentialVersion: Number(empleado.credential_version || 0),
-      foto: empleado.foto_url || null,
-    };
-  } catch (error) {
-    console.error("[users] getUserByEmail failed:", error);
+  if (!empleado) {
     return null;
   }
 
-  /*
-  const empleado = await buscarEmpleadoPorEmail(normalizedEmail)
+  const name = `${empleado.nombre || ""} ${empleado.apellido || ""}`.trim();
+  const role = resolveRole(empleado);
 
-  if (!empleado) {
-    return null
-  }
-
-  */
+  return {
+    id: empleado.id,
+    name: name || empleado.nombreCompleto || "",
+    email: empleado.email_corporativo,
+    role,
+    activo: empleado.activo !== false,
+    isPublisher: role === "admin",
+    workMode: empleado.workMode || empleado.work_mode || "office",
+    mustChangePassword: Boolean(
+      empleado.mustChangePassword || empleado.must_change_password || false,
+    ),
+    passwordHash: empleado.passwordHash || empleado.password_hash || "",
+    credentialVersion: Number(empleado.credential_version || 0),
+    foto: empleado.foto_url || null,
+  };
 }
 
 // Lee del almacenamiento local el estado de bloqueo de un correo.

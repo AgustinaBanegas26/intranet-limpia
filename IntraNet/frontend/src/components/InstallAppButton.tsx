@@ -1,4 +1,3 @@
-import { Download } from 'lucide-react'
 import { usePwaInstall } from '../context/PwaInstallContext'
 
 type InstallAppButtonProps = {
@@ -35,7 +34,12 @@ export function InstallAppButton({
       className={`inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all ${variantClasses[variant]} ${className}`}
       aria-label="Instalar aplicación"
     >
-      <Download className="h-4 w-4 shrink-0" />
+      <img
+        src="/icons/icon-72x72.png"
+        alt=""
+        aria-hidden="true"
+        className="h-5 w-5 shrink-0 rounded-md"
+      />
       {showLabel && <span>Instalar aplicación</span>}
     </button>
   )

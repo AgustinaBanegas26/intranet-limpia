@@ -1,4 +1,4 @@
-import { Download, Share, Smartphone, X } from 'lucide-react'
+import { Download, Share, X } from 'lucide-react'
 import { usePwaInstall } from '../../context/PwaInstallContext'
 
 // Gestiona la operacion platformLabel.
@@ -41,8 +41,12 @@ export function PwaInstallBanner() {
         >
           <div className="rounded-3xl border border-border bg-card p-5 shadow-2xl">
             <div className="mb-3 flex items-start gap-3">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-accent text-primary">
-                <Smartphone className="h-5 w-5" />
+              <div className="h-11 w-11 shrink-0 overflow-hidden rounded-2xl">
+                <img
+                  src="/icons/icon-96x96.png"
+                  alt="Icono de Intranet Empresarial"
+                  className="h-full w-full object-cover"
+                />
               </div>
               <div className="min-w-0 flex-1">
                 <h2 className="text-lg font-bold text-foreground">Instalá esta aplicación</h2>

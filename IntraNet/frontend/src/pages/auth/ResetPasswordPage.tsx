@@ -8,6 +8,7 @@ import { AlertCircle, CheckCircle2, Lock } from 'lucide-react'
 import { ThemeToggle } from '../../components/ThemeToggle'
 import { PasswordStrengthBar } from '../../components/ui/PasswordStrengthBar'
 import {
+  getPasswordRecoveryErrorMessage,
   requestPasswordRecovery,
   resetPasswordWithCode,
   verifyPasswordRecovery,
@@ -38,8 +39,11 @@ export function ResetPasswordPage() {
       const message = await requestPasswordRecovery(email.trim())
       setNotice(message)
       setStep('code')
-    } catch {
-      setError('No se pudo procesar la solicitud ahora. Intentá nuevamente más tarde.')
+    } catch (error) {
+      setError(getPasswordRecoveryErrorMessage(
+        error,
+        'No se pudo procesar la solicitud ahora. Intentá nuevamente más tarde.',
+      ))
     } finally {
       setLoading(false)
     }
@@ -53,8 +57,11 @@ export function ResetPasswordPage() {
     try {
       await verifyPasswordRecovery(email.trim(), code.trim())
       setStep('password')
-    } catch {
-      setError('El código no es válido, venció o alcanzó el máximo de intentos.')
+    } catch (error) {
+      setError(getPasswordRecoveryErrorMessage(
+        error,
+        'El código no es válido, venció o alcanzó el máximo de intentos.',
+      ))
     } finally {
       setLoading(false)
     }
@@ -78,8 +85,11 @@ export function ResetPasswordPage() {
     try {
       setNotice(await resetPasswordWithCode(email.trim(), code.trim(), password))
       setStep('success')
-    } catch {
-      setError('No se pudo actualizar. El código puede haber vencido o ya haberse usado; solicitá otro.')
+    } catch (error) {
+      setError(getPasswordRecoveryErrorMessage(
+        error,
+        'No se pudo actualizar. El código puede haber vencido o ya haberse usado; solicitá otro.',
+      ))
     } finally {
       setLoading(false)
     }

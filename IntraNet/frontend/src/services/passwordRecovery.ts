@@ -4,6 +4,23 @@ import { getBackendUrl } from './auth'
 
 type ApiResult = { ok?: boolean; message?: string; error?: string }
 
+// Traduce códigos HTTP estables a mensajes útiles sin mostrar datos internos
+// del servidor ni confundir una caída del servicio con un código inválido.
+export function getPasswordRecoveryErrorMessage(
+  error: unknown,
+  fallback: string,
+): string {
+  const code = error instanceof Error ? error.message : ''
+  if (code === 'recovery_temporarily_unavailable') {
+    return 'El servicio de recuperación no está disponible ahora. Intentá nuevamente más tarde.'
+  }
+  if (code === 'recovery_rate_limited') {
+    return 'Se alcanzó el límite de solicitudes. Esperá unos minutos e intentá nuevamente.'
+  }
+  if (code === 'invalid_email') return 'Ingresá un correo electrónico válido.'
+  return fallback
+}
+
 // Envía una solicitud de recuperación y devuelve el mensaje genérico del backend,
 // que no revela si el correo está registrado.
 export async function requestPasswordRecovery(email: string): Promise<string> {
