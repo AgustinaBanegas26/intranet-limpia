@@ -1,0 +1,21 @@
+# Roles y permisos
+
+El backend valida los roles en `backend/src/utils/roles.js`. Toda ruta marcada con JWT también requiere, salvo excepciones explícitas, que se haya completado el cambio obligatorio de contraseña. La autorización real se efectúa en backend; los guards del frontend complementan la navegación, pero no reemplazan esta validación.
+
+| Rol registrado | Puede | No puede según las funciones de autorización backend | Rutas/grupos protegidos |
+|---|---|---|---|
+| `admin` | Administrar empleados, sectores, novedades, solicitudes, ausencias, catálogos, sugerencias; consultar datos completos de empleados; resolver solicitudes, rendiciones, adelantos y ausencias. | No se observa una prohibición general aparte de las reglas de negocio puntuales. | `/empleados*`, `/sectores` (escritura), `/novedades` (publicar/editar/baja), `/solicitudes*`, `/rendiciones*` (aprobación/devolución), `/adelantos*` (gestión), `/ausencias*` (gestión), `/slider*`, `/beneficios*`, `/eventos*`, `/politicas*`, `/sugerencias` (gestión), `/manuales*`. También `/calendario` en frontend. |
+| `rrhh` | Operaciones comunes de una persona autenticada: perfil propio y creación/consulta de solicitudes propias donde se habilita a usuarios no admin. | El middleware no le concede capacidades administrativas: no lista ni administra empleados, no publica novedades, no gestiona solicitudes/ausencias/catálogos como admin. | Sin rutas administrativas propias en el middleware. Comparte rutas autenticadas ordinarias con `empleado`. |
+| `director` | Operaciones comunes de una persona autenticada, como perfil propio y solicitudes propias permitidas a no admin. | El middleware no le concede permisos especiales de director; no cumple las funciones `isAdmin`, `canManage*` o `canListEmployees`. | Sin rutas administrativas propias en el middleware. Comparte rutas autenticadas ordinarias con `empleado`. |
+| `empleado` | Perfil, noticias y módulos comunes autenticados; crear sus propias solicitudes, viáticos, vacaciones, adelantos y ausencias; operar sobre sus rendiciones según propiedad. | No administra empleados ni catálogos, no publica/edita novedades, no aprueba ni rechaza solicitudes. | `/profile`, `/novedades` lectura/interacción, `/solicitudes` propias, `/viaticos`, `/rendiciones` propias, `/adelantos` propios, `/ausencias` propias, `/vacaciones`, mensajes y módulos de contenido. |
+
+## Endpoints y reglas observadas
+
+- **Autenticación:** `POST /auth/login` es público; cambio de contraseña autenticado en `PUT /auth/change-password`. Recuperación (`POST /auth/password-recovery/request|verify|reset`) usa limitadores propios y no requiere JWT.
+- **Empleados:** `/empleados` requiere `canListEmployees` (solo `admin`); alta, edición, baja y sectores requieren `canManageEmployees` (solo `admin`). `GET /empleados/:id/perfil` expone datos personales completos solo a `admin`.
+- **Solicitudes:** listado/detalle se filtra según rol; crear solicitudes y viáticos requiere `canCreateSolicitud` (cualquier rol excepto admin); aprobar/rechazar requiere `canManageSolicitudes` (solo admin). Rendiciones, adelantos y solicitudes de insumos siguen el mismo límite para resolverlas.
+- **Ausencias y vacaciones:** las operaciones de administración requieren `canManageAusencias` (admin). Crear/editar/eliminar solicitud propia requiere `canCreateAusencia` (no admin). Vacaciones se sirve por `/vacaciones` y deriva a `ausencias`.
+- **Contenido/catálogos:** edición de beneficios, eventos, políticas, slider y manuales requiere `canManageCatalog` (admin). Cambiar estado/eliminar sugerencias requiere `canManageSugerencias` (admin); proponer y votar está disponible a usuarios.
+- **Módulos comunes:** perfiles, notificaciones, mensajes, cumpleaños, lecturas, RSVPs y reacciones requieren token y cambio de contraseña completado. Las reglas por propiedad se aplican en handlers/servicios.
+
+El código declara `rrhh` y `director` como roles válidos, y tiene helpers `isRRHH`/`isDirector`, pero no les asigna privilegios especiales en las funciones de autorización revisadas. La lógica de destinatarios de correo usa direcciones de RRHH/áreas, lo que no equivale a permisos del rol `rrhh`. **No verificado:** la matriz de permisos del entorno desplegado.

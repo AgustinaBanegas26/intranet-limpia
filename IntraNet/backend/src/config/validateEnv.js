@@ -37,6 +37,10 @@ function validateEnv({ exitOnError = false } = {}) {
     warnings.push('El correo de recuperación no está configurado correctamente (revisá SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS y SMTP_FROM)')
   }
 
+  if (!String(process.env.EMAIL_RECIBIDOS || '').trim()) {
+    warnings.push('EMAIL_RECIBIDOS no está configurada; las notificaciones de solicitudes no tendrán destinatario')
+  }
+
   if (isProduction) {
     const corsOrigins = parseCorsOrigins()
     if (corsOrigins.length === 0) {

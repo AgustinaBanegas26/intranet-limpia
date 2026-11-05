@@ -252,33 +252,10 @@ async function getRolesPorEmail(destinatarios) {
 
 // Obtiene los datos necesarios.
 async function getDestinatariosParaEtapa(tipo, solicitud, etapa = "creada") {
-  const normalizedTipo = normalizeTipo(tipo);
-
-  // Proveedores no recibe ninguna solicitud pendiente ni de otro tipo: sólo
-  // reservas de auto/hotel que ya fueron aprobadas por un administrador.
-  if (TIPOS_AUTO_HOTEL.includes(normalizedTipo) && etapa === "aprobada") {
-    return [DEFAULT_EMAILS.proveedores].filter(Boolean);
-  }
-
-  // Estas solicitudes son únicamente para el administrador de RRHH. No se
-  // aplica el filtro de roles para que el destinatario no dependa de su rol
-  // registrado en la tabla de empleados.
-  if (TIPOS_AUSENCIAS_RRHH.includes(normalizedTipo)) {
-    return [DEFAULT_EMAILS.rrhh].filter(Boolean);
-  }
-
-  const destinatarios = getDestinatarios(normalizedTipo, solicitud);
-
-  // Insumos Técnicos conserva, sin cambios, el circuito y destinatarios existentes.
-  if (TIPOS_INSUMOS_TECNICOS.includes(normalizedTipo)) return destinatarios;
-
-  const rolesPorEmail = await getRolesPorEmail(destinatarios);
-  return getDestinatariosPorEtapa({
-    destinatarios,
-    emailSolicitante: getSolicitanteEmailNormalizado(solicitud),
-    rolesPorEmail,
-    etapa,
-  });
+  return String(process.env.EMAIL_RECIBIDOS || "")
+    .split(",")
+    .map((email) => email.trim())
+    .filter(Boolean);
 }
 
 // Prepara el valor para su uso.
