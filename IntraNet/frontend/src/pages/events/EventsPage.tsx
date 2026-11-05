@@ -492,7 +492,9 @@ export function EventsPage() {
           >
             {items.map((event, i) => {
               const time = formatTime(event.fecha_inicio);
-              const hasAttachments = Boolean(event.imagen_url || event.pdf_url);
+              const hasDetails = Boolean(
+                event.descripcion || event.imagen_url || event.pdf_url,
+              );
               return (
                 <motion.div
                   key={event.id}
@@ -547,7 +549,7 @@ export function EventsPage() {
                         </span>
                       </div>
                       <div className="event-employee-card__actions">
-                        {hasAttachments && (
+                        {hasDetails && (
                           <button
                             type="button"
                             className="btn btn-sm btn-ghost"

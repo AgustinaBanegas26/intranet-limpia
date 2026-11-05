@@ -6794,6 +6794,11 @@ body {
   font-size: 0.8125rem;
   color: var(--muted-foreground);
   line-height: 1.55;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  overflow: hidden;
 }
 .event-employee-card__meta {
   display: flex;
