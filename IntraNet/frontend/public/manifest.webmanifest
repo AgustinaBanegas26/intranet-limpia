@@ -1,6 +1,6 @@
 {
   "id": "/",
-  "name": "Intranet Empresarial | Grupo Núcleo",
+  "name": "Intranet Empresarial",
   "short_name": "Intranet Empresarial",
   "description": "Portal interno para empleados y administración.",
   "start_url": "/?source=pwa",
