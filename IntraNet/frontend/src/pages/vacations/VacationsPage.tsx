@@ -1,3 +1,4 @@
+// Pantalla del frontend: combina componentes React, estado y servicios para presentar este módulo al usuario. Tema específico: solicitudes y saldo de vacaciones.
 import { useCallback, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Plane, PlusCircle, CheckCircle, Clock, XCircle, Umbrella, Loader2, Pencil, Trash2 } from 'lucide-react'

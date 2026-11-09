@@ -1,3 +1,4 @@
+// Datos de referencia del frontend: valores estáticos que la interfaz consume como contenido o configuración. Tema específico: eventos institucionales.
 export type EventAttendee = {
   name: string
   status: 'confirmed' | 'pending'

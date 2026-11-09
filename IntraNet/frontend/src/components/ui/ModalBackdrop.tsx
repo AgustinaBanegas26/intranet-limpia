@@ -1,3 +1,4 @@
+// Componente React reutilizable: recibe datos mediante props, puede manejar estado local y representa una parte de la interfaz. Tema específico: ventana modal reutilizable.
 import { useEffect, type HTMLAttributes, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 

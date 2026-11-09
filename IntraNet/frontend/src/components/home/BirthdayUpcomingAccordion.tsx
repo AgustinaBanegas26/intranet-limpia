@@ -1,3 +1,4 @@
+// Componente React reutilizable: recibe datos mediante props, puede manejar estado local y representa una parte de la interfaz. Tema específico: contenido desplegable reutilizable.
 import { useMemo } from 'react'
 import type { CelebracionPersona } from '../../services/celebraciones'
 import { prepareMonthlyUpcomingBirthdays } from '../../utils/birthdayUpcoming'

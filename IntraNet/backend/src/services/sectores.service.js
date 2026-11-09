@@ -1,3 +1,4 @@
+// Servicio del backend: concentra reglas de negocio y acceso a datos para este dominio; las rutas HTTP delegan aquí las operaciones. Tema específico: sectores.service.
 const supabase = require('../config/supabase')
 const { readEntity, writeEntity, updateEntity } = require('../fakeDb/entityStore')
 //hola

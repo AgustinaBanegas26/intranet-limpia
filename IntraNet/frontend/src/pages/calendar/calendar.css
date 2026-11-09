@@ -1,3 +1,4 @@
+/* Pantalla del frontend: combina componentes React, estado y servicios para presentar este módulo al usuario. Tema específico: calendario y solicitudes asociadas. */
 .request-calendar__toolbar, .request-calendar__navigation, .request-calendar__filters, .request-calendar__legend { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
 .request-calendar__toolbar { justify-content: space-between; margin-bottom: 14px; gap: 14px; }
 .request-calendar__navigation h2 { margin: 0 4px; min-width: 170px; text-align: center; font-size: 1.05rem; text-transform: capitalize; }

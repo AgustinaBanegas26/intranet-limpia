@@ -1,3 +1,4 @@
+// Pantalla del frontend: combina componentes React, estado y servicios para presentar este módulo al usuario. Tema específico: panel principal según el rol.
 import { useEffect, useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
 import { getProfile, type Profile } from '../../services/api'

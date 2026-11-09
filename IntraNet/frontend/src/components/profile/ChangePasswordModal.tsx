@@ -1,3 +1,4 @@
+// Componente React reutilizable: recibe datos mediante props, puede manejar estado local y representa una parte de la interfaz. Tema específico: cambio de contraseña.
 import { useState } from 'react'
 import { Eye, EyeOff, LockKeyhole, X } from 'lucide-react'
 import { changePassword } from '../../services/auth'

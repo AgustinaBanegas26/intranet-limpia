@@ -1,3 +1,4 @@
+/* Hoja de estilos: define reglas visuales reutilizables, como colores, tipografía, distribución y adaptación a distintos tamaños. Tema específico: tailwind. */
 @import 'tailwindcss' source(none);
 @source '../**/*.{js,ts,jsx,tsx}';
 

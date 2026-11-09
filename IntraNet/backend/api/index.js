@@ -1,4 +1,4 @@
-//este archivo es para poder hacer pruebas de integración con supertest, ya que si no se hace de esta manera, supertest no puede hacer las pruebas correctamente.
+// Exporta la aplicación Express para que Supertest y los adaptadores de despliegue puedan invocarla sin abrir un puerto.
 const app = require('../src/index')
 
 module.exports = app

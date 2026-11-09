@@ -1,3 +1,4 @@
+// Componente React reutilizable: recibe datos mediante props, puede manejar estado local y representa una parte de la interfaz. Tema específico: rendiciones de gastos.
 import { useEffect, useMemo, useState } from 'react'
 import { CheckCircle, Clock, Eye, Loader2, Pencil, PlusCircle, Send, Trash2, X, XCircle } from 'lucide-react'
 import { ConfirmDialog } from '../ui/ConfirmDialog'

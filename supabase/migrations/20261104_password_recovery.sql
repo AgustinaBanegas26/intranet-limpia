@@ -53,8 +53,8 @@ ALTER TABLE public.password_recovery_requests ENABLE ROW LEVEL SECURITY;
 REVOKE ALL ON TABLE public.password_recovery_requests FROM PUBLIC, anon, authenticated;
 GRANT ALL ON TABLE public.password_recovery_requests TO service_role;
 
--- Aplica 3 solicitudes por hora, tanto por correo como por IP. Se guarda también
--- una fila cuando el email no existe para que esos pedidos cuenten para el límite.
+-- Aplica tres solicitudes por hora, tanto por correo como por dirección IP. También
+-- guarda una fila cuando el correo no existe para que esos pedidos cuenten para el límite.
 CREATE OR REPLACE FUNCTION public.request_password_recovery(
   p_employee_id bigint,
   p_email_hash text,

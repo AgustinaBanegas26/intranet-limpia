@@ -1,3 +1,4 @@
+// Componente React reutilizable: recibe datos mediante props, puede manejar estado local y representa una parte de la interfaz. Tema específico: eventos institucionales.
 import { useEffect } from 'react'
 import { CalendarDays, Clock, FileText, Image as ImageIcon, MapPin, Users, X } from 'lucide-react'
 import { ModalBackdrop } from '../ui/ModalBackdrop'

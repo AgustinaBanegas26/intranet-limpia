@@ -1,3 +1,5 @@
+//este archivo se encarga de manejar los eventos de empleados en la base de datos,
+// y permite listar, crear, actualizar, eliminar y gestionar la asistencia a eventos.
 const supabase = require('../config/supabase')
 const {
   parseSucursalesDestino,

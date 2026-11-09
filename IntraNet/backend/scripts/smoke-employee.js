@@ -1,6 +1,7 @@
 #!/usr/bin/env node
+// Script operativo del backend: ejecuta una tarea puntual de diagnóstico, preparación de datos o comprobación. Tema específico: información y gestión de empleados.
 /**
- * Smoke test del recorrido empleado vía API (Fase 0).
+ * Prueba de recorrido de un empleado a través de la API (fase inicial).
  * Uso:
  *   SMOKE_BASE_URL=https://api.tu-dominio.com SMOKE_EMAIL=... SMOKE_PASSWORD=... npm run smoke
  * O definir SMOKE_* en backend/.env
@@ -10,7 +11,8 @@ require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') }
 const baseUrl = String(process.env.SMOKE_BASE_URL || `http://localhost:${process.env.PORT || 4000}`).replace(/\/+$/, '')
 const email = String(process.env.SMOKE_EMAIL || '').trim().toLowerCase()
 const password = String(process.env.SMOKE_PASSWORD || '')
-
+// Rutas protegidas que un empleado de prueba debería poder consultar.
+// El script usa fetch de Node.js; no necesita Supertest porque prueba una API ya iniciada.
 const employeeRoutes = [
   { name: 'Perfil', method: 'GET', path: '/profile' },
   { name: 'Novedades', method: 'GET', path: '/novedades' },
@@ -28,7 +30,7 @@ const employeeRoutes = [
   { name: 'Celebraciones', method: 'GET', path: '/birthdays?days=14' },
 ]
 
-// envia la solicitud correspondiente.
+// Envía HTTP contra la API, adjunta el token si existe y convierte la respuesta JSON.
 async function request(method, path, { token, body } = {}) {
   const headers = { Accept: 'application/json' }
   if (token) headers.Authorization = `Bearer ${token}`
@@ -50,13 +52,13 @@ async function request(method, path, { token, body } = {}) {
   return { status: res.status, ok: res.ok, payload }
 }
 
-// Gestiona la operacion printResult.
+// Imprime un resultado uniforme para que el recorrido sea fácil de revisar en consola.
 function printResult(label, passed, detail = '') {
   const icon = passed ? 'OK' : 'FAIL'
   console.log(`  [${icon}] ${label}${detail ? ` — ${detail}` : ''}`)
 }
 
-// Gestiona la operacion main.
+// Comprueba salud, inicia sesión y recorre las rutas protegidas configuradas arriba.
 async function main() {
   console.log(`\n[smoke] Base URL: ${baseUrl}\n`)
   let failed = 0
@@ -111,7 +113,7 @@ async function main() {
 
   console.log('\n[smoke] Employee routes:\n')
 
-  // Recorre los elementos de la coleccion.
+  // Ejecuta cada comprobación en orden y acumula los errores para devolver un estado final.
   for (const route of employeeRoutes) {
     try {
       const res = await request(route.method, route.path, { token })

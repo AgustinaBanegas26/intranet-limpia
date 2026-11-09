@@ -1,3 +1,4 @@
+// Componente React reutilizable: recibe datos mediante props, puede manejar estado local y representa una parte de la interfaz. Tema específico: contenido desplegable reutilizable.
 import { useEffect, useState } from 'react'
 import { Clock, CheckCircle, XCircle } from 'lucide-react'
 import { Accordion } from '../ui/Accordion'

@@ -1,3 +1,4 @@
+// Servicio del frontend: encapsula las llamadas HTTP y transforma respuestas para que las pantallas no dependan del detalle de transporte. Tema específico: celebraciones.
 import { apiClient } from './apiClient'
 
 export type CelebracionPersona = {

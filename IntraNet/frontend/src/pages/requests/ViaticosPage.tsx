@@ -1,3 +1,4 @@
+// Pantalla del frontend: combina componentes React, estado y servicios para presentar este módulo al usuario. Tema específico: viáticos y rendiciones.
 import { useEffect, useMemo, useState } from 'react'
 import { CheckCircle, Loader2, Users } from 'lucide-react'
 import { PageHero, PremiumCard } from '../../components/ui/ProductUI'

@@ -1,3 +1,5 @@
+//este archivo se encarga de manejar los insumos tecnicos de empleados en la base de datos,
+// y permite listar, crear, actualizar, resolver y eliminar solicitudes de insumos tecnicos.
 const supabase = require('../config/supabase')
 const { notifyAdminsNewSolicitud, notifyEmpleadoSolicitudResuelta } = require('./notificaciones.service')
 const { sendSolicitudNotification } = require('./emailService')

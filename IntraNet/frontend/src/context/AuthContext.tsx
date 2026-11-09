@@ -1,3 +1,4 @@
+// Contexto React: comparte estado y acciones entre componentes sin pasar props manualmente por todos los niveles. Tema específico: autenticación y sesión.
 import { createContext, useContext, type ReactNode } from 'react'
 
 export type UserRole = 'empleado' | 'rrhh' | 'director' | 'admin'

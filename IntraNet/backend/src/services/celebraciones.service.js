@@ -1,3 +1,5 @@
+//este archivo se encarga de manejar las celebraciones de empleados en la base de datos,
+// y permite listar los cumpleaños y aniversarios de empleados.
 const supabase = require('../config/supabase')
 
 // Gestiona la operacion startOfDay.

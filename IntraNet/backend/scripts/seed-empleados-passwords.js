@@ -1,3 +1,5 @@
+//este archivo es para poder hacer pruebas de integración con supertest,
+//  ya que si no se hace de esta manera, supertest no puede hacer las pruebas correctamente.
 const bcrypt = require("bcrypt");
 require("dotenv").config({
   path: require("path").join(__dirname, "..", ".env"),

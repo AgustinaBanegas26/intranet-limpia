@@ -1,3 +1,4 @@
+// Servicio del backend: concentra reglas de negocio y acceso a datos para este dominio; las rutas HTTP delegan aquí las operaciones. Tema específico: calendario y solicitudes asociadas.
 const { listSolicitudes } = require('./solicitudes.service')
 const { listAusencias } = require('./ausencias.service')
 const { listAdelantos } = require('./adelantos.service')

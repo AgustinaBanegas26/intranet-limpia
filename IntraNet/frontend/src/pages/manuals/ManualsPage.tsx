@@ -1,3 +1,4 @@
+// Pantalla del frontend: combina componentes React, estado y servicios para presentar este módulo al usuario. Tema específico: manuales y documentos internos.
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import {

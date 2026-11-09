@@ -1,3 +1,4 @@
+// Componente React reutilizable: recibe datos mediante props, puede manejar estado local y representa una parte de la interfaz. Tema específico: PasswordStrengthBar.
 export type PasswordStrength = 'weak' | 'medium' | 'strong'
 
 // Gestiona la operacion evaluatePasswordStrength.

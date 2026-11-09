@@ -1,3 +1,4 @@
+// Servicio del backend: concentra reglas de negocio y acceso a datos para este dominio; las rutas HTTP delegan aquí las operaciones. Tema específico: carrusel de imágenes y contenido destacado.
 const { randomUUID } = require('crypto')
 const path = require('path')
 const supabase = require('../config/supabase')

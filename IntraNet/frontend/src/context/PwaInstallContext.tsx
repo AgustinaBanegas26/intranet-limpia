@@ -1,3 +1,4 @@
+// Contexto React: comparte estado y acciones entre componentes sin pasar props manualmente por todos los niveles. Tema específico: instalación de la aplicación.
 import {
   createContext,
   useCallback,

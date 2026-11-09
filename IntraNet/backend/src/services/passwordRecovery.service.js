@@ -1,7 +1,7 @@
 // Este servicio implementa la recuperación de acceso sin depender de Supabase Auth.
 // Consulta empleados mediante el cliente Supabase del backend, conserva únicamente
 // hashes de códigos en la tabla auxiliar y delega operaciones atómicas en RPC SQL.
-// Lo utilizan los endpoints públicos /auth/password-recovery de src/index.js.
+// Lo utilizan las rutas públicas /auth/password-recovery de src/index.js.
 const supabase = require('../config/supabase')
 const { createRecoveryTransporter } = require('./recoveryEmailTransport')
 const {
@@ -14,9 +14,9 @@ const TOKEN_TTL_MINUTES = 15
 const RECOVERY_MESSAGE = 'Si la cuenta existe, recibirás un código de recuperación en el correo corporativo.'
 
 // Busca exclusivamente cuentas activas con el correo corporativo exacto.
-// Devuelve datos mínimos para el envío y evita el fallback aproximado del login.
+// Devuelve los datos mínimos para el envío y evita la búsqueda aproximada del inicio de sesión.
 async function findActiveEmployeeByEmail(email) {
-  // El login compara el correo sin distinguir mayúsculas; la recuperación debe
+  // El inicio de sesión compara el correo sin distinguir mayúsculas; la recuperación debe
   // reconocer el mismo registro, sin usar coincidencias parciales.
   const exactEmailPattern = email.replace(/[\\%_]/g, '\\$&')
   const { data, error } = await supabase
@@ -122,7 +122,7 @@ async function verifyRecoveryCode(email, code) {
   return valid
 }
 
-// Hashea la nueva contraseña con el mismo bcrypt que utiliza el login y consume
+// Cifra la nueva contraseña con el mismo bcrypt del inicio de sesión y consume
 // el código en una única transacción SQL para impedir reutilización concurrente.
 async function resetPassword(email, code, password) {
   const bcrypt = require('bcrypt')

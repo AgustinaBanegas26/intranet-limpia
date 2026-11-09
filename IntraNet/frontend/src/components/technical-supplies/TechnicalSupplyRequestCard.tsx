@@ -1,3 +1,4 @@
+// Componente React reutilizable: recibe datos mediante props, puede manejar estado local y representa una parte de la interfaz. Tema específico: solicitudes de empleados.
 import { CheckCircle, Clock, Edit3, Loader2 } from 'lucide-react'
 import type { TechnicalSupplyRequestDTO, TechnicalSupplyStatus } from '../../services/technicalSupplies'
 

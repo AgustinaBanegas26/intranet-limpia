@@ -1,3 +1,4 @@
+// Pantalla del frontend: combina componentes React, estado y servicios para presentar este módulo al usuario. Tema específico: cumpleaños y celebraciones.
 import { useEffect, useState } from "react";
 import { Cake, Trophy, Star } from "lucide-react";
 import { motion } from "framer-motion";

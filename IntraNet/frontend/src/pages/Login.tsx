@@ -1,3 +1,4 @@
+// Pantalla del frontend: combina componentes React, estado y servicios para presentar este módulo al usuario. Tema específico: inicio de sesión.
 import { useState } from "react";
 import {
   AlertCircle,
@@ -25,7 +26,7 @@ function formatError(code: string) {
   return "No se pudo iniciar sesión.";
 }
 
-// Gestiona la operacion Login.
+// Presenta el formulario de acceso y conecta sus acciones con el contexto de autenticación.
 const Login = ({ onLogin }: Props) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);

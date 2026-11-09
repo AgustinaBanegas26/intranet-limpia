@@ -1,3 +1,4 @@
+// Pantalla del frontend: combina componentes React, estado y servicios para presentar este módulo al usuario. Tema específico: ausencias y licencias.
 import { useCallback, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { UserMinus, Clock, CheckCircle, XCircle, Loader2, Eye, Trash2, Pencil } from 'lucide-react'

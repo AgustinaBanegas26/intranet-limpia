@@ -1,3 +1,4 @@
+// Archivo de configuraci?n o entrada: conecta las piezas necesarias para iniciar o compilar el proyecto. Tema específico: instalación y actualización de la aplicación web progresiva.
 import { mkdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";

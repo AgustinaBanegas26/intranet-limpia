@@ -1,3 +1,4 @@
+// Pantalla del frontend: combina componentes React, estado y servicios para presentar este módulo al usuario. Tema específico: OnBalancePage.
 import { ExternalLink, FileText } from 'lucide-react'
 import { motion } from 'framer-motion'
 

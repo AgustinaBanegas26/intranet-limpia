@@ -1,3 +1,4 @@
+// Configuración del frontend: centraliza valores o clientes compartidos por otras partes de la aplicación. Tema específico: conexión con la base de datos Supabase.
 import { createClient } from '@supabase/supabase-js'
 
 const supabaseUrl = String(import.meta.env.VITE_SUPABASE_URL || '')
@@ -27,7 +28,7 @@ if (missingUrl || missingAnon) {
   }
 }
 
-// Runtime sanity: try to decode anon key (JWT) and compare project ref with URL host.
+// Comprueba la configuración al iniciar: decodifica la clave pública JWT y compara el identificador del proyecto con el de la URL.
 try {
   const anon = String(supabaseAnonKey || '')
   const parts = anon.split('.')

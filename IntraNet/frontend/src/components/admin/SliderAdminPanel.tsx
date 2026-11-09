@@ -1,3 +1,4 @@
+// Componente React reutilizable: recibe datos mediante props, puede manejar estado local y representa una parte de la interfaz. Tema específico: carrusel de imágenes y contenido destacado.
 import { useCallback, useEffect, useState } from "react";
 import {
   ImageIcon,

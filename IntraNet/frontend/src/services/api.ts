@@ -1,3 +1,4 @@
+// Servicio del frontend: encapsula las llamadas HTTP y transforma respuestas para que las pantallas no dependan del detalle de transporte. Tema específico: comunicación con la API del backend.
 import { getBackendUrl } from './auth'
 
 export type Employee = {
@@ -58,7 +59,7 @@ async function request<T>(path: string, token: string | null): Promise<T> {
       const data = (await res.json()) as { error?: string }
       if (data?.error) code = data.error
     } catch {
-      // keep generic code
+      // Conserva un código genérico para no revelar detalles internos de la respuesta.
     }
     throw new Error(code)
   }

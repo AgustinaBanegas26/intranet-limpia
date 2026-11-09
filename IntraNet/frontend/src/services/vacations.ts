@@ -1,3 +1,4 @@
+// Servicio del frontend: encapsula las llamadas HTTP y transforma respuestas para que las pantallas no dependan del detalle de transporte. Tema específico: solicitudes y saldo de vacaciones.
 import { apiClient } from './apiClient'
 import type { AusenciaDTO } from './absences'
 

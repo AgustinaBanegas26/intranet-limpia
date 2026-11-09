@@ -1,3 +1,4 @@
+// Hook de React: encapsula estado y efectos reutilizables para que los componentes compartan comportamiento. Tema específico: diálogo de confirmación.
 import { useCallback, useState } from 'react'
 import { ConfirmDialog, type ConfirmDialogProps } from '../components/ui/ConfirmDialog'
 

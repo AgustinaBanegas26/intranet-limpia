@@ -1,3 +1,4 @@
+// Soporte PWA: integra capacidades de aplicación web progresiva, como el service worker. Tema específico: registerSW.
 import { registerSW } from 'virtual:pwa-register'
 
 // Gestiona la operacion registerServiceWorker.

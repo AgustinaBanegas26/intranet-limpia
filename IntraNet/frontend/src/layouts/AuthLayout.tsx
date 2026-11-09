@@ -1,3 +1,4 @@
+// Estructura visual común: envuelve páginas con navegación, encabezados y áreas compartidas. Tema específico: autenticación y sesión.
 import type { ReactNode } from 'react'
 import { InstallAppButton } from '../components/InstallAppButton'
 import { ThemeToggle } from '../components/ThemeToggle'

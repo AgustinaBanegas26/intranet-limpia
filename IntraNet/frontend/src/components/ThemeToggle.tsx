@@ -1,3 +1,4 @@
+// Componente React reutilizable: recibe datos mediante props, puede manejar estado local y representa una parte de la interfaz. Tema específico: tema visual claro y oscuro.
 import { Moon, Sun } from 'lucide-react'
 import { useTheme } from '../context/ThemeContext'
 

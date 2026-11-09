@@ -1,3 +1,5 @@
+//este archivo se encarga de manejar las politicas de empleados en la base de datos,
+// y permite listar, crear, actualizar, eliminar y marcar politicas como leidas.
 const supabase = require('../config/supabase')
 
 // Procesa los elementos de la coleccion.

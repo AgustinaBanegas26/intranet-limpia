@@ -1,3 +1,4 @@
+// Utilidad del frontend: contiene funciones puras o validaciones compartidas, separadas de la presentación. Tema específico: reglas de validación de solicitudes.
 import { z } from 'zod'
 
 export const VALIDATION_MESSAGES = {

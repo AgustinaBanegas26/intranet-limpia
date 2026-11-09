@@ -1,3 +1,5 @@
+//este archivo se encarga de configurar la conexion con supabase,
+// que es la base de datos que se utiliza en este proyecto.
 const { createClient } = require('@supabase/supabase-js')
 
 const rawUrl = process.env.SUPABASE_URL
@@ -15,7 +17,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 let supabase = null
 if (SUPABASE_URL && SUPABASE_SERVICE_KEY) {
-  // Crear cliente Supabase con Service Role Key (solo backend)
+  // Crea el cliente de Supabase con la clave de servicio, que solo debe usarse en el servidor.
   supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
     auth: { persistSession: false },
   })

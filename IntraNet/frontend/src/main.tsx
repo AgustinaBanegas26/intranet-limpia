@@ -1,3 +1,4 @@
+// Archivo de configuraci?n o entrada: conecta las piezas necesarias para iniciar o compilar el proyecto. Tema específico: punto de entrada del cliente.
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router'

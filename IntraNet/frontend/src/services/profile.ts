@@ -1,3 +1,4 @@
+// Servicio del frontend: encapsula las llamadas HTTP y transforma respuestas para que las pantallas no dependan del detalle de transporte. Tema específico: perfil del empleado.
 import { getBackendUrl, getSession } from "./auth";
 
 export type ProfileData = {

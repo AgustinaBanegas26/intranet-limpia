@@ -1,3 +1,5 @@
+//este archivo se encarga de manejar el almacenamiento de entidades en archivos JSON,
+// y permite leer, escribir y actualizar los datos de las entidades.
 const path = require('path')
 const { readJsonFile, writeJsonFile } = require('./jsonStore')
 

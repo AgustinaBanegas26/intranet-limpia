@@ -1,3 +1,4 @@
+// Componente React reutilizable: recibe datos mediante props, puede manejar estado local y representa una parte de la interfaz. Tema específico: control de acción reutilizable.
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowUp } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'

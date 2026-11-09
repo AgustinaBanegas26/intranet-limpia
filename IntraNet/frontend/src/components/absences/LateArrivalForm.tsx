@@ -1,3 +1,4 @@
+// Componente React reutilizable: recibe datos mediante props, puede manejar estado local y representa una parte de la interfaz. Tema específico: formulario y validación de datos.
 import { useMemo, useState } from 'react'
 import { Clock3, Loader2 } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'

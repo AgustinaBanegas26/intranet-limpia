@@ -31,7 +31,7 @@ interface Props {
 
 // Traduce errores funcionales del backend a mensajes breves para quien inicia sesión.
 function formatError(fullMessage: string) {
-  // We expect errors in the form "code:message" when thrown from `login()`.
+  // login() comunica los errores con el formato "código:mensaje" para traducirlos en la interfaz.
   const parts = String(fullMessage || "").split(":");
   const code = parts[0];
   const detail = parts.slice(1).join(":");

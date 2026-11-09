@@ -1,3 +1,5 @@
+//este archivo se encarga de manejar las sugerencias de empleados en la base de datos,
+// y permite listar, crear, votar, actualizar el estado y eliminar sugerencias.
 const supabase = require('../config/supabase')
 
 const ESTADO_MAP = {

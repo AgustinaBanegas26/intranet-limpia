@@ -1,3 +1,6 @@
+//este archivo se encarga de manejar los registros de actividad del sistema,
+// y permite agregar nuevos registros y listar los registros existentes.
+const crypto = require('crypto')
 const { readEntity, updateEntity } = require('./entityStore')
 
 const ACTIVITY_LOGS_ENTITY = 'activity_logs'
@@ -8,7 +11,7 @@ function appendActivityLog(log) {
   if (isVercel) {
     return null
   }
-
+// Recorre los elementos de la coleccion.
   return updateEntity(ACTIVITY_LOGS_ENTITY, (current) => {
     const nextLog = {
       id: crypto.randomUUID(),

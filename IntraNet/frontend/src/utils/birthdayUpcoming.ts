@@ -1,3 +1,4 @@
+// Utilidad del frontend: contiene funciones puras o validaciones compartidas, separadas de la presentación. Tema específico: birthdayUpcoming.
 import type { CelebracionPersona, CelebracionesDTO } from '../services/celebraciones'
 
 export type BirthdayUpcomingDisplay = {
@@ -33,7 +34,7 @@ export function isBirthdayPast(person: CelebracionPersona): boolean {
   return days != null && days < 0
 }
 
-/** Remaining birthdays in the current calendar month (excludes today and past). */
+/** Devuelve los cumpleaños que quedan en el mes actual, sin incluir los de hoy ni los pasados. */
 export function filterMonthlyUpcoming(persons: CelebracionPersona[]): CelebracionPersona[] {
   const maxDays = daysUntilEndOfMonth()
   return persons.filter((p) => {
@@ -142,7 +143,7 @@ function isProfileBirthdayToday(fechaNac?: string | null): boolean {
   return bday.getDate() === today.getDate() && bday.getMonth() === today.getMonth()
 }
 
-/** Today's birthdays only — for dashboard slider / hero card. */
+/** Devuelve solo los cumpleaños de hoy para el carrusel o la tarjeta destacada del inicio. */
 export function buildFeaturedDashboardBirthdays(
   celebraciones: CelebracionesDTO | null,
   self?: SelfBirthdayProfile | null,
@@ -175,7 +176,7 @@ export function buildFeaturedDashboardBirthdays(
   return list
 }
 
-/** Merge today + upcoming lists and dedupe by id. */
+/** Combina los cumpleaños de hoy con los próximos y elimina duplicados por identificador. */
 export function mergeCelebracionLists(
   today: CelebracionPersona[],
   upcoming: CelebracionPersona[],

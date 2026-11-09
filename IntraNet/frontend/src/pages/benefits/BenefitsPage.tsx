@@ -1,3 +1,4 @@
+// Pantalla del frontend: combina componentes React, estado y servicios para presentar este módulo al usuario. Tema específico: beneficios para empleados.
 import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {

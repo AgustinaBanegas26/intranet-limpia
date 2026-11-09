@@ -1,3 +1,4 @@
+// Pantalla del frontend: combina componentes React, estado y servicios para presentar este módulo al usuario. Tema específico: solicitudes de insumos técnicos.
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { CheckCircle, ChevronDown, Eye, FileText, Filter, ListChecks, Loader2, Pencil, Search, User, Users, Wrench, X } from 'lucide-react'
 import { PageHero, PremiumCard } from '../../components/ui/ProductUI'

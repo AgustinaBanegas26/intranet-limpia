@@ -1,3 +1,5 @@
+//este archivo se encarga de manejar los beneficios de empleados en la base de datos,
+// y permite listar, crear, actualizar y eliminar beneficios.
 const supabase = require('../config/supabase')
 
 // Procesa los elementos de la coleccion.

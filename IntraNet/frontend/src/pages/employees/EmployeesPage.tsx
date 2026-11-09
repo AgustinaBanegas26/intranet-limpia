@@ -1,3 +1,4 @@
+// Pantalla del frontend: combina componentes React, estado y servicios para presentar este módulo al usuario. Tema específico: administración de empleados.
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react'
 import { Eye, ListChecks, Pencil, Plus, Search, Trash2, UserCheck, UserMinus, Users } from 'lucide-react'
 import { motion } from 'framer-motion'
@@ -78,7 +79,7 @@ export function EmployeesPage() {
       const secRes = await sectoresService.getAll(true)
       setSectores(secRes.data || [])
     } catch {
-      // keep current list
+      // Conserva la lista actual mientras se actualizan los datos.
     }
   }, [])
 

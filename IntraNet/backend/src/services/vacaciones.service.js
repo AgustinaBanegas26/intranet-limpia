@@ -1,14 +1,16 @@
+//este archivo se encarga de manejar las vacaciones de empleados en la base de datos,
+// y permite listar, crear, actualizar y eliminar solicitudes de vacaciones.
 const supabase = require('../config/supabase')
 const { createAusencia, listAusencias, assertValidDateRange } = require('./ausencias.service')
 
 const DEFAULT_DIAS_ASIGNADOS = 14
 
-// Gestiona la operacion currentYear.
+// Obtiene el año calendario actual, usado como período predeterminado del saldo.
 function currentYear() {
   return new Date().getFullYear()
 }
 
-// Gestiona la operacion diffDays.
+// Cuenta ambos extremos del período; una solicitud de un mismo día consume un día.
 function diffDays(desde, hasta) {
   if (!desde || !hasta) return 1
   const a = new Date(`${desde}T00:00:00`)
@@ -16,7 +18,7 @@ function diffDays(desde, hasta) {
   return Math.max(1, Math.round((b - a) / 86400000) + 1)
 }
 
-// Obtiene los datos necesarios.
+// Lee el saldo anual y calcula los días disponibles; si aún no existe fila, aplica el saldo inicial.
 async function getSaldo(empleadoId, anio = currentYear()) {
   const { data, error } = await supabase
     .from('vacaciones_saldo')
@@ -48,12 +50,12 @@ async function getSaldo(empleadoId, anio = currentYear()) {
   }
 }
 
-// Obtiene los datos necesarios.
+// Reutiliza el listado de ausencias filtrándolo al tipo vacación para mantener una sola fuente de datos.
 async function listVacacionesSolicitudes(empleadoId) {
   return listAusencias({ empleadoId, tipo: 'vacacion' })
 }
 
-// Crea el registro o elemento correspondiente.
+// Normaliza fechas y motivo, calcula la duración y delega la creación al flujo común de ausencias.
 async function createVacacionSolicitud(empleadoId, body) {
   const { fechaDesde, fechaHasta } = assertValidDateRange(
     body.fecha_desde || body.startDate,
@@ -70,12 +72,12 @@ async function createVacacionSolicitud(empleadoId, body) {
   })
 }
 
-// Actualiza los datos correspondientes.
+// Delega la edición al servicio de ausencias, que valida propiedad y rango de fechas.
 async function updateVacacionSolicitud(empleadoId, id, body) {
   return require('./ausencias.service').updateAusencia(id, empleadoId, body)
 }
 
-// Elimina el elemento indicado.
+// Elimina la solicitud como empleado no administrador para que se aplique la regla de propiedad.
 async function removeVacacionSolicitud(empleadoId, id) {
   return require('./ausencias.service').removeAusencia(id, { empleadoId, isAdmin: false })
 }

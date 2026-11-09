@@ -1,3 +1,4 @@
+-- Esquema SQL de referencia: define tablas, relaciones, restricciones e ?ndices que estructuran la base de datos. Tema específico: definición del esquema relacional de la base de datos.
 
 
 

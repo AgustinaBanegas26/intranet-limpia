@@ -1,3 +1,4 @@
+// Pantalla del frontend: combina componentes React, estado y servicios para presentar este módulo al usuario. Tema específico: solicitudes de adelantos.
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import { CheckCircle, Clock, Loader2, Trash2, WalletCards, XCircle } from 'lucide-react'

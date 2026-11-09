@@ -1,3 +1,4 @@
+// Archivo de configuraci?n o entrada: conecta las piezas necesarias para iniciar o compilar el proyecto. Tema específico: composición raíz de la aplicación.
 import { useEffect, useState } from "react";
 import { Routes, Route } from "react-router";
 import { AuthenticatedRoutes } from "./routes";

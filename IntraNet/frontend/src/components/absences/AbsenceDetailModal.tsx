@@ -1,3 +1,4 @@
+// Componente React reutilizable: recibe datos mediante props, puede manejar estado local y representa una parte de la interfaz. Tema específico: ausencias y licencias.
 import { useEffect, type ReactNode } from 'react'
 import { Calendar, FileText, User, X, Paperclip } from 'lucide-react'
 import { ModalBackdrop } from '../ui/ModalBackdrop'

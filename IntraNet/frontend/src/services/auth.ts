@@ -1,3 +1,4 @@
+// Servicio del frontend: encapsula las llamadas HTTP y transforma respuestas para que las pantallas no dependan del detalle de transporte. Tema específico: autenticación y sesión.
 import type { User } from "../context/AuthContext";
 
 type AuthUserLike = User & {
@@ -87,7 +88,7 @@ export function getLegacyUser(): User | null {
   }
 }
 
-// Gestiona la operacion login.
+// Envía las credenciales a la API y adapta la respuesta a la sesión del frontend.
 export async function login(input: {
   email: string;
   password: string;

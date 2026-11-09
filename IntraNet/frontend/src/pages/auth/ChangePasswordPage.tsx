@@ -1,3 +1,4 @@
+// Pantalla del frontend: combina componentes React, estado y servicios para presentar este módulo al usuario. Tema específico: cambio de contraseña.
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Eye, EyeOff, Lock } from 'lucide-react'

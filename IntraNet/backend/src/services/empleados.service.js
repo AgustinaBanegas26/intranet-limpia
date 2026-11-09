@@ -1,5 +1,5 @@
 // Este servicio concentra las consultas y cambios de empleados en PostgreSQL.
-// El login lo usa para buscar y comprobar bcrypt; la recuperación reutiliza su
+// El inicio de sesión lo usa para buscar y comprobar bcrypt; la recuperación reutiliza su
 // política de hash al actualizar password_hash, sin tocar roles ni relaciones.
 const supabase = require("../config/supabase");
 const bcrypt = require("bcrypt");
@@ -163,7 +163,7 @@ async function getAllEmployees({
   }
 }
 
-// Busca el empleado por correo corporativo para el login y devuelve sus columnas
+// Busca el empleado por correo corporativo para iniciar sesión y devuelve sus columnas
 // almacenadas; recibe un correo normalizado y propaga errores reales de Supabase.
 async function buscarEmpleadoPorEmail(email) {
   if (!supabase || typeof supabase.from !== "function") {
@@ -223,7 +223,7 @@ async function buscarEmpleadoPorEmail(email) {
   }
 }
 
-// Crea la fila de empleado con una contraseña inicial bcrypt para el login propio.
+// Crea la fila de empleado con una contraseña inicial cifrada con bcrypt para iniciar sesión.
 // No crea una identidad en Supabase Auth; los roles y datos quedan en empleados.
 async function createEmployee(employee) {
   if (!supabase || typeof supabase.from !== "function") {
@@ -450,7 +450,7 @@ async function removeEmployee(id) {
   }
 }
 
-// Genera el mismo hash bcrypt que el login verifica y actualiza la contraseña.
+// Genera el mismo hash bcrypt que se verifica al iniciar sesión y actualiza la contraseña.
 // Ejecuta una función SQL que incrementa credential_version para invalidar JWT
 // anteriores; devuelve los datos mínimos para que el endpoint emita uno nuevo.
 async function updateEmployeePassword(userId, newPassword) {

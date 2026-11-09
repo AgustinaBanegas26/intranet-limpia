@@ -1,3 +1,4 @@
+// Componente React reutilizable: recibe datos mediante props, puede manejar estado local y representa una parte de la interfaz. Tema específico: novedades y publicaciones.
 import { Link } from "react-router";
 import { Megaphone } from "lucide-react";
 import { getInitials } from "../../context/AuthContext";

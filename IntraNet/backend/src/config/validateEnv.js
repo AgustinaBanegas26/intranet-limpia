@@ -1,3 +1,5 @@
+//este archivo valida las variables de entorno necesarias para el correcto funcionamiento del backend,
+// y muestra advertencias si alguna variable no está configurada correctamente.
 const MIN_JWT_SECRET_LENGTH = 32
 
 // Prepara el valor para su uso.
@@ -13,7 +15,7 @@ function validateEnv({ exitOnError = false } = {}) {
   const isProduction = process.env.NODE_ENV === 'production'
   const errors = []
   const warnings = []
-
+// Recorre los elementos de la coleccion.
   if (!process.env.JWT_SECRET) {
     errors.push('JWT_SECRET is required')
   } else if (process.env.JWT_SECRET.length < MIN_JWT_SECRET_LENGTH) {
@@ -27,7 +29,7 @@ function validateEnv({ exitOnError = false } = {}) {
     if (isProduction) errors.push(msg)
     else warnings.push(msg)
   }
-
+// Recorre los elementos de la coleccion.
   const smtpHost = String(process.env.SMTP_HOST || '').trim()
   const smtpPort = Number(process.env.SMTP_PORT)
   const smtpUser = String(process.env.SMTP_USER || '').trim()

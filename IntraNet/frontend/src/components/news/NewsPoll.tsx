@@ -1,3 +1,4 @@
+// Componente React reutilizable: recibe datos mediante props, puede manejar estado local y representa una parte de la interfaz. Tema específico: novedades y publicaciones.
 import { useState } from 'react'
 import { BarChart3 } from 'lucide-react'
 import { newsService, type EncuestaDTO } from '../../services/news'
@@ -23,7 +24,7 @@ export function NewsPoll({ novedadId, encuesta, token, onVote, disabled }: NewsP
       const result = await newsService.votePoll(novedadId, opcionId, token)
       onVote(result.encuesta)
     } catch {
-      // keep UI stable on error
+      // Mantiene la interfaz estable si falla el envío del voto.
     } finally {
       setVoting(false)
     }

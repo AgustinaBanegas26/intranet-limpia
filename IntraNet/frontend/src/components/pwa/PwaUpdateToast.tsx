@@ -1,3 +1,4 @@
+// Componente React reutilizable: recibe datos mediante props, puede manejar estado local y representa una parte de la interfaz. Tema específico: instalación y actualización de la aplicación web progresiva.
 import { RefreshCw, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 

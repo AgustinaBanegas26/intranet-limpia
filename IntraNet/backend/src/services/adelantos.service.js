@@ -1,3 +1,5 @@
+//este archivo se encarga de manejar los adelantos de empleados en la base de datos,
+// y permite listar, crear, resolver y eliminar adelantos.
 const supabase = require('../config/supabase')
 const { notifyAdminsNewSolicitud, notifyEmpleadoAdelantoResuelta } = require('./notificaciones.service')
 const { sendSolicitudNotification } = require('./emailService')

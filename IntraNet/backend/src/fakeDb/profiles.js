@@ -1,3 +1,5 @@
+//este archivo se encarga de manejar los perfiles de usuario en la base de datos,
+// y permite obtener y actualizar los datos de perfil de los usuarios.
 const supabase = require('../config/supabase')
 
 /**

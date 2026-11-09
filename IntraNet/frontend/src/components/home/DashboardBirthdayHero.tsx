@@ -1,3 +1,4 @@
+// Componente React reutilizable: recibe datos mediante props, puede manejar estado local y representa una parte de la interfaz. Tema específico: panel principal según el rol.
 import { useEffect, useMemo, useState } from 'react'
 
 import { motion } from 'framer-motion'

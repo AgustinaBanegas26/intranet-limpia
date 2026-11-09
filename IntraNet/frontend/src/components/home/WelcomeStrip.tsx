@@ -1,3 +1,4 @@
+// Componente React reutilizable: recibe datos mediante props, puede manejar estado local y representa una parte de la interfaz. Tema específico: WelcomeStrip.
 import { motion } from 'framer-motion'
 import { getInitials } from '../../context/AuthContext'
 import type { Profile } from '../../services/api'

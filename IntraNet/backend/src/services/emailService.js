@@ -1,3 +1,5 @@
+//este archivo se encarga de manejar el envio de correos electronicos para notificaciones de solicitudes,
+// y permite enviar correos a los destinatarios correspondientes según el tipo de solicitud y la etapa del proceso.
 const fs = require("fs");
 const path = require("path");
 const nodemailer = require("nodemailer");

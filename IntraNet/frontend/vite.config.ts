@@ -1,3 +1,4 @@
+// Archivo de configuraci?n o entrada: conecta las piezas necesarias para iniciar o compilar el proyecto. Tema específico: vite.config.
 import path from 'path'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'

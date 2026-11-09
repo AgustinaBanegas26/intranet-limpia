@@ -1,3 +1,4 @@
+// Componente React reutilizable: recibe datos mediante props, puede manejar estado local y representa una parte de la interfaz. Tema específico: listado de novedades.
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router";
 import { ArrowRight, Newspaper, Sparkles } from "lucide-react";

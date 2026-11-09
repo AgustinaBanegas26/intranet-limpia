@@ -1,4 +1,4 @@
-// Middleware de JWT propio para las rutas protegidas de Express. El login firma
+// Middleware de JWT propio para las rutas protegidas de Express. El inicio de sesión firma
 // el token y este módulo valida firma, versión de credenciales y cambio obligatorio.
 const { getMustChangePassword } = require('../services/empleados.service')
 
@@ -7,7 +7,7 @@ function getJwtSecret() {
   return process.env.JWT_SECRET
 }
 
-// Verifica los JWT propios que emite el login del portal y compara credential_version
+// Verifica los JWT propios que emite el inicio de sesión y compara credential_version
 // para rechazar sesiones emitidas antes de un cambio de contraseña.
 async function authenticateToken(req, res, next) {
   const jwt = require('jsonwebtoken')
@@ -24,7 +24,7 @@ async function authenticateToken(req, res, next) {
     if (err) {
       return res.status(403).json({ error: 'invalid_token' })
     }
-
+// Recorre los elementos de la coleccion.
     try {
       const { data, error } = await supabase
         .from('empleados')
@@ -61,11 +61,11 @@ function isProfileRoute(req) {
 
 /**
  * Bloquea rutas protegidas cuando el usuario debe cambiar contraseña.
- * Valida contra DB (autoridad) además del flag JWT.
+ * Valida contra la base de datos (fuente de verdad), además de la marca incluida en el JWT.
  * Solo permite PUT /auth/change-password.
  */
 async function requirePasswordChanged(req, res, next) {
-  // Allow changing password and fetching profile even when mustChangePassword is true
+  // Permite cambiar la contraseña y consultar el perfil mientras el cambio obligatorio siga pendiente.
   if (isChangePasswordRoute(req) || isProfileRoute(req)) {
     return next()
   }

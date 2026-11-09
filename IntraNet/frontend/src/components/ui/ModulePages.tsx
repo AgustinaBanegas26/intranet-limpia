@@ -1,3 +1,4 @@
+// Componente React reutilizable: recibe datos mediante props, puede manejar estado local y representa una parte de la interfaz. Tema específico: ModulePages.
 import { useEffect, useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import { FileWarning, UserCircle, AlertCircle } from "lucide-react";

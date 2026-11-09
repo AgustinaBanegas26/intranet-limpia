@@ -17,7 +17,7 @@ app.set('trust proxy', 1)
 const helmet = require('helmet')
 const rateLimit = require('express-rate-limit')
 const bcrypt = require('bcrypt')
-// Importar middlewares, servicios y utilidades
+// Importa las capas de middleware, los servicios de negocio y las utilidades compartidas.
 const { createCorsMiddleware } = require('./middleware/cors')
 const { authenticateToken, requirePasswordChanged, signToken } = require('./middleware/auth')
 const { canListEmployees, canManageEmployees, canViewEmployeePersonalData, canPublishNovedades, canManageSolicitudes, canCreateSolicitud, canManageAusencias, canCreateAusencia, canManageCatalog, canManageSugerencias, isAdmin } = require('./utils/roles')
@@ -207,7 +207,7 @@ app.get('/empleados', authenticateToken, requirePasswordChanged, async (req, res
   }
 })
 
-// GET /empleados/:id/perfil — datos personales completos (solo admin)
+// GET /empleados/:id/perfil: datos personales completos, solo para el rol administrador.
 app.get('/empleados/:id/perfil', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canViewEmployeePersonalData(req.user.role)) {
     return res.status(403).json({ error: 'forbidden', message: 'Solo administración puede ver datos personales.' })
@@ -514,7 +514,7 @@ app.post('/auth/password-recovery/reset', recoveryVerifyLimiter, async (req, res
   }
 })
 
-// GET /profile - Get logged-in user profile
+// GET /profile: obtiene el perfil del usuario que inició sesión.
 app.get('/profile', authenticateToken, requirePasswordChanged, async (req, res) => {
   const userId = req.user.sub
   const profile = await getProfileByUserId(userId)
@@ -526,7 +526,7 @@ app.get('/profile', authenticateToken, requirePasswordChanged, async (req, res) 
   return res.json(profile)
 })
 
-// PUT /profile - Update logged-in user profile
+// PUT /profile: actualiza los datos del perfil del usuario que inició sesión.
 app.put('/profile', authenticateToken, requirePasswordChanged, async (req, res) => {
   const userId = req.user.sub
   try {
@@ -558,7 +558,7 @@ app.put('/profile', authenticateToken, requirePasswordChanged, async (req, res) 
   }
 })
 
-// GET /novedades - Corporate news feed
+// GET /novedades: lista las novedades visibles para el usuario.
 app.get('/novedades', authenticateToken, requirePasswordChanged, async (req, res) => {
   try {
     const data = await getAllNovedades(req.user.sub, {
@@ -571,7 +571,7 @@ app.get('/novedades', authenticateToken, requirePasswordChanged, async (req, res
   }
 })
 
-// POST /novedades - Publish news (admin / director)
+// POST /novedades: publica una novedad; requiere permisos de administración o dirección.
 app.post('/novedades', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canPublishNovedades(req.user.role)) {
     return res.status(403).json({ error: 'forbidden' })
@@ -599,7 +599,7 @@ app.post('/novedades', authenticateToken, requirePasswordChanged, async (req, re
   }
 })
 
-// GET /novedades/mias - Author's recent posts (compact admin strip)
+// GET /novedades/mias: lista las publicaciones recientes del autor para el panel compacto.
 app.get('/novedades/mias', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canPublishNovedades(req.user.role)) {
     return res.status(403).json({ error: 'forbidden' })
@@ -614,7 +614,7 @@ app.get('/novedades/mias', authenticateToken, requirePasswordChanged, async (req
   }
 })
 
-// POST /novedades/:id/encuesta/vote - Vote on poll
+// POST /novedades/:id/encuesta/vote: registra el voto del usuario en una encuesta.
 app.post('/novedades/:id/encuesta/vote', authenticateToken, requirePasswordChanged, async (req, res) => {
   const opcionId = String(req.body?.opcionId || req.body?.opcion_id || '').trim()
   if (!opcionId) {
@@ -633,7 +633,7 @@ app.post('/novedades/:id/encuesta/vote', authenticateToken, requirePasswordChang
   }
 })
 
-// PUT /novedades/:id - Update (admin or author)
+// PUT /novedades/:id: actualiza una publicación si el usuario es administrador o su autor.
 app.put('/novedades/:id', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canPublishNovedades(req.user.role)) {
     return res.status(403).json({ error: 'forbidden' })
@@ -651,7 +651,7 @@ app.put('/novedades/:id', authenticateToken, requirePasswordChanged, async (req,
   }
 })
 
-// DELETE /novedades/:id - Hard delete (admin) or soft delete (author)
+// DELETE /novedades/:id: elimina definitivamente como administrador o desactiva como autor.
 app.delete('/novedades/:id', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canPublishNovedades(req.user.role)) {
     return res.status(403).json({ error: 'forbidden' })
@@ -668,7 +668,7 @@ app.delete('/novedades/:id', authenticateToken, requirePasswordChanged, async (r
   }
 })
 
-// POST /novedades/:id/like - Toggle like
+// POST /novedades/:id/like: alterna la reacción del usuario sobre la publicación.
 app.post('/novedades/:id/like', authenticateToken, requirePasswordChanged, async (req, res) => {
   const novedadId = req.params.id
 
@@ -681,7 +681,7 @@ app.post('/novedades/:id/like', authenticateToken, requirePasswordChanged, async
   }
 })
 
-// GET /notificaciones - Employee notifications
+// GET /notificaciones: lista las notificaciones del empleado autenticado.
 app.get('/notificaciones', authenticateToken, requirePasswordChanged, async (req, res) => {
   try {
     const data = await getNotificacionesForEmpleado(req.user.sub)
@@ -692,7 +692,7 @@ app.get('/notificaciones', authenticateToken, requirePasswordChanged, async (req
   }
 })
 
-// PUT /notificaciones/leer-todas - Mark all notifications as read
+// PUT /notificaciones/leer-todas: marca como leídas todas las notificaciones propias.
 app.put('/notificaciones/leer-todas', authenticateToken, requirePasswordChanged, async (req, res) => {
   try {
     const result = await markAllNotificacionesLeidas(req.user.sub)
@@ -703,7 +703,7 @@ app.put('/notificaciones/leer-todas', authenticateToken, requirePasswordChanged,
   }
 })
 
-// PUT /notificaciones/:id/leer - Mark notification as read
+// PUT /notificaciones/:id/leer: marca como leída una notificación propia.
 app.put('/notificaciones/:id/leer', authenticateToken, requirePasswordChanged, async (req, res) => {
   try {
     const result = await markNotificacionLeida(req.params.id, req.user.sub)
@@ -714,7 +714,7 @@ app.put('/notificaciones/:id/leer', authenticateToken, requirePasswordChanged, a
   }
 })
 
-// DELETE /notificaciones/todas - Delete all notifications for current user
+// DELETE /notificaciones/todas: elimina todas las notificaciones propias.
 app.delete('/notificaciones/todas', authenticateToken, requirePasswordChanged, async (req, res) => {
   try {
     const result = await deleteAllNotificaciones(req.user.sub)
@@ -725,7 +725,7 @@ app.delete('/notificaciones/todas', authenticateToken, requirePasswordChanged, a
   }
 })
 
-// DELETE /notificaciones/:id - Delete one notification
+// DELETE /notificaciones/:id: elimina una notificación propia.
 app.delete('/notificaciones/:id', authenticateToken, requirePasswordChanged, async (req, res) => {
   try {
     const result = await deleteNotificacion(req.params.id, req.user.sub)
@@ -737,7 +737,7 @@ app.delete('/notificaciones/:id', authenticateToken, requirePasswordChanged, asy
   }
 })
 
-// GET /solicitudes — admin: todas; empleado: solo las propias
+// GET /solicitudes: el administrador ve todas y cada empleado ve solo las propias.
 app.get('/solicitudes', authenticateToken, requirePasswordChanged, async (req, res) => {
   const estado = req.query.estado ? String(req.query.estado) : null
 
@@ -767,7 +767,7 @@ app.get('/calendario/solicitudes', authenticateToken, requirePasswordChanged, as
   }
 })
 
-// GET /solicitudes/:id — admin puede ver cualquier solicitud; empleado solo la suya
+// GET /solicitudes/:id: el administrador puede ver cualquiera y cada empleado solo la suya.
 app.get('/solicitudes/:id', authenticateToken, requirePasswordChanged, async (req, res) => {
   try {
     const isAdminUser = canManageSolicitudes(req.user.role)
@@ -784,7 +784,7 @@ app.get('/solicitudes/:id', authenticateToken, requirePasswordChanged, async (re
   }
 })
 
-// POST /solicitudes — solo empleados (no admin)
+// POST /solicitudes: disponible para empleados; el administrador no crea solicitudes personales.
 app.post('/solicitudes', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canCreateSolicitud(req.user.role)) {
     return res.status(403).json({ error: 'forbidden', message: 'La administración no envía solicitudes desde este formulario.' })
@@ -805,7 +805,7 @@ app.post('/solicitudes', authenticateToken, requirePasswordChanged, async (req, 
   }
 })
 
-// POST /viaticos — solo empleados, crea fila en la tabla viaticos directamente
+// POST /viaticos: disponible para empleados y crea una fila directamente en la tabla viaticos.
 app.post('/viaticos', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canCreateSolicitud(req.user.role)) {
     return res.status(403).json({ error: 'forbidden', message: 'La administración no envía solicitudes desde este formulario.' })
@@ -827,7 +827,7 @@ app.post('/viaticos', authenticateToken, requirePasswordChanged, async (req, res
   }
 })
 
-// PUT /solicitudes/:id/approve — solo admin
+// PUT /solicitudes/:id/approve: solo el administrador puede aprobar.
 app.put('/solicitudes/:id/approve', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageSolicitudes(req.user.role)) {
     return res.status(403).json({ error: 'forbidden' })
@@ -854,7 +854,7 @@ app.put('/solicitudes/:id/approve', authenticateToken, requirePasswordChanged, a
   }
 })
 
-// PUT /solicitudes/:id/reject — solo admin
+// PUT /solicitudes/:id/reject: solo el administrador puede rechazar.
 app.put('/solicitudes/:id/reject', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageSolicitudes(req.user.role)) {
     return res.status(403).json({ error: 'forbidden' })
@@ -899,7 +899,7 @@ app.delete('/solicitudes/:id', authenticateToken, requirePasswordChanged, async 
   }
 })
 
-// GET /rendiciones — admin: todas; empleado: solo las propias
+// GET /rendiciones: el administrador ve todas y cada empleado ve solo las propias.
 app.get('/rendiciones', authenticateToken, requirePasswordChanged, async (req, res) => {
   const estado = req.query.estado ? String(req.query.estado) : null
   const viaticoId = req.query.viaticoId ? Number(req.query.viaticoId) : null
@@ -919,7 +919,7 @@ app.get('/rendiciones', authenticateToken, requirePasswordChanged, async (req, r
   }
 })
 
-// Gestiona la accion correspondiente.
+// Sincroniza las rendiciones que ya cumplen las condiciones para ser habilitadas.
 async function handleRendicionesSync(_req, res) {
   try {
     const data = await syncEligibleRendiciones()
@@ -1177,7 +1177,7 @@ app.put('/insumos-tecnicos/solicitudes/:id/reject', authenticateToken, requirePa
   }
 })
 
-// GET /adelantos — admin: todas; empleado: solo las propias
+// GET /adelantos: el administrador ve todos y cada empleado ve solo los propios.
 app.get('/adelantos', authenticateToken, requirePasswordChanged, async (req, res) => {
   const estado = req.query.estado ? String(req.query.estado) : null
   const empleadoQuery = req.query.empleado ? String(req.query.empleado) : null
@@ -1192,7 +1192,7 @@ app.get('/adelantos', authenticateToken, requirePasswordChanged, async (req, res
   }
 })
 
-// POST /adelantos — solo empleados
+// POST /adelantos: disponible para empleados; crea una solicitud propia.
 app.post('/adelantos', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canCreateSolicitud(req.user.role)) {
     return res.status(403).json({ error: 'forbidden', message: 'La administración no envía adelantos desde este formulario.' })
@@ -1208,7 +1208,7 @@ app.post('/adelantos', authenticateToken, requirePasswordChanged, async (req, re
   }
 })
 
-// PUT /adelantos/:id/approve — solo admin
+// PUT /adelantos/:id/approve: solo el administrador puede aprobar.
 app.put('/adelantos/:id/approve', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageSolicitudes(req.user.role)) {
     return res.status(403).json({ error: 'forbidden' })
@@ -1230,7 +1230,7 @@ app.put('/adelantos/:id/approve', authenticateToken, requirePasswordChanged, asy
   }
 })
 
-// PUT /adelantos/:id/reject — solo admin
+// PUT /adelantos/:id/reject: solo el administrador puede rechazar.
 app.put('/adelantos/:id/reject', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageSolicitudes(req.user.role)) {
     return res.status(403).json({ error: 'forbidden' })
@@ -1298,7 +1298,7 @@ app.get('/ausencias', authenticateToken, requirePasswordChanged, async (req, res
   }
 })
 
-// POST /ausencias — solo empleados
+// POST /ausencias: disponible para empleados; crea una solicitud propia.
 app.post('/ausencias', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canCreateAusencia(req.user.role)) {
     return res.status(403).json({ error: 'forbidden' })
@@ -1316,7 +1316,7 @@ app.post('/ausencias', authenticateToken, requirePasswordChanged, async (req, re
   }
 })
 
-// PUT /ausencias/:id/approve
+// PUT /ausencias/:id/approve: el administrador resuelve la solicitud aprobándola.
 app.put('/ausencias/:id/approve', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageAusencias(req.user.role)) return res.status(403).json({ error: 'forbidden' })
   try {
@@ -1330,7 +1330,7 @@ app.put('/ausencias/:id/approve', authenticateToken, requirePasswordChanged, asy
   }
 })
 
-// PUT /ausencias/:id/reject
+// PUT /ausencias/:id/reject: el administrador resuelve la solicitud rechazándola.
 app.put('/ausencias/:id/reject', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageAusencias(req.user.role)) return res.status(403).json({ error: 'forbidden' })
   try {
@@ -1834,7 +1834,7 @@ app.delete('/mensajes/:id', authenticateToken, requirePasswordChanged, async (re
   }
 })
 
-// GET /birthdays - Birthdays and work anniversaries
+// GET /birthdays: devuelve cumpleaños y aniversarios laborales próximos.
 app.get('/birthdays', authenticateToken, requirePasswordChanged, async (req, res) => {
   const upcomingDays = Math.min(Math.max(Number(req.query.days) || 14, 1), 60)
 
@@ -1847,7 +1847,7 @@ app.get('/birthdays', authenticateToken, requirePasswordChanged, async (req, res
   }
 })
 
-// PUT /auth/change-password - update password and clear first-login flag
+// PUT /auth/change-password: cambia la contraseña y limpia la marca de primer ingreso.
 app.put('/auth/change-password', authenticateToken, async (req, res) => {
   const userId = req.user.sub
   const password = String(req.body?.password || '')
@@ -1894,7 +1894,7 @@ app.put('/auth/change-password', authenticateToken, async (req, res) => {
   }
 })
 
-// Global error handler
+// Controlador global de errores: registra el fallo en el servidor y devuelve una respuesta segura.
 app.use((err, req, res, next) => {
   if (err?.message?.startsWith('CORS:')) {
     return res.status(403).json({ error: 'cors_forbidden', message: err.message })

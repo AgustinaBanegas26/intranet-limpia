@@ -1,3 +1,4 @@
+// Enrutamiento del frontend: relaciona URLs con páginas y aplica las condiciones de acceso del cliente. Tema específico: inicialización y enrutamiento principal.
 import { Routes, Route, Navigate } from 'react-router'
 import type { ReactNode } from 'react'
 import { MainLayout } from '../layouts/MainLayout'

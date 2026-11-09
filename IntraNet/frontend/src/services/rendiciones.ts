@@ -1,3 +1,4 @@
+// Servicio del frontend: encapsula las llamadas HTTP y transforma respuestas para que las pantallas no dependan del detalle de transporte. Tema específico: rendiciones de gastos.
 import { apiClient } from './apiClient'
 import type { SolicitudSolicitante } from './requests'
 

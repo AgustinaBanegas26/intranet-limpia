@@ -1,3 +1,5 @@
+//este archivo se encarga de manejar la lectura y escritura de archivos JSON,
+// y permite leer y escribir datos en archivos JSON de manera sencilla.
 const fs = require('fs')
 const path = require('path')
 

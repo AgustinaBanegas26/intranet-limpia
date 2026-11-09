@@ -1,3 +1,4 @@
+// Servicio del frontend: encapsula las llamadas HTTP y transforma respuestas para que las pantallas no dependan del detalle de transporte. Tema específico: cliente HTTP compartido.
 import { getBackendUrl, getSession } from "./auth";
 import { isSessionAuthError } from "../utils/sessionToken";
 

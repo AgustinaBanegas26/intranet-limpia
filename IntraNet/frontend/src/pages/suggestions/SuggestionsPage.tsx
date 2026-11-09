@@ -1,3 +1,4 @@
+// Pantalla del frontend: combina componentes React, estado y servicios para presentar este módulo al usuario. Tema específico: sugerencias de empleados.
 import { useEffect, useState, useCallback } from 'react'
 import { Lightbulb, Send, Loader2, Eye, X, Trash2 } from 'lucide-react'
 import { PageHero, PremiumCard } from '../../components/ui/ProductUI'

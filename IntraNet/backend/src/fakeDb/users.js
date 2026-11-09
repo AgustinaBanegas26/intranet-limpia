@@ -1,4 +1,4 @@
-// Este módulo adapta el modelo real de empleados al formato que consume el login.
+// Este módulo adapta el modelo real de empleados al formato que consume el inicio de sesión.
 // También conserva el bloqueo local de intentos fallidos; index.js lo utiliza para
 // validar credenciales con bcrypt y firmar el JWT propio del portal.
 const { readEntity, updateEntity } = require("./entityStore");
@@ -8,7 +8,7 @@ const { resolveRole } = require("../utils/roles");
 const AUTH_LOCKS_ENTITY = "auth_locks";
 const isVercel = process.env.VERCEL === "1";
 
-// Normaliza el correo para que login y el contador de intentos comparen igual.
+// Normaliza el correo para que el inicio de sesión y el contador de intentos lo comparen de la misma forma.
 function normalizeEmail(email) {
   return String(email || "")
     .trim()
@@ -16,7 +16,7 @@ function normalizeEmail(email) {
 }
 
 // Busca el empleado real por correo y adapta sus columnas a la estructura usada
-// por /auth/login; devuelve null si no existe y lanza error ante fallas de datos.
+// por /auth/login; devuelve null si no existe y lanza un error ante fallas de datos.
 async function getUserByEmail(email) {
   const normalizedEmail = normalizeEmail(email);
   const empleado = await buscarEmpleadoPorEmail(normalizedEmail);

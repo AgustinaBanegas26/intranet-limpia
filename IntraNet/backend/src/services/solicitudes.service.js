@@ -1,3 +1,4 @@
+// Servicio del backend: concentra reglas de negocio y acceso a datos para este dominio; las rutas HTTP delegan aquí las operaciones. Tema específico: solicitudes.service.
 const { randomUUID } = require('crypto')
 const supabase = require('../config/supabase')
 const { notifyAdminsNewSolicitud, notifyEmpleadoSolicitudResuelta } = require('./notificaciones.service')
@@ -579,7 +580,7 @@ async function resolveSolicitud(compositeId, { estado, comentario_admin, resuelt
   let motivo = String(existing.motivo || '')
   let updateData = { estado, motivo }
 
-  // Check if it's the new viaticos schema (by checking if nombre_completo exists)
+  // Detecta el esquema nuevo de viáticos comprobando si existe la columna nombre_completo.
   if (existing.nombre_completo || existing.correo) {
     const nuevoEstado = estado === 'aprobada' ? 'Aprobado' : estado === 'rechazada' ? 'Rechazado' : 'Pendiente'
     updateData = {

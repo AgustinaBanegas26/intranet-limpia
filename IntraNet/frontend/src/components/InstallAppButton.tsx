@@ -1,3 +1,4 @@
+// Componente React reutilizable: recibe datos mediante props, puede manejar estado local y representa una parte de la interfaz. Tema específico: instalación de la aplicación.
 import { usePwaInstall } from '../context/PwaInstallContext'
 
 type InstallAppButtonProps = {

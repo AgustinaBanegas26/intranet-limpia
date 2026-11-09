@@ -1,3 +1,5 @@
+//este archivo se encarga de manejar las ausencias de empleados en la base de datos,
+// y permite listar, crear, resolver, eliminar y actualizar ausencias.
 const supabase = require('../config/supabase')
 const { notifyAdminsNewAusencia, notifyEmpleadoAusenciaResuelta } = require('./notificaciones.service')
 const { sendSolicitudNotification } = require('./emailService')

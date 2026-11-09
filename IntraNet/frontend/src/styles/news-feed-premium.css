@@ -1,4 +1,4 @@
-/* ── News module (premium feed 2026) ── */
+/* ── Módulo de novedades con diseño de publicaciones destacadas ── */
 .news-module--dashboard {
   padding: 0;
   margin-top: 4px;
@@ -151,7 +151,7 @@
   color: var(--muted-foreground);
 }
 
-/* ── News feed card (corporate social — Viva / LinkedIn style) ── */
+/* ── Tarjeta de novedad con formato de red social corporativa ── */
 .news-feed-card {
   --nfc-bg: #FFFFFF;
   --nfc-text: #111827;
@@ -203,7 +203,7 @@
   box-shadow: var(--nfc-shadow-hover);
 }
 
-/* Header */
+/* Encabezado */
 .news-feed-card__header {
   display: flex;
   align-items: flex-start;
@@ -318,7 +318,7 @@
   background: var(--nfc-action-bg);
 }
 
-/* Type badge */
+/* Insignia del tipo de contenido */
 .news-feed-card__type-row {
   display: flex;
   align-items: center;
@@ -545,12 +545,12 @@
   100% { transform: scale(1); }
 }
 
-/* Inline poll */
+/* Encuesta integrada en la publicación */
 .news-feed-card__poll {
   margin-top: 4px;
 }
 
-/* Footer CTA */
+/* Pie con botón de acción */
 .news-feed-card__footer {
   display: flex;
   justify-content: flex-end;
@@ -629,7 +629,7 @@
   transform: translateX(2px);
 }
 
-/* ── News post modal (premium — light / dark) ── */
+/* ── Ventana modal de publicación para tema claro y oscuro ── */
 .news-post-modal-backdrop {
   /* Hereda estilos globales de .modal-backdrop en index.css */
 }
@@ -842,7 +842,7 @@
   margin-left: auto;
 }
 
-/* ── News poll (inline + modal) ── */
+/* ── Encuesta de novedades en la publicación y en la ventana modal ── */
 .news-poll {
   margin-top: 14px;
   padding: 14px;

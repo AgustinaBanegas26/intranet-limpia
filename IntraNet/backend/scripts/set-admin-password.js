@@ -1,3 +1,4 @@
+//este archivo es para poder hacer pruebas de integración con supertest,(supertest es una libreria de nodejs para hacer pruebas de integración de APIs),
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') })
 const bcrypt = require('bcrypt')
 const supabase = require('../src/config/supabase')

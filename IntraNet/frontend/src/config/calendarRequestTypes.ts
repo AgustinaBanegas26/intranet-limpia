@@ -1,3 +1,4 @@
+// Configuración del frontend: centraliza valores o clientes compartidos por otras partes de la aplicación. Tema específico: calendario y solicitudes asociadas.
 export type CalendarRequestType = 'ausencias' | 'vacaciones' | 'adelantos' | 'viaticos' | 'rendicion_viaticos' | 'hotel' | 'auto'
 
 export const calendarRequestTypes: Record<CalendarRequestType, {

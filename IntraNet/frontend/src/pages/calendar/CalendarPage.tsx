@@ -1,3 +1,4 @@
+// Pantalla del frontend: combina componentes React, estado y servicios para presentar este módulo al usuario. Tema específico: calendario y solicitudes asociadas.
 import { useEffect, useMemo, useState, type CSSProperties } from 'react'
 import { CalendarDays, ChevronLeft, ChevronRight, Filter, Loader2, MapPin, X } from 'lucide-react'
 import { PageHero, PremiumCard } from '../../components/ui/ProductUI'

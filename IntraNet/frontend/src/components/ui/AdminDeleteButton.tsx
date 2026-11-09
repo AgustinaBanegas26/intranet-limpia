@@ -1,3 +1,4 @@
+// Componente React reutilizable: recibe datos mediante props, puede manejar estado local y representa una parte de la interfaz. Tema específico: control de acción reutilizable.
 import { useState } from 'react'
 import { Trash2 } from 'lucide-react'
 import { AlertDialog, ConfirmDialog } from './ConfirmDialog'

@@ -1,3 +1,4 @@
+/* Hoja de estilos: define reglas visuales reutilizables, como colores, tipografía, distribución y adaptación a distintos tamaños. Tema específico: tema visual claro y oscuro. */
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -13,7 +14,7 @@
   --text-2xl:  1.75rem;    /* 28px   — títulos de página */
   --text-3xl:  2.25rem;    /* 36px   — títulos hero */
 
-  /* Light theme */
+  /* Tema claro */
   --background: #F5F6F8;
   --foreground: #111827;
   --card: #FFFFFF;
@@ -71,7 +72,7 @@
 }
 
 .dark {
-  /* Dark theme — premium mobile-first */
+  /* Tema oscuro con prioridad para pantallas móviles */
   --background: #0B0B0D;
   --foreground: #F9FAFB;
   --card: #17181C;
@@ -241,7 +242,7 @@
   .status-danger  { background-color: var(--danger-bg); color: var(--danger); }
   .status-accent  { background-color: var(--accent); color: var(--accent-foreground); }
 
-  /* Buttons */
+  /* Botones */
   .btn-primary { background-color: var(--primary); color: var(--primary-foreground); }
   .btn-secondary { background-color: var(--muted); color: var(--foreground); }
 

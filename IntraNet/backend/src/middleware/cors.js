@@ -1,4 +1,7 @@
+//este archivo se encarga de manejar la configuracion de CORS para el backend,
+// y permite definir los orígenes permitidos y las opciones de CORS.
 const cors = require("cors");
+
 
 const DEFAULT_DEV_ORIGINS = [
   "http://localhost:5173",

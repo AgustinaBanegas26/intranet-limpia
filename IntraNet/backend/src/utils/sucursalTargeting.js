@@ -1,3 +1,5 @@
+//este archivo se encarga de manejar las sucursales de empleados en la base de datos,
+// y permite determinar la sucursal de un empleado y si una publicacion es visible para el empleado segun su sucursal.
 const SUCURSAL_MDP = 'Mar del Plata'
 const SUCURSAL_CABA = 'Buenos Aires'
 const ALL_SUCURSALES = [SUCURSAL_MDP, SUCURSAL_CABA]

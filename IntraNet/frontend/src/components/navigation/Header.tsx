@@ -1,3 +1,4 @@
+// Componente React reutilizable: recibe datos mediante props, puede manejar estado local y representa una parte de la interfaz. Tema específico: Header.
 import { useState } from 'react'
 import { Search, Bell } from 'lucide-react'
 import { InstallAppButton } from '../InstallAppButton'
@@ -74,7 +75,7 @@ function NotificationsModal({
   )
 }
 
-// Gestiona la operacion Header.
+// Renderiza la cabecera principal con navegación, datos de sesión y acciones rápidas.
 export function Header() {
   const { user } = useAuth()
   const [showNotifications, setShowNotifications] = useState(false)

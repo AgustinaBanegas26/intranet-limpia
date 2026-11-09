@@ -1,3 +1,4 @@
+// Componente React reutilizable: recibe datos mediante props, puede manejar estado local y representa una parte de la interfaz. Tema específico: ausencias y licencias.
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Loader2, PlusCircle } from 'lucide-react'

@@ -1,3 +1,4 @@
+// Componente React reutilizable: recibe datos mediante props, puede manejar estado local y representa una parte de la interfaz. Tema específico: eventos institucionales.
 import { useEffect, useState } from 'react'
 import { FileText, ImagePlus, Loader2, X } from 'lucide-react'
 import { SUCURSALES } from '../../data/profileData'

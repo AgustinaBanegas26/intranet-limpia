@@ -1,3 +1,4 @@
+// Componente React reutilizable: recibe datos mediante props, puede manejar estado local y representa una parte de la interfaz. Tema específico: eventos institucionales.
 import { useCallback, useEffect, useState } from 'react'
 import { CalendarDays, Loader2, Pencil, Trash2 } from 'lucide-react'
 import { Link } from 'react-router'

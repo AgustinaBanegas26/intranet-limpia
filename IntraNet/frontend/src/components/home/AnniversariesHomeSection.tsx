@@ -1,3 +1,4 @@
+// Componente React reutilizable: recibe datos mediante props, puede manejar estado local y representa una parte de la interfaz. Tema específico: AnniversariesHomeSection.
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Trophy } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";

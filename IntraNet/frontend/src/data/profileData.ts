@@ -1,3 +1,4 @@
+// Datos de referencia del frontend: valores estáticos que la interfaz consume como contenido o configuración. Tema específico: perfil del empleado.
 export const ESTADOS_CIVILES = [
   'Soltero/a',
   'Casado/a',
