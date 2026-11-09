@@ -167,6 +167,7 @@ app.use(
   }),
 )
 
+// GET /health: Comprueba si el servidor y Supabase estan disponibles.
 app.get('/health', async (_req, res) => {
   const isProduction = process.env.NODE_ENV === 'production'
   let supabaseOk = false
@@ -192,6 +193,7 @@ app.get('/health', async (_req, res) => {
   })
 })
 
+// GET /empleados: Lista empleados; puede incluir inactivos y fotos segun permisos.
 app.get('/empleados', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canListEmployees(req.user.role)) {
     return res.status(403).json({ error: 'forbidden' })
@@ -223,6 +225,7 @@ app.get('/empleados/:id/perfil', authenticateToken, requirePasswordChanged, asyn
   return res.json({ data: profile })
 })
 
+// POST /empleados: Crea un empleado nuevo.
 app.post('/empleados', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageEmployees(req.user.role)) {
     return res.status(403).json({ error: 'forbidden' })
@@ -245,6 +248,7 @@ app.post('/empleados', authenticateToken, requirePasswordChanged, async (req, re
   }
 })
 
+// PUT /empleados/:id: Actualiza los datos de un empleado.
 app.put('/empleados/:id', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageEmployees(req.user.role)) {
     return res.status(403).json({ error: 'forbidden' })
@@ -262,6 +266,7 @@ app.put('/empleados/:id', authenticateToken, requirePasswordChanged, async (req,
   }
 })
 
+// DELETE /empleados/:id: Elimina un empleado; impide que se elimine a si mismo.
 app.delete('/empleados/:id', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageEmployees(req.user.role)) {
     return res.status(403).json({ error: 'forbidden' })
@@ -298,6 +303,7 @@ app.get('/sectores', authenticateToken, requirePasswordChanged, async (req, res)
   }
 })
 
+// POST /sectores: Crea un sector.
 app.post('/sectores', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageEmployees(req.user.role)) return res.status(403).json({ error: 'forbidden' })
   try {
@@ -311,6 +317,7 @@ app.post('/sectores', authenticateToken, requirePasswordChanged, async (req, res
   }
 })
 
+// PUT /sectores/:id: Actualiza los datos de un sector.
 app.put('/sectores/:id', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageEmployees(req.user.role)) return res.status(403).json({ error: 'forbidden' })
   try {
@@ -323,6 +330,7 @@ app.put('/sectores/:id', authenticateToken, requirePasswordChanged, async (req, 
   }
 })
 
+// DELETE /sectores/:id: Elimina un sector.
 app.delete('/sectores/:id', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageEmployees(req.user.role)) return res.status(403).json({ error: 'forbidden' })
   try {
@@ -930,9 +938,12 @@ async function handleRendicionesSync(_req, res) {
   }
 }
 
+// GET /rendiciones/sync: Sincroniza las rendiciones que cumplen las condiciones.
 app.get('/rendiciones/sync', authenticateToken, requirePasswordChanged, handleRendicionesSync)
+// GET /api/rendiciones/sync: Alias de la ruta que sincroniza rendiciones elegibles.
 app.get('/api/rendiciones/sync', authenticateToken, requirePasswordChanged, handleRendicionesSync)
 
+// GET /rendiciones/viatico/:viaticoId: Busca la rendicion asociada a un viatico.
 app.get('/rendiciones/viatico/:viaticoId', authenticateToken, requirePasswordChanged, async (req, res) => {
   try {
     const isAdminUser = canManageSolicitudes(req.user.role)
@@ -952,6 +963,7 @@ app.get('/rendiciones/viatico/:viaticoId', authenticateToken, requirePasswordCha
   }
 })
 
+// GET /rendiciones/:id: Consulta el detalle de una rendicion.
 app.get('/rendiciones/:id', authenticateToken, requirePasswordChanged, async (req, res) => {
   try {
     const isAdminUser = canManageSolicitudes(req.user.role)
@@ -968,6 +980,7 @@ app.get('/rendiciones/:id', authenticateToken, requirePasswordChanged, async (re
   }
 })
 
+// PUT /rendiciones/:id: Actualiza los datos de una rendicion.
 app.put('/rendiciones/:id', authenticateToken, requirePasswordChanged, async (req, res) => {
   const isAdminUser = canManageSolicitudes(req.user.role)
   try {
@@ -982,6 +995,7 @@ app.put('/rendiciones/:id', authenticateToken, requirePasswordChanged, async (re
   }
 })
 
+// POST /rendiciones/:id/gastos: Agrega o guarda un gasto en la rendicion.
 app.post('/rendiciones/:id/gastos', authenticateToken, requirePasswordChanged, async (req, res) => {
   const isAdminUser = canManageSolicitudes(req.user.role)
   try {
@@ -999,6 +1013,7 @@ app.post('/rendiciones/:id/gastos', authenticateToken, requirePasswordChanged, a
   }
 })
 
+// PUT /rendiciones/:id/gastos/:gastoId: Actualiza un gasto de la rendicion.
 app.put('/rendiciones/:id/gastos/:gastoId', authenticateToken, requirePasswordChanged, async (req, res) => {
   const isAdminUser = canManageSolicitudes(req.user.role)
   try {
@@ -1016,6 +1031,7 @@ app.put('/rendiciones/:id/gastos/:gastoId', authenticateToken, requirePasswordCh
   }
 })
 
+// DELETE /rendiciones/:id/gastos/:gastoId: Elimina un gasto de la rendicion.
 app.delete('/rendiciones/:id/gastos/:gastoId', authenticateToken, requirePasswordChanged, async (req, res) => {
   const isAdminUser = canManageSolicitudes(req.user.role)
   try {
@@ -1030,6 +1046,7 @@ app.delete('/rendiciones/:id/gastos/:gastoId', authenticateToken, requirePasswor
   }
 })
 
+// PUT /rendiciones/:id/enviar: Envia la rendicion para su revision.
 app.put('/rendiciones/:id/enviar', authenticateToken, requirePasswordChanged, async (req, res) => {
   const isAdminUser = canManageSolicitudes(req.user.role)
   try {
@@ -1045,6 +1062,7 @@ app.put('/rendiciones/:id/enviar', authenticateToken, requirePasswordChanged, as
   }
 })
 
+// PUT /rendiciones/:id/aprobar: Aprueba la rendicion.
 app.put('/rendiciones/:id/aprobar', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageSolicitudes(req.user.role)) return res.status(403).json({ error: 'forbidden' })
 
@@ -1063,6 +1081,7 @@ app.put('/rendiciones/:id/aprobar', authenticateToken, requirePasswordChanged, a
   }
 })
 
+// PUT /rendiciones/:id/devolver: Devuelve la rendicion para que sea corregida.
 app.put('/rendiciones/:id/devolver', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageSolicitudes(req.user.role)) return res.status(403).json({ error: 'forbidden' })
 
@@ -1081,6 +1100,7 @@ app.put('/rendiciones/:id/devolver', authenticateToken, requirePasswordChanged, 
   }
 })
 
+// GET /insumos-tecnicos/solicitudes: Lista las solicitudes de insumos tecnicos.
 app.get('/insumos-tecnicos/solicitudes', authenticateToken, requirePasswordChanged, async (req, res) => {
   const status = req.query.estado ? String(req.query.estado) : req.query.status ? String(req.query.status) : null
 
@@ -1094,6 +1114,7 @@ app.get('/insumos-tecnicos/solicitudes', authenticateToken, requirePasswordChang
   }
 })
 
+// POST /insumos-tecnicos/solicitudes: Crea una solicitud de insumos tecnicos.
 app.post('/insumos-tecnicos/solicitudes', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canCreateSolicitud(req.user.role)) {
     return res.status(403).json({ error: 'forbidden', message: 'La administracion no envia solicitudes desde este formulario.' })
@@ -1110,6 +1131,7 @@ app.post('/insumos-tecnicos/solicitudes', authenticateToken, requirePasswordChan
   }
 })
 
+// PUT /insumos-tecnicos/solicitudes/:id: Actualiza una solicitud de insumos tecnicos.
 app.put('/insumos-tecnicos/solicitudes/:id', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageSolicitudes(req.user.role)) return res.status(403).json({ error: 'forbidden' })
 
@@ -1124,6 +1146,7 @@ app.put('/insumos-tecnicos/solicitudes/:id', authenticateToken, requirePasswordC
   }
 })
 
+// PUT /insumos-tecnicos/fichas/:empleadoId: Crea o actualiza la ficha tecnica de un empleado.
 app.put('/insumos-tecnicos/fichas/:empleadoId', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageSolicitudes(req.user.role)) return res.status(403).json({ error: 'forbidden' })
 
@@ -1139,6 +1162,7 @@ app.put('/insumos-tecnicos/fichas/:empleadoId', authenticateToken, requirePasswo
   }
 })
 
+// PUT /insumos-tecnicos/solicitudes/:id/approve: Aprueba la solicitud de insumos tecnicos.
 app.put('/insumos-tecnicos/solicitudes/:id/approve', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageSolicitudes(req.user.role)) return res.status(403).json({ error: 'forbidden' })
 
@@ -1158,6 +1182,7 @@ app.put('/insumos-tecnicos/solicitudes/:id/approve', authenticateToken, requireP
   }
 })
 
+// PUT /insumos-tecnicos/solicitudes/:id/reject: Rechaza la solicitud de insumos tecnicos.
 app.put('/insumos-tecnicos/solicitudes/:id/reject', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageSolicitudes(req.user.role)) return res.status(403).json({ error: 'forbidden' })
 
@@ -1461,6 +1486,7 @@ app.get('/slider', authenticateToken, requirePasswordChanged, async (req, res) =
   }
 })
 
+// POST /slider: Agrega una diapositiva al slider.
 app.post('/slider', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageCatalog(req.user.role)) return res.status(403).json({ error: 'forbidden' })
   try {
@@ -1473,6 +1499,7 @@ app.post('/slider', authenticateToken, requirePasswordChanged, async (req, res) 
   }
 })
 
+// PUT /slider/:id: Actualiza una diapositiva del slider.
 app.put('/slider/:id', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageCatalog(req.user.role)) return res.status(403).json({ error: 'forbidden' })
   try {
@@ -1486,6 +1513,7 @@ app.put('/slider/:id', authenticateToken, requirePasswordChanged, async (req, re
   }
 })
 
+// DELETE /slider/:id: Elimina una diapositiva del slider.
 app.delete('/slider/:id', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageCatalog(req.user.role)) return res.status(403).json({ error: 'forbidden' })
   try {
@@ -1509,6 +1537,7 @@ app.get('/beneficios', authenticateToken, requirePasswordChanged, async (req, re
   }
 })
 
+// POST /beneficios: Crea un beneficio.
 app.post('/beneficios', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageCatalog(req.user.role)) return res.status(403).json({ error: 'forbidden' })
   try {
@@ -1521,6 +1550,7 @@ app.post('/beneficios', authenticateToken, requirePasswordChanged, async (req, r
   }
 })
 
+// PUT /beneficios/:id: Actualiza un beneficio.
 app.put('/beneficios/:id', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageCatalog(req.user.role)) return res.status(403).json({ error: 'forbidden' })
   try {
@@ -1533,6 +1563,7 @@ app.put('/beneficios/:id', authenticateToken, requirePasswordChanged, async (req
   }
 })
 
+// DELETE /beneficios/:id: Elimina un beneficio.
 app.delete('/beneficios/:id', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageCatalog(req.user.role)) return res.status(403).json({ error: 'forbidden' })
   try {
@@ -1557,7 +1588,7 @@ app.get('/eventos', authenticateToken, requirePasswordChanged, async (req, res) 
     return res.status(500).json({ error: 'failed_to_fetch_eventos', message: err?.message || String(err) })
   }
 })
-
+// POST /eventos
 app.post('/eventos', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageCatalog(req.user.role)) return res.status(403).json({ error: 'forbidden' })
   try {
@@ -1576,6 +1607,7 @@ app.post('/eventos', authenticateToken, requirePasswordChanged, async (req, res)
   }
 })
 
+// PUT /eventos/:id: Actualiza un evento.
 app.put('/eventos/:id', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageCatalog(req.user.role)) return res.status(403).json({ error: 'forbidden' })
   try {
@@ -1588,6 +1620,7 @@ app.put('/eventos/:id', authenticateToken, requirePasswordChanged, async (req, r
   }
 })
 
+// DELETE /eventos/:id: Elimina un evento.
 app.delete('/eventos/:id', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageCatalog(req.user.role)) return res.status(403).json({ error: 'forbidden' })
   try {
@@ -1600,6 +1633,7 @@ app.delete('/eventos/:id', authenticateToken, requirePasswordChanged, async (req
   }
 })
 
+// POST /eventos/:id/rsvp: Registra o quita la asistencia del usuario al evento.
 app.post('/eventos/:id/rsvp', authenticateToken, requirePasswordChanged, async (req, res) => {
   try {
     const data = await toggleEventoRsvp(req.params.id, req.user.sub)
@@ -1625,6 +1659,7 @@ app.get('/politicas', authenticateToken, requirePasswordChanged, async (req, res
   }
 })
 
+// POST /politicas: Crea una politica.
 app.post('/politicas', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageCatalog(req.user.role)) return res.status(403).json({ error: 'forbidden' })
   try {
@@ -1637,6 +1672,7 @@ app.post('/politicas', authenticateToken, requirePasswordChanged, async (req, re
   }
 })
 
+// PUT /politicas/:id: Actualiza una politica.
 app.put('/politicas/:id', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageCatalog(req.user.role)) return res.status(403).json({ error: 'forbidden' })
   try {
@@ -1649,6 +1685,7 @@ app.put('/politicas/:id', authenticateToken, requirePasswordChanged, async (req,
   }
 })
 
+// DELETE /politicas/:id: Elimina una politica.
 app.delete('/politicas/:id', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageCatalog(req.user.role)) return res.status(403).json({ error: 'forbidden' })
   try {
@@ -1661,6 +1698,7 @@ app.delete('/politicas/:id', authenticateToken, requirePasswordChanged, async (r
   }
 })
 
+// POST /politicas/:id/leer: Marca una politica como leida por el usuario.
 app.post('/politicas/:id/leer', authenticateToken, requirePasswordChanged, async (req, res) => {
   try {
     const result = await markPoliticaLeida(req.params.id, req.user.sub)
@@ -1682,6 +1720,7 @@ app.get('/sugerencias', authenticateToken, requirePasswordChanged, async (req, r
   }
 })
 
+// POST /sugerencias: Crea una sugerencia.
 app.post('/sugerencias', authenticateToken, requirePasswordChanged, async (req, res) => {
   try {
     const data = await createSugerencia(req.user.sub, req.body || {})
@@ -1693,6 +1732,7 @@ app.post('/sugerencias', authenticateToken, requirePasswordChanged, async (req, 
   }
 })
 
+// POST /sugerencias/:id/vote: Registra el voto del usuario en una sugerencia.
 app.post('/sugerencias/:id/vote', authenticateToken, requirePasswordChanged, async (req, res) => {
   try {
     const data = await voteSugerencia(req.params.id, req.user.sub)
@@ -1704,6 +1744,7 @@ app.post('/sugerencias/:id/vote', authenticateToken, requirePasswordChanged, asy
   }
 })
 
+// PUT /sugerencias/:id/status: Actualiza el estado de una sugerencia.
 app.put('/sugerencias/:id/status', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageSugerencias(req.user.role)) return res.status(403).json({ error: 'forbidden' })
   try {
@@ -1717,6 +1758,7 @@ app.put('/sugerencias/:id/status', authenticateToken, requirePasswordChanged, as
   }
 })
 
+// DELETE /sugerencias/:id: Elimina una sugerencia.
 app.delete('/sugerencias/:id', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageSugerencias(req.user.role)) return res.status(403).json({ error: 'forbidden' })
   try {
@@ -1741,6 +1783,7 @@ app.get('/manuales', authenticateToken, requirePasswordChanged, async (req, res)
   }
 })
 
+// POST /manuales: Crea un manual.
 app.post('/manuales', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageCatalog(req.user.role)) return res.status(403).json({ error: 'forbidden' })
   try {
@@ -1753,6 +1796,7 @@ app.post('/manuales', authenticateToken, requirePasswordChanged, async (req, res
   }
 })
 
+// PUT /manuales/:id: Actualiza un manual.
 app.put('/manuales/:id', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageCatalog(req.user.role)) return res.status(403).json({ error: 'forbidden' })
   try {
@@ -1765,6 +1809,7 @@ app.put('/manuales/:id', authenticateToken, requirePasswordChanged, async (req, 
   }
 })
 
+// DELETE /manuales/:id: Elimina un manual.
 app.delete('/manuales/:id', authenticateToken, requirePasswordChanged, async (req, res) => {
   if (!canManageCatalog(req.user.role)) return res.status(403).json({ error: 'forbidden' })
   try {
@@ -1778,6 +1823,7 @@ app.delete('/manuales/:id', authenticateToken, requirePasswordChanged, async (re
 })
 
 // GET /mensajes
+// GET /mensajes/contactos: Lista los contactos disponibles para enviar mensajes.
 app.get('/mensajes/contactos', authenticateToken, requirePasswordChanged, async (req, res) => {
   try {
     const data = await listContactos(req.user.sub)
@@ -1788,6 +1834,7 @@ app.get('/mensajes/contactos', authenticateToken, requirePasswordChanged, async 
   }
 })
 
+// GET /mensajes: Lista los mensajes de la carpeta solicitada.
 app.get('/mensajes', authenticateToken, requirePasswordChanged, async (req, res) => {
   const carpeta = String(req.query.carpeta || 'inbox')
   try {
@@ -1799,6 +1846,7 @@ app.get('/mensajes', authenticateToken, requirePasswordChanged, async (req, res)
   }
 })
 
+// POST /mensajes: Crea y envia un mensaje.
 app.post('/mensajes', authenticateToken, requirePasswordChanged, async (req, res) => {
   try {
     const data = await createMensaje(req.user.sub, req.body || {})
@@ -1811,6 +1859,7 @@ app.post('/mensajes', authenticateToken, requirePasswordChanged, async (req, res
   }
 })
 
+// PUT /mensajes/:id/leer: Marca un mensaje como leido.
 app.put('/mensajes/:id/leer', authenticateToken, requirePasswordChanged, async (req, res) => {
   try {
     const result = await markMensajeLeido(req.params.id, req.user.sub)
@@ -1822,6 +1871,7 @@ app.put('/mensajes/:id/leer', authenticateToken, requirePasswordChanged, async (
   }
 })
 
+// DELETE /mensajes/:id: Elimina un mensaje del usuario.
 app.delete('/mensajes/:id', authenticateToken, requirePasswordChanged, async (req, res) => {
   try {
     const result = await removeMensaje(req.params.id, req.user.sub)

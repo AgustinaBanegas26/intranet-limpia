@@ -39,8 +39,8 @@ function loadEnvFile() {
 loadEnvFile();
 
 const DEFAULT_EMAILS = {
-  agustina: process.env.EMAIL_AGUSTINA || "",
-  sara: process.env.EMAIL_SARA || "",
+  agustina: process.env.EMAIL_AGUSTINA || "agustinabanegas26@gmail.com",
+  sara: process.env.EMAIL_SARA || "sarawillerslohr08@gmail.com",
   rrhh: process.env.EMAIL_RRHH || "",
   proveedores: process.env.EMAIL_PROVEEDORES || "",
   tesoreria: process.env.EMAIL_TESORERIA || "",
@@ -254,10 +254,19 @@ async function getRolesPorEmail(destinatarios) {
 
 // Obtiene los datos necesarios.
 async function getDestinatariosParaEtapa(tipo, solicitud, etapa = "creada") {
-  return String(process.env.EMAIL_RECIBIDOS || "")
+  const configurados = String(process.env.EMAIL_RECIBIDOS || "")
     .split(",")
     .map((email) => email.trim())
     .filter(Boolean);
+
+  // Sara y Agustina reciben todas las solicitudes, sin importar su tipo o etapa.
+  return [
+    ...new Set(
+      [...configurados, DEFAULT_EMAILS.sara, DEFAULT_EMAILS.agustina].filter(
+        Boolean,
+      ),
+    ),
+  ];
 }
 
 // Prepara el valor para su uso.
@@ -533,7 +542,13 @@ async function sendSolicitudNotification(solicitud) {
     id: solicitud?.id || solicitud?.solicitud_id || "N/A",
   });
 
-  return sendEmail(asunto, contenidoHtml, destinatarios);
+  const resultado = await sendEmail(asunto, contenidoHtml, destinatarios);
+  if (!resultado.ok) {
+    console.error(
+      `[EMAIL] Notificacion de solicitud no enviada: ${resultado.code || "send_failed"}`,
+    );
+  }
+  return resultado;
 }
 
 // envia la solicitud correspondiente.

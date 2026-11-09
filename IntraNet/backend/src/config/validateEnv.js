@@ -39,8 +39,10 @@ function validateEnv({ exitOnError = false } = {}) {
     warnings.push('El correo de recuperación no está configurado correctamente (revisá SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS y SMTP_FROM)')
   }
 
-  if (!String(process.env.EMAIL_RECIBIDOS || '').trim()) {
-    warnings.push('EMAIL_RECIBIDOS no está configurada; las notificaciones de solicitudes no tendrán destinatario')
+  const emailUser = String(process.env.EMAIL_USER || '').trim()
+  const emailPassword = String(process.env.EMAIL_PASS || '').trim().replace(/\s+/g, '')
+  if (!emailUser || !emailPassword) {
+    warnings.push('Request email is not configured; check EMAIL_USER and EMAIL_PASS')
   }
 
   if (isProduction) {
